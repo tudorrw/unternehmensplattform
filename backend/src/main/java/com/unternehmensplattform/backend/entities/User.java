@@ -1,6 +1,6 @@
 package com.unternehmensplattform.backend.entities;
 
-import com.unternehmensplattform.backend.entities.Role;
+import com.unternehmensplattform.backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,15 +40,11 @@ public class User implements UserDetails, Principal {
     private boolean accountLocked;
     private boolean enabled;
 
-//    @CreatedDate
-//    @Column(updatable = false, nullable = false)
-//    private LocalDateTime createdDate;
-//
-//    @LastModifiedDate
-//    @Column(insertable = false)
-//    private LocalDateTime modifiedDate;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.ORDINAL)
     private Role role;
+
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private Role role;
 
     @Override
     public String getName() {
@@ -57,7 +53,7 @@ public class User implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getName()));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

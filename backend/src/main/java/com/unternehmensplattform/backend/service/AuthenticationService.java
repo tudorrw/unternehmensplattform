@@ -4,13 +4,13 @@ import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.repositories.RoleRepository;
+import com.unternehmensplattform.backend.enums.Role;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,6 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -27,8 +26,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     public void register(RegistrationRequest registrationRequest) {
-        var userRole = roleRepository.findByName("Employee")
-                .orElseThrow(() -> new RuntimeException("Role User was mot initialized"));
+//        Role roleToAssign = getRole();
         var user = User.builder()
                 .first_name(registrationRequest.getFirst_name())
                 .last_name(registrationRequest.getLast_name())
@@ -36,9 +34,23 @@ public class AuthenticationService {
                 .password_hash(passwordEncoder.encode(registrationRequest.getPassword_hash()))
                 .accountLocked(false)
                 .enabled(true)
-                .role(userRole)
+                .role(Role.Employee)
                 .build();
         userRepository.save(user);
+    }
+
+    private static Role getRole() {
+        var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Role roleToAssign;
+        // Check if the current user has permission to create the requested role
+        if (currentUser.getRole() == Role.Superadmin) {
+            roleToAssign = Role.Administrator; // Superadmin can create administrators
+        } else if (currentUser.getRole() == Role.Administrator) {
+            roleToAssign = Role.Employee; // Administrator can create employees
+        } else {
+            throw new IllegalArgumentException("You do not have permission to create users.");
+        }
+        return roleToAssign;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
