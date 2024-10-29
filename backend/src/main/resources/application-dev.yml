@@ -18,5 +18,6 @@ application:
   security:
     jwt:
       secret-key: 7506d035980f7bee4108beb06780ed76ea48ee6abd43abd5ed9fef8f1ca03e99
-      expiration: 1800000
-#      expiration: 8640000
+      expiration: 900000 # 15 minutes
+
+#      expiration: 8640000 # 144 minutes
