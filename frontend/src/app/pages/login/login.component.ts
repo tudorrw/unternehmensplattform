@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {AuthenticationRequest} from "../../services/models/authentication-request";
 import { Router } from '@angular/router';
 import {AuthenticationControllerService} from "../../services/services/authentication-controller.service";
@@ -10,7 +10,9 @@ import { Message } from 'primeng/api';  // Import Message type
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+
+export class LoginComponent implements OnInit{
+
   authRequest: AuthenticationRequest = {email: '', password_hash: ''};
   errorMsg: Message[] = [];  // Change to Message array
 
@@ -20,8 +22,22 @@ export class LoginComponent {
     private tokenService: TokenService
   ) { }
 
+  ngOnInit(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const existingToken = localStorage.getItem('token');
+
+      if (existingToken) {
+        if(this.tokenService.isTokenNotValid()) {
+          localStorage.removeItem('token');
+        }
+      }
+    }
+  }
+
   login() {
+
     console.log(this.authRequest.password_hash, this.authRequest.email);
+
     this.errorMsg = [];  // Clear previous error messages
 
     this.authService.authenticate({
