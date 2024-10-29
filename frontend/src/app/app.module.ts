@@ -9,10 +9,12 @@ import {HttpClientModule, HttpClient } from '@angular/common/http'
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './pages/login/login.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token.interceptor";
 
 @NgModule({
   declarations: [
@@ -32,7 +34,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MessagesModule, MessageModule
   ],
   providers: [
-    HttpClient
+    HttpClient,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpTokenInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
