@@ -39,4 +39,14 @@ export class TokenService {
     return true;
   }
 
+  get userRoles(): string {
+    const token = this.token;
+    if (token) {
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(token);
+      return decodedToken.authorities[0];
+    }
+    return "";
+  }
+
 }
