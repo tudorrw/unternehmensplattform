@@ -13,7 +13,7 @@ import { Message } from 'primeng/api';  // Import Message type
 
 export class LoginComponent implements OnInit{
 
-  authRequest: AuthenticationRequest = {email: '', password_hash: ''};
+  authRequest: AuthenticationRequest = {email: '', passwordHash: ''};
   errorMsg: Message[] = [];  // Change to Message array
 
   constructor(
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit{
 
   login() {
 
-    console.log(this.authRequest.password_hash, this.authRequest.email);
+    console.log(this.authRequest.passwordHash, this.authRequest.email);
 
     this.errorMsg = [];  // Clear previous error messages
 

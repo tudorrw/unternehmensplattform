@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { User } from '../../models/user';
+import { UserDetailsDto } from '../../models/user-details-dto';
 
-export interface GetAllUsers$Params {
+export interface GetAllEmployees$Params {
 }
 
-export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<User>>> {
-  const rb = new RequestBuilder(rootUrl, getAllUsers.PATH, 'get');
+export function getAllEmployees(http: HttpClient, rootUrl: string, params?: GetAllEmployees$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDetailsDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllEmployees.PATH, 'get');
   if (params) {
   }
 
@@ -23,9 +23,9 @@ export function getAllUsers(http: HttpClient, rootUrl: string, params?: GetAllUs
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<User>>;
+      return r as StrictHttpResponse<Array<UserDetailsDto>>;
     })
   );
 }
 
-getAllUsers.PATH = '/dashboard/user/get-all';
+getAllEmployees.PATH = '/users/get-employees';

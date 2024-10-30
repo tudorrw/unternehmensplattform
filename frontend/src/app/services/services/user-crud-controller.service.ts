@@ -13,11 +13,11 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { authenticatedUser } from '../fn/user-crud-controller/authenticated-user';
 import { AuthenticatedUser$Params } from '../fn/user-crud-controller/authenticated-user';
-import { getAllUsers } from '../fn/user-crud-controller/get-all-users';
-import { GetAllUsers$Params } from '../fn/user-crud-controller/get-all-users';
+import { getAllEmployees } from '../fn/user-crud-controller/get-all-employees';
+import { GetAllEmployees$Params } from '../fn/user-crud-controller/get-all-employees';
 import { register } from '../fn/user-crud-controller/register';
 import { Register$Params } from '../fn/user-crud-controller/register';
-import { User } from '../models/user';
+import { UserDetailsDto } from '../models/user-details-dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserCrudControllerService extends BaseService {
@@ -26,7 +26,7 @@ export class UserCrudControllerService extends BaseService {
   }
 
   /** Path part for operation `register()` */
-  static readonly RegisterPath = '/dashboard/user/register';
+  static readonly RegisterPath = '/users/register';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -55,7 +55,7 @@ export class UserCrudControllerService extends BaseService {
   }
 
   /** Path part for operation `authenticatedUser()` */
-  static readonly AuthenticatedUserPath = '/dashboard/user/me';
+  static readonly AuthenticatedUserPath = '/users/me';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -63,7 +63,7 @@ export class UserCrudControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  authenticatedUser$Response(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<User>> {
+  authenticatedUser$Response(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDetailsDto>> {
     return authenticatedUser(this.http, this.rootUrl, params, context);
   }
 
@@ -73,34 +73,34 @@ export class UserCrudControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  authenticatedUser(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<User> {
+  authenticatedUser(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<UserDetailsDto> {
     return this.authenticatedUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<User>): User => r.body)
+      map((r: StrictHttpResponse<UserDetailsDto>): UserDetailsDto => r.body)
     );
   }
 
-  /** Path part for operation `getAllUsers()` */
-  static readonly GetAllUsersPath = '/dashboard/user/get-all';
+  /** Path part for operation `getAllEmployees()` */
+  static readonly GetAllEmployeesPath = '/users/get-employees';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllUsers()` instead.
+   * To access only the response body, use `getAllEmployees()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllUsers$Response(params?: GetAllUsers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<User>>> {
-    return getAllUsers(this.http, this.rootUrl, params, context);
+  getAllEmployees$Response(params?: GetAllEmployees$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDetailsDto>>> {
+    return getAllEmployees(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllUsers$Response()` instead.
+   * To access the full response (for headers, for example), `getAllEmployees$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllUsers(params?: GetAllUsers$Params, context?: HttpContext): Observable<Array<User>> {
-    return this.getAllUsers$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<User>>): Array<User> => r.body)
+  getAllEmployees(params?: GetAllEmployees$Params, context?: HttpContext): Observable<Array<UserDetailsDto>> {
+    return this.getAllEmployees$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserDetailsDto>>): Array<UserDetailsDto> => r.body)
     );
   }
 

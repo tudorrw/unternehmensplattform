@@ -4,5 +4,5 @@
 
 export interface AuthenticationRequest {
   email: string;
-  password_hash: string;
+  passwordHash: string;
 }
