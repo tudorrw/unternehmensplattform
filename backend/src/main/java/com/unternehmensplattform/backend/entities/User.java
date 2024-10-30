@@ -16,7 +16,9 @@ import javax.security.auth.Subject;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,7 +27,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name="users")
-@EntityListeners(AuditingEntityListener.class)
+//@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
     @Id
@@ -43,8 +45,22 @@ public class User implements UserDetails, Principal {
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_company",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id"))
+    private Set<Company> companies = new LinkedHashSet<>();
+
+    // One user (administrator) can be associated with multiple vacation requests
+    @OneToMany(mappedBy = "administrator")
+    private List<VacationRequest> managedRequests;
+
+    // One user (employee) can create multiple vacation requests
+    @OneToMany(mappedBy = "employee")
+    private List<VacationRequest> vacationRequests;
+
+    @OneToMany(mappedBy = "employee")
+    private List<WorkingDay> workingDays;
 
     @Override
     public String getName() {
