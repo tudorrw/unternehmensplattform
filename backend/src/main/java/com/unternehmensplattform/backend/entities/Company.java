@@ -35,6 +35,6 @@ public class Company {
     @Column(name = "address", nullable = false, length = 45)
     private String address;
 
-    @ManyToMany(mappedBy = "company")
-    private Set<User> students = new HashSet<>();
+    @ManyToMany(mappedBy = "companies")
+    private Set<User> users = new HashSet<>();
 }
