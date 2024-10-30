@@ -2,6 +2,7 @@ package com.unternehmensplattform.backend.service.implementations;
 
 
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
+import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.Role;
 import com.unternehmensplattform.backend.repositories.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +34,18 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public List<User> getAllUsers() {
-            List<User> users = new ArrayList<>();
-
-            userRepository.findAll().forEach(users::add);
-
-            return users;
+    public List<UserDetailsDTO> getAllEmployees() {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole() == Role.Employee)
+                .map(user -> new UserDetailsDTO(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getTelefonNumber(),
+                        user.isAccountLocked(),
+                        user.getRole()
+                       ) {
+                })
+                .collect(Collectors.toList());
     }
 }

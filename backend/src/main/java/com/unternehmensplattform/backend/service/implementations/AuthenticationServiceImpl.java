@@ -27,15 +27,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
 
     public void register(RegistrationRequest registrationRequest) {
-//        Role roleToAssign = getRole();
+        Role roleToAssign = getRole();
         var user = User.builder()
-                .first_name(registrationRequest.getFirst_name())
-                .last_name(registrationRequest.getLast_name())
+                .firstName(registrationRequest.getFirst_name())
+                .lastName(registrationRequest.getLast_name())
                 .email(registrationRequest.getEmail())
-                .password_hash(passwordEncoder.encode(registrationRequest.getPassword_hash()))
+                .passwordHash(passwordEncoder.encode(registrationRequest.getPassword_hash()))
                 .accountLocked(false)
                 .enabled(true)
-                .role(Role.Employee)
+                .role(roleToAssign)
                 .build();
         userRepository.save(user);
     }
@@ -58,12 +58,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getEmail(),
-                        authenticationRequest.getPassword_hash()
+                        authenticationRequest.getPasswordHash()
                 )
         );
         var claims = new HashMap<String, Object>();
         var user = ((User)auth.getPrincipal());
-        claims.put("full_name", user.getFirst_name() + " " + user.getLast_name());
+        claims.put("full_name", user.getFirstName() + " " + user.getLastName());
         var jwtToken = jwtService.generateToken(claims, user);
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();

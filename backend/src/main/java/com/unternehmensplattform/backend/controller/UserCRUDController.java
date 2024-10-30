@@ -1,6 +1,7 @@
 package com.unternehmensplattform.backend.controller;
 
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
+import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.service.interfaces.AuthenticationService;
 import com.unternehmensplattform.backend.service.interfaces.UserService;
@@ -16,24 +17,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("dashboard/user")
+@RequestMapping("users")
 @RequiredArgsConstructor
 public class UserCRUDController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @GetMapping("/get-all")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @GetMapping("/get-employees")
+    public ResponseEntity<List<UserDetailsDTO>> getAllEmployees() {
+        List<UserDetailsDTO> employees = userService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
+    public ResponseEntity<UserDetailsDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
-
-        return ResponseEntity.ok(currentUser);
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                currentUser.getFirstName(),
+                currentUser.getLastName(),
+                currentUser.getEmail(),
+                currentUser.getTelefonNumber(),
+                currentUser.isAccountLocked(),
+                currentUser.getRole()
+        );
+        return ResponseEntity.ok(userDetailsDTO);
     }
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
