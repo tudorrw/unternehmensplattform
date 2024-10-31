@@ -47,6 +47,36 @@
         }
       }
     },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "authentication-controller"
+        ],
+        "operationId": "registerSuperadmins",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/authenticate": {
       "post": {
         "tags": [
@@ -126,22 +156,22 @@
       "RegistrationRequest": {
         "required": [
           "email",
-          "first_name",
-          "last_name",
-          "password_hash"
+          "firstName",
+          "lastName",
+          "passwordHash"
         ],
         "type": "object",
         "properties": {
-          "first_name": {
+          "firstName": {
             "type": "string"
           },
-          "last_name": {
+          "lastName": {
             "type": "string"
           },
           "email": {
             "type": "string"
           },
-          "password_hash": {
+          "passwordHash": {
             "maxLength": 2147483647,
             "minLength": 8,
             "type": "string"
