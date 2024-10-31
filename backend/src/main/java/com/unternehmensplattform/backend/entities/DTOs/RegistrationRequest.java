@@ -16,10 +16,10 @@ public class RegistrationRequest {
 
     @NotEmpty(message = "First name is mandatory")
     @NotBlank(message = "First name is mandatory")
-    private String first_name;
+    private String firstName;
     @NotEmpty(message = "Last name is mandatory")
     @NotBlank(message = "Last name is mandatory")
-    private String last_name;
+    private String lastName;
     @Email(message = "Email is not formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotBlank(message = "First name is mandatory")
@@ -27,5 +27,5 @@ public class RegistrationRequest {
     @NotEmpty(message = "Password is mandatory")
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
-    private String password_hash;
+    private String passwordHash;
 }

@@ -29,13 +29,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void register(RegistrationRequest registrationRequest) {
         Role roleToAssign = getRole();
         var user = User.builder()
-                .firstName(registrationRequest.getFirst_name())
-                .lastName(registrationRequest.getLast_name())
+                .firstName(registrationRequest.getFirstName())
+                .lastName(registrationRequest.getLastName())
                 .email(registrationRequest.getEmail())
-                .passwordHash(passwordEncoder.encode(registrationRequest.getPassword_hash()))
+                .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
                 .accountLocked(false)
                 .enabled(true)
                 .role(roleToAssign)
+                .build();
+        userRepository.save(user);
+    }
+
+    public void registerSuperadmins(RegistrationRequest registrationRequest) {
+        var user = User.builder()
+                .firstName(registrationRequest.getFirstName())
+                .lastName(registrationRequest.getLastName())
+                .email(registrationRequest.getEmail())
+                .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
+                .accountLocked(false)
+                .enabled(true)
+                .role(Role.Superadmin)
                 .build();
         userRepository.save(user);
     }

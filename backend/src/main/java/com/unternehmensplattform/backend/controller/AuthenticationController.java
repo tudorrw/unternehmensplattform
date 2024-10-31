@@ -4,6 +4,7 @@ import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.service.implementations.AuthenticationServiceImpl;
+import com.unternehmensplattform.backend.service.interfaces.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationServiceImpl service;
+    private final AuthenticationService service;
 
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> registerSuperadmins(
+            @RequestBody @Valid RegistrationRequest request) {
+        service.registerSuperadmins(request);
+        return ResponseEntity.accepted().build();
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(

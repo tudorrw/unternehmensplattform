@@ -6,6 +6,9 @@ import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 
 public interface AuthenticationService {
     void register(RegistrationRequest registrationRequest);
+    void registerSuperadmins(RegistrationRequest registrationRequest);
+
 
     AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
+
 }
