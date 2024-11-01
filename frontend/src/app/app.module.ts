@@ -15,12 +15,18 @@ import { MessageModule } from 'primeng/message';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token.interceptor";
+import { SuperadminDashboardComponent } from './pages/dashboard/superadmin-dashboard/superadmin-dashboard.component';
+import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
+import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    SuperadminDashboardComponent,
+    EmployeeDashboardComponent,
+    AdministratorDashboardComponent
   ],
   imports: [
     BrowserModule,
