@@ -2,7 +2,7 @@ package com.unternehmensplattform.backend.services.implementations;
 
 
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
-import com.unternehmensplattform.backend.enums.Role;
+import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     @Override
     public List<UserDetailsDTO> getAllEmployees() {
         return userRepository.findAll().stream()
-                .filter(user -> user.getRole() == Role.Employee)
+                .filter(user -> user.getRole() == UserRole.Employee)
                 .map(user -> new UserDetailsDTO(
                         user.getFirstName(),
                         user.getLastName(),

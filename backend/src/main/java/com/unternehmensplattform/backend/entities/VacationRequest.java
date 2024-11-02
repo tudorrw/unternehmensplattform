@@ -1,5 +1,7 @@
 package com.unternehmensplattform.backend.entities;
 
+import com.unternehmensplattform.backend.enums.UserRole;
+import com.unternehmensplattform.backend.enums.VacationReqStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -41,8 +43,8 @@ public class VacationRequest {
     private LocalDate endDate;
 
     @NotNull
-    @Column(name = "status", nullable = false)
-    private Integer status;
+    @Enumerated(EnumType.ORDINAL)
+    private VacationReqStatus status;
 
     @Size(max = 256)
     @NotNull
