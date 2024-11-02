@@ -44,7 +44,10 @@ export class LoginComponent implements OnInit{
       body: this.authRequest
     }).subscribe({
       next: (result) => {
-        this.tokenService.token = result.token as string;
+        if (typeof window !== 'undefined' && window.localStorage) {
+          // Set token on client-side only
+          this.tokenService.token = result.token as string;
+        }
         this.router.navigate(['dashboard']);
       },
       error: (err) => {
