@@ -1,10 +1,9 @@
-package com.unternehmensplattform.backend.controller;
+package com.unternehmensplattform.backend.controllers;
 
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
-import com.unternehmensplattform.backend.service.implementations.AuthenticationServiceImpl;
-import com.unternehmensplattform.backend.service.interfaces.AuthenticationService;
+import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

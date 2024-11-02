@@ -1,4 +1,4 @@
-package com.unternehmensplattform.backend.service.interfaces;
+package com.unternehmensplattform.backend.services.interfaces;
 
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;

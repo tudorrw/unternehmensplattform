@@ -1,22 +1,17 @@
-package com.unternehmensplattform.backend.service.implementations;
+package com.unternehmensplattform.backend.services.implementations;
 
 
-import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
-import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.Role;
 import com.unternehmensplattform.backend.repositories.UserRepository;
-import com.unternehmensplattform.backend.service.interfaces.UserService;
+import com.unternehmensplattform.backend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

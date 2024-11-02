@@ -3,11 +3,6 @@ package com.unternehmensplattform.backend.entities;
 import com.unternehmensplattform.backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,12 +45,8 @@ public class User implements UserDetails, Principal {
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_company",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "company_id"))
-    private Set<Company> companies = new LinkedHashSet<>();
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Contract contract;
     // One user (administrator) can be associated with multiple vacation requests
     @OneToMany(mappedBy = "administrator")
     private List<VacationRequest> managedRequests;

@@ -1,17 +1,16 @@
-package com.unternehmensplattform.backend.controller;
+package com.unternehmensplattform.backend.controllers;
 
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.service.interfaces.AuthenticationService;
-import com.unternehmensplattform.backend.service.interfaces.UserService;
+import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
+import com.unternehmensplattform.backend.services.interfaces.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

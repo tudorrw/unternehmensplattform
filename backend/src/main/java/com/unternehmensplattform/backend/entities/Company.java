@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,6 +36,6 @@ public class Company {
     @Column(name = "address", nullable = false, length = 45)
     private String address;
 
-    @ManyToMany(mappedBy = "companies")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "company")
+    private List<Contract> contracts;
 }

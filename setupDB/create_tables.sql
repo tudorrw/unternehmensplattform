@@ -25,15 +25,20 @@ CREATE TABLE `companies` (
 
 
 
-CREATE TABLE `user_company` (
-    `user_id` int NOT NULL,
-    `company_id` int NOT NULL,
-    KEY `FK_user_id_idx` (`user_id`),
-    KEY `FK_company_id_idx` (`company_id`),
-    CONSTRAINT `FK_company_id` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`),
-    CONSTRAINT `FK_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+CREATE TABLE `contracts` (
+     `id` int NOT NULL AUTO_INCREMENT,
+     `user_id` int NOT NULL,
+     `company_id` int NOT NULL,
+     `signing_date` date DEFAULT NULL,
+     `previous_year_vacation_days` int DEFAULT '0',
+     `actual_year_vacation_days` int DEFAULT '0',
+     PRIMARY KEY (`id`),
+     UNIQUE KEY `contracts_pk` (`user_id`),
+     KEY `FK_contract_user_idx` (`user_id`),
+     KEY `FK_contract_company_idx` (`company_id`),
+     CONSTRAINT `FK_contract_company` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`),
+     CONSTRAINT `FK_contract_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 CREATE TABLE `vacation_request` (
     `id` int NOT NULL AUTO_INCREMENT,
@@ -75,7 +80,7 @@ CREATE TABLE `days_off` (
 
 
 drop table days_off;
-drop table user_company;
+drop table contracts;
 drop table companies;
 drop table vacation_request;
 drop table working_days;

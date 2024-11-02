@@ -1,12 +1,7 @@
-package com.unternehmensplattform.backend.controller;
+package com.unternehmensplattform.backend.controllers;
 
 
-import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
-import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.unternehmensplattform.backend.service.implementations;
+package com.unternehmensplattform.backend.services.implementations;
 
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
@@ -7,7 +7,7 @@ import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.Role;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.security.JwtService;
-import com.unternehmensplattform.backend.service.interfaces.AuthenticationService;
+import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
