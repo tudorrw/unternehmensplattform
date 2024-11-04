@@ -23,15 +23,15 @@ export class LoginComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const existingToken = localStorage.getItem('token');
-
-      if (existingToken) {
-        if(this.tokenService.isTokenNotValid()) {
-          localStorage.removeItem('token');
-        }
-      }
-    }
+    // if (typeof window !== 'undefined' && window.localStorage) {
+    //   const existingToken = localStorage.getItem('token');
+    //
+    //   if (existingToken) {
+    //     if(this.tokenService.isTokenNotValid()) {
+    //       localStorage.removeItem('token');
+    //     }
+    //   }
+    // }
   }
 
   login() {
