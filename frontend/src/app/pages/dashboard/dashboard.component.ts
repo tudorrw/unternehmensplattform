@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TokenService} from "../../services/token/token.service";
 import {UserCrudControllerService} from "../../services/services/user-crud-controller.service";
 import {UserDetailsDto} from "../../services/models/user-details-dto";
+import {UserRole} from "../../services/enums/UserRole";
 
 @Component({
   selector: 'app-dashboard',
@@ -23,4 +24,6 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  protected readonly UserRole = UserRole;
 }

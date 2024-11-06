@@ -5,7 +5,8 @@
   <p>Role: {{ userDetails.role }}</p>
 
   <!-- Superadmin-specific content -->
-  <app-superadmin-dashboard *ngIf="userDetails.role === 'Superadmin'"></app-superadmin-dashboard>
-  <app-administrator-dashboard *ngIf="userDetails.role === 'Administrator'"></app-administrator-dashboard>
-  <app-employee-dashboard *ngIf="userDetails.role === 'Employee'"></app-employee-dashboard>
+
+  <app-superadmin-dashboard *ngIf="userDetails.role === UserRole.Superadmin"></app-superadmin-dashboard>
+  <app-administrator-dashboard *ngIf="userDetails.role === UserRole.Administrator"></app-administrator-dashboard>
+  <app-employee-dashboard *ngIf="userDetails.role === UserRole.Employee"></app-employee-dashboard>
 </div>
