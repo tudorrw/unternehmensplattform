@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {UserDetailsDto} from "../../../services/models/user-details-dto";
 import {RegistrationRequest} from "../../../services/models/registration-request";
-import {EmployeeData} from "../../../services/models/employee-data";
+import {EmployeeData} from "../../../persistentModels/employee-data";
 
 @Component({
   selector: 'app-employee-edit-dialog',

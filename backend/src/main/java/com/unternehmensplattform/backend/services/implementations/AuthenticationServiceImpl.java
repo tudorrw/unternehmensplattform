@@ -32,7 +32,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public void register(RegistrationRequest registrationRequest) {
         var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(currentUser.getContract() != null) {
+        var contract = currentUser.getContract();
+        if((currentUser.getRole() == UserRole.Administrator && contract != null) || currentUser.getRole() == UserRole.Superadmin) {
             UserRole roleToAssign = getRole(currentUser);
             var createdUser = User.builder()
                     .firstName(registrationRequest.getFirstName())
@@ -45,10 +46,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
             userRepository.save(createdUser);
 
-            if (currentUser.getRole() == UserRole.Administrator) {
-                Contract contract = currentUser.getContract();
+            if(currentUser.getRole() == UserRole.Administrator && contract != null) {
                 Company company = contract.getCompany();
-
                 Contract contractToAssign = new Contract();
 
                 contractToAssign.setCompany(company);
@@ -56,8 +55,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 contractRepository.save(contractToAssign);
             }
-        } else {
-            throw new IllegalArgumentException("You do not have permission to create users because you are not in a company.");
         }
     }
 

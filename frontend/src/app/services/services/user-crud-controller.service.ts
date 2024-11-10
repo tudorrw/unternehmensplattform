@@ -15,8 +15,6 @@ import { activateUser } from '../fn/user-crud-controller/activate-user';
 import { ActivateUser$Params } from '../fn/user-crud-controller/activate-user';
 import { authenticatedUser } from '../fn/user-crud-controller/authenticated-user';
 import { AuthenticatedUser$Params } from '../fn/user-crud-controller/authenticated-user';
-import { getAllAdmins } from '../fn/user-crud-controller/get-all-admins';
-import { GetAllAdmins$Params } from '../fn/user-crud-controller/get-all-admins';
 import { deactivateUser } from '../fn/user-crud-controller/deactivate-user';
 import { DeactivateUser$Params } from '../fn/user-crud-controller/deactivate-user';
 import { getAllEmployees } from '../fn/user-crud-controller/get-all-employees';
@@ -195,31 +193,6 @@ export class UserCrudControllerService extends BaseService {
    */
   getAllEmployees(params?: GetAllEmployees$Params, context?: HttpContext): Observable<Array<UserDetailsDto>> {
     return this.getAllEmployees$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<UserDetailsDto>>): Array<UserDetailsDto> => r.body)
-    );
-  }
-
-  /** Path part for operation `getAllAdmins()` */
-  static readonly GetAllAdminsPath = '/users/admins';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllAdmins()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllAdmins$Response(params?: GetAllAdmins$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDetailsDto>>> {
-    return getAllAdmins(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllAdmins$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getAllAdmins(params?: GetAllAdmins$Params, context?: HttpContext): Observable<Array<UserDetailsDto>> {
-    return this.getAllAdmins$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserDetailsDto>>): Array<UserDetailsDto> => r.body)
     );
   }
