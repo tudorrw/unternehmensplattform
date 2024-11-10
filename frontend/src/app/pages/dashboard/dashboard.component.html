@@ -1,12 +1,29 @@
 <div *ngIf="userDetails">
-  <h2>Welcome, {{ userDetails.firstName }} {{ userDetails.lastName }}</h2>
-  <p>Email: {{ userDetails.email }}</p>
-  <p>Telefon Number: {{ userDetails.telefonNumber }}</p>
-  <p>Role: {{ userDetails.role }}</p>
+  <div class="top-bar">
+    <div class="user-profile">
+      <!-- Avatar with PrimeNG icon and customized style -->
+      <p-avatar
+        icon="pi pi-user"
+        [style]="{'width': '40px', 'height': '40px', 'background-color': '#007bff', 'color': '#fff', 'border-radius': '50%', 'cursor': 'pointer'}"
+        (click)="userMenu.toggle($event)">
+      </p-avatar>
 
-  <!-- Superadmin-specific content -->
+      <!-- User Menu Overlay Panel -->
+      <p-overlayPanel #userMenu [dismissable]="true">
+        <div class="user-details">
+          <strong>{{ userDetails.firstName }} {{ userDetails.lastName }}</strong>
+          <p>{{ userDetails.email }}</p>
+          <span *ngIf="userDetails.role">Role: {{ userDetails.role }}</span>
+        </div>
+        <hr />
+        <button pButton label="Contul meu" (click)="goToProfile()" class="p-button-text"></button>
+        <button pButton label="Logout" icon="pi pi-sign-out" (click)="logout()" class="p-button-text"></button>
+      </p-overlayPanel>
+    </div>
+  </div>
 
-  <app-superadmin-dashboard *ngIf="userDetails.role === UserRole.Superadmin"></app-superadmin-dashboard>
-  <app-administrator-dashboard *ngIf="userDetails.role === UserRole.Administrator"></app-administrator-dashboard>
-  <app-employee-dashboard *ngIf="userDetails.role === UserRole.Employee"></app-employee-dashboard>
+  <!-- Role-based Dashboards -->
+  <app-superadmin-dashboard *ngIf="userDetails.role === 'Superadmin'"></app-superadmin-dashboard>
+  <app-administrator-dashboard *ngIf="userDetails.role === 'Administrator'"></app-administrator-dashboard>
+  <app-employee-dashboard *ngIf="userDetails.role === 'Employee'"></app-employee-dashboard>
 </div>

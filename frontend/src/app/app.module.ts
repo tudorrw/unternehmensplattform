@@ -26,6 +26,8 @@ import {MatDialogContent} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
 import { AddCompanyComponent } from './functionalities/company-creation/add-company/add-company.component';
 import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {AvatarModule} from "primeng/avatar";
 
 @NgModule({
   declarations: [
@@ -49,7 +51,7 @@ import { AddAdminComponent } from './functionalities/company-creation/add-admin/
     FormsModule, ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton
+    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton, OverlayPanelModule, AvatarModule
   ],
   providers: [
     HttpClient,
