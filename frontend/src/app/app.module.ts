@@ -20,6 +20,9 @@ import { AdministratorDashboardComponent } from './pages/dashboard/administrator
 import { EmployeeManagerComponent } from "./functionalities/employee-management/employee-manager/employee-manager.component";
 import { EmployeeEditDialogComponent } from "./functionalities/employee-management/employee-edit-dialog/employee-edit-dialog.component";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MatInput} from "@angular/material/input";
+import {MatDialogContent} from "@angular/material/dialog";
+import {MatButton} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -41,7 +44,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
     FormsModule, ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule, MatCheckbox
+    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton
   ],
   providers: [
     HttpClient,

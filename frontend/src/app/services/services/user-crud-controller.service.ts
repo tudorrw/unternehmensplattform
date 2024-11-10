@@ -11,10 +11,16 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { activateUser } from '../fn/user-crud-controller/activate-user';
+import { ActivateUser$Params } from '../fn/user-crud-controller/activate-user';
 import { authenticatedUser } from '../fn/user-crud-controller/authenticated-user';
 import { AuthenticatedUser$Params } from '../fn/user-crud-controller/authenticated-user';
+import { deactivateUser } from '../fn/user-crud-controller/deactivate-user';
+import { DeactivateUser$Params } from '../fn/user-crud-controller/deactivate-user';
 import { getAllEmployees } from '../fn/user-crud-controller/get-all-employees';
 import { GetAllEmployees$Params } from '../fn/user-crud-controller/get-all-employees';
+import { modifyUser } from '../fn/user-crud-controller/modify-user';
+import { ModifyUser$Params } from '../fn/user-crud-controller/modify-user';
 import { register } from '../fn/user-crud-controller/register';
 import { Register$Params } from '../fn/user-crud-controller/register';
 import { UserDetailsDto } from '../models/user-details-dto';
@@ -48,6 +54,93 @@ export class UserCrudControllerService extends BaseService {
   register(params: Register$Params, context?: HttpContext): Observable<{
 }> {
     return this.register$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `modifyUser()` */
+  static readonly ModifyUserPath = '/users/modify';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `modifyUser()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  modifyUser$Response(params: ModifyUser$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return modifyUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `modifyUser$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  modifyUser(params: ModifyUser$Params, context?: HttpContext): Observable<{
+}> {
+    return this.modifyUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `deactivateUser()` */
+  static readonly DeactivateUserPath = '/users/deactivate/{userId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `deactivateUser()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deactivateUser$Response(params: DeactivateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return deactivateUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `deactivateUser$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  deactivateUser(params: DeactivateUser$Params, context?: HttpContext): Observable<{
+}> {
+    return this.deactivateUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `activateUser()` */
+  static readonly ActivateUserPath = '/users/activate/{userId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `activateUser()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  activateUser$Response(params: ActivateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return activateUser(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `activateUser$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  activateUser(params: ActivateUser$Params, context?: HttpContext): Observable<{
+}> {
+    return this.activateUser$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)

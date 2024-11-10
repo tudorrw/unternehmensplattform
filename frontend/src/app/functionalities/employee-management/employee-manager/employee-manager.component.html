@@ -1,6 +1,15 @@
 <div class="buttons-container">
-  <button mat-raised-button color="primary" class="display-button" (click)="showAllEmployees()">Display Employees</button>
-  <button mat-raised-button color="primary" class="register-button" (click)="openDialog()">Register Employee</button>
+<!--  <button mat-raised-button color="primary" class="display-button" (click)="showAllEmployees()">Display Employees</button>-->
+<!--  <button mat-raised-button color="default" class="register-button" (click)="openDialog()">Register Employee</button>-->
+  <div class="p-d-flex p-jc-between p-mb-3">
+    <button type="button" pButton (click)="showAllEmployees()" label="Display Employee" class="p-button-primary" style="width: 100%;">
+    </button>
+  </div>
+
+  <div class="p-d-flex p-jc-between p-mb-3">
+    <button type="button" pButton (click)="openDialog()" label="Register Employee" class="p-button-primary" style="width: 100%;">
+    </button>
+  </div>
 </div>
 
 <br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -15,6 +24,7 @@
     <tr>
       <th>First Name</th>
       <th>Last Name</th>
+      <th>Email</th>
       <th>Account Locked</th>
       <th>Phone</th>
       <th></th>
@@ -24,11 +34,21 @@
     <tr *ngFor="let employee of employees">
       <td>{{ employee.firstName }}</td>
       <td>{{ employee.lastName }}</td>
-      <td>{{ employee.accountLocked ? 'True' : 'False' }}</td>
-      <td>{{ employee.telefon }}</td>
-      <td>
-
-        <button mat-raised-button color="primary" class="edit-button" (click)="openDialog(employee)">Edit</button>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.accountLocked }}</td>
+      <td>{{ employee.telefonNumber }}</td>
+      <td style="display: flex; justify-content: center; align-items: center;">
+        <div class="p-d-flex p-jc-between p-mb-2">
+          <button
+            type="button"
+            pButton
+            (click)="openDialog(employee)"
+            icon="pi pi-pencil"
+            class="p-button-secondary"
+            aria-label="Edit"
+            style="width: 30px; height: 30px; padding: 0; border-radius: 4px; display: flex; justify-content: center; align-items: center;"
+          ></button>
+        </div>
       </td>
     </tr>
     </tbody>

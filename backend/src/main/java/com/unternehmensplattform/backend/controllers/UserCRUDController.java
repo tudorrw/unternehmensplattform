@@ -52,22 +52,25 @@ public class UserCRUDController {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/modify/{userId}")
-    public ResponseEntity<?> modifyUser(@PathVariable Integer userId,
-                                        @RequestBody @Valid UserDetailsDTO userDetailsDTO) {
-        userService.modifyUser(userId, userDetailsDTO);
-        return ResponseEntity.ok("User updated successfully");
+    @PostMapping("/modify")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> modifyUser(
+         @RequestBody @Valid UserDetailsDTO userDetailsDTO) {
+        userService.modifyUser(userDetailsDTO);
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/deactivate/{userId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> deactivateUser(@PathVariable Integer userId) {
         userService.deactivateUser(userId);
-        return ResponseEntity.ok("User deactivated successfully");
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/activate/{userId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> activateUser(@PathVariable Integer userId) {
         userService.activateUser(userId);
-        return ResponseEntity.ok("User activated successfully");
+        return ResponseEntity.accepted().build();
     }
 }

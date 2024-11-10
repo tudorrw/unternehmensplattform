@@ -6,6 +6,7 @@ export interface UserDetailsDto {
   accountLocked?: boolean;
   email?: string;
   firstName?: string;
+  id?: number;
   lastName?: string;
   role?: 'Superadmin' | 'Administrator' | 'Employee';
   telefonNumber?: string;

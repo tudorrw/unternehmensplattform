@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserService {
     List<UserDetailsDTO> getAllEmployees();
 
-    void modifyUser( Integer userId, UserDetailsDTO userDetailsDTO);
+    void modifyUser( UserDetailsDTO userDetailsDTO);
     void deactivateUser(Integer userId);
     void activateUser(Integer userId);
 }

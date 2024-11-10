@@ -60,15 +60,14 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public void modifyUser(Integer userId, UserDetailsDTO userDetailsDTO) {
-        User user = userRepository.findById(userId)
+    public void modifyUser(UserDetailsDTO userDetailsDTO) {
+        User user = userRepository.findById(userDetailsDTO.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setFirstName(userDetailsDTO.getFirstName());
         user.setLastName(userDetailsDTO.getLastName());
         user.setEmail(userDetailsDTO.getEmail());
         user.setTelefonNumber(userDetailsDTO.getTelefonNumber());
-
         userRepository.save(user);
     }
 
@@ -77,10 +76,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     public void deactivateUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setEnabled(false);
-        user.setAccountLocked(true);
+        if(user.isAccountNonLocked()) {
+            user.setEnabled(false);
+            user.setAccountLocked(true);
+        }
         userRepository.save(user);
+
     }
 
     @Override
@@ -88,11 +89,10 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     public void activateUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setEnabled(true);
-        user.setAccountLocked(false);
+        if(user.isAccountLocked()) {
+            user.setEnabled(true);
+            user.setAccountLocked(false);
+        }
         userRepository.save(user);
     }
-
-
 }

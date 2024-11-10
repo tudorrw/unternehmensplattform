@@ -1,5 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {UserDetailsDto} from "../../../services/models/user-details-dto";
+import {RegistrationRequest} from "../../../services/models/registration-request";
+import {EmployeeData} from "../../../services/models/employee-data";
 
 @Component({
   selector: 'app-employee-edit-dialog',
@@ -8,13 +11,18 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EmployeeEditDialogComponent {
   isDialogOpen: boolean = true;
+  isNewEmployee: boolean;
+
 
   constructor(
     public dialogRef: MatDialogRef<EmployeeEditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { firstName: string; lastName: string; accountLocked: boolean; telefon: string }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: EmployeeData
+  ) {
+    this.isNewEmployee = !('id' in data); // If 'id' is missing, it's a new employee
+  }
 
   onSave(): void {
+    console.log(this.data);
     this.dialogRef.close(this.data);
   }
 

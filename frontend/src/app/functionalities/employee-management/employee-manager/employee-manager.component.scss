@@ -73,6 +73,7 @@ table {
   z-index: 1000;
 }
 
+/* Buttons styling */
 .display-button,
 .register-button {
   background-color: blue;
@@ -80,11 +81,14 @@ table {
   font-size: 13px;
   height: 35px;
   width: 130px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .display-button:hover,
 .register-button:hover {
-  background-color: blue;
+  background-color: darkblue; /* Darker shade on hover */
 }
 
 .edit-button {
@@ -96,6 +100,7 @@ table {
   margin-top: 10px;
   position: relative;
   left: 30px;
+  cursor: pointer;
 }
 
 .edit-button:hover {
