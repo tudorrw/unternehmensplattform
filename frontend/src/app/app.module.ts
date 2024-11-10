@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HttpClientModule, HttpClient } from '@angular/common/http'
@@ -18,6 +17,9 @@ import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token
 import { SuperadminDashboardComponent } from './pages/dashboard/superadmin-dashboard/superadmin-dashboard.component';
 import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
 import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
+import { EmployeeManagerComponent } from "./functionalities/employee-management/employee-manager/employee-manager.component";
+import { EmployeeEditDialogComponent } from "./functionalities/employee-management/employee-edit-dialog/employee-edit-dialog.component";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { AdministratorDashboardComponent } from './pages/dashboard/administrator
     DashboardComponent,
     SuperadminDashboardComponent,
     EmployeeDashboardComponent,
-    AdministratorDashboardComponent
+    AdministratorDashboardComponent,
+    EmployeeManagerComponent,
+    EmployeeEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,10 +38,10 @@ import { AdministratorDashboardComponent } from './pages/dashboard/administrator
     ButtonModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,ReactiveFormsModule,
+    FormsModule, ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule
+    MessagesModule, MessageModule, MatCheckbox
   ],
   providers: [
     HttpClient,
