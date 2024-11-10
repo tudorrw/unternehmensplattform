@@ -3,7 +3,6 @@ package com.unternehmensplattform.backend.controllers;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import com.unternehmensplattform.backend.services.interfaces.UserService;
 import jakarta.validation.Valid;
@@ -36,6 +35,7 @@ public class UserCRUDController {
 
         User currentUser = (User) authentication.getPrincipal();
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                currentUser.getId(),
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
                 currentUser.getEmail(),
@@ -54,12 +54,25 @@ public class UserCRUDController {
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/admins")
-    public ResponseEntity<List<UserDetailsDTO>> getAllAdmins() {
-        List<UserDetailsDTO> admins = userService.getAllAdmins();
-        if (admins.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(admins);
+    @PostMapping("/modify")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> modifyUser(
+         @RequestBody @Valid UserDetailsDTO userDetailsDTO) {
+        userService.modifyUser(userDetailsDTO);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/deactivate/{userId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> deactivateUser(@PathVariable Integer userId) {
+        userService.deactivateUser(userId);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/activate/{userId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> activateUser(@PathVariable Integer userId) {
+        userService.activateUser(userId);
+        return ResponseEntity.accepted().build();
     }
 }

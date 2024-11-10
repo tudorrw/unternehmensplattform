@@ -1,10 +1,13 @@
 package com.unternehmensplattform.backend.services.implementations;
 
+import com.unternehmensplattform.backend.entities.Company;
+import com.unternehmensplattform.backend.entities.Contract;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
+import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.security.JwtService;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
@@ -25,19 +28,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ContractRepository contractRepository;
 
     public void register(RegistrationRequest registrationRequest) {
-        UserRole roleToAssign = getRole();
-        var user = User.builder()
-                .firstName(registrationRequest.getFirstName())
-                .lastName(registrationRequest.getLastName())
-                .email(registrationRequest.getEmail())
-                .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
-                .accountLocked(false)
-                .enabled(true)
-                .role(roleToAssign)
-                .build();
-        userRepository.save(user);
+        var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(currentUser.getContract() != null) {
+            UserRole roleToAssign = getRole(currentUser);
+            var createdUser = User.builder()
+                    .firstName(registrationRequest.getFirstName())
+                    .lastName(registrationRequest.getLastName())
+                    .email(registrationRequest.getEmail())
+                    .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
+                    .accountLocked(false)
+                    .enabled(true)
+                    .role(roleToAssign)
+                    .build();
+            userRepository.save(createdUser);
+
+            if (currentUser.getRole() == UserRole.Administrator) {
+                Contract contract = currentUser.getContract();
+                Company company = contract.getCompany();
+
+                Contract contractToAssign = new Contract();
+
+                contractToAssign.setCompany(company);
+                contractToAssign.setUser(createdUser);
+
+                contractRepository.save(contractToAssign);
+            }
+        } else {
+            throw new IllegalArgumentException("You do not have permission to create users because you are not in a company.");
+        }
     }
 
     public void registerSuperadmins(RegistrationRequest registrationRequest) {
@@ -53,8 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
     }
 
-    private static UserRole getRole() {
-        var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    private static UserRole getRole(User currentUser) {
         UserRole roleToAssign;
         // Check if the current user has permission to create the requested role
         if (currentUser.getRole() == UserRole.Superadmin) {

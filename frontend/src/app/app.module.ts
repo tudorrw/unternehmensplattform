@@ -18,6 +18,12 @@ import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token
 import { SuperadminDashboardComponent } from './pages/dashboard/superadmin-dashboard/superadmin-dashboard.component';
 import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
 import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
+import { EmployeeManagerComponent } from "./functionalities/employee-management/employee-manager/employee-manager.component";
+import { EmployeeEditDialogComponent } from "./functionalities/employee-management/employee-edit-dialog/employee-edit-dialog.component";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatInput} from "@angular/material/input";
+import {MatDialogContent} from "@angular/material/dialog";
+import {MatButton} from "@angular/material/button";
 import { AddCompanyComponent } from './functionalities/company-creation/add-company/add-company.component';
 import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
 
@@ -30,7 +36,9 @@ import { AddAdminComponent } from './functionalities/company-creation/add-admin/
     EmployeeDashboardComponent,
     AdministratorDashboardComponent,
     AddCompanyComponent,
-    AddAdminComponent
+    AddAdminComponent,
+    EmployeeManagerComponent,
+    EmployeeEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -38,10 +46,10 @@ import { AddAdminComponent } from './functionalities/company-creation/add-admin/
     ButtonModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,ReactiveFormsModule,
+    FormsModule, ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule,
+    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton
   ],
   providers: [
     HttpClient,
