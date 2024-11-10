@@ -2,6 +2,7 @@ package com.unternehmensplattform.backend.services.implementations;
 
 
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
+import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.services.interfaces.UserService;
@@ -39,8 +40,28 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                         user.getTelefonNumber(),
                         user.isAccountLocked(),
                         user.getRole()
-                       ) {
+                ) {
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<UserDetailsDTO> getAllAdmins() {
+
+        List<User> adminUsers = userRepository.findByRole(UserRole.Administrator);
+
+        return adminUsers.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private UserDetailsDTO convertToDTO(User adminUser) {
+        return UserDetailsDTO.builder()
+                .firstName(adminUser.getFirstName())
+                .lastName(adminUser.getLastName())
+                .email(adminUser.getEmail())
+                .telefonNumber(adminUser.getTelefonNumber())
+                .accountLocked(adminUser.isAccountLocked())
+                .role(adminUser.getRole())
+                .build();
     }
 }

@@ -2,6 +2,7 @@ package com.unternehmensplattform.backend.entities.DTOs;
 
 import com.unternehmensplattform.backend.enums.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDetailsDTO {
     private String firstName;
     private String lastName;
