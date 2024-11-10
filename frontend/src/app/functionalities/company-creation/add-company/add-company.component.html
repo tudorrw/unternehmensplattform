@@ -1,0 +1,33 @@
+<h2>Add New Company</h2>
+<!-- Formularul de adăugare a companiei -->
+
+
+<form (ngSubmit)="onSubmit()" #companyForm="ngForm" class="company-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" [(ngModel)]="company.name" name="name" required minlength="3" #name="ngModel" />
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" [(ngModel)]="company.address" name="address" required minlength="5" #address="ngModel" />
+
+    <label for="telefonNumber">Phone Number:</label>
+    <input type="text" id="telefonNumber" [(ngModel)]="company.telefonNumber" name="telefonNumber" required pattern="^\+?[0-9]{10,15}$" #telefonNumber="ngModel" />
+
+    <div class="admin-selection">
+        <label for="adminSelect">Select Admin:</label>
+        <select [(ngModel)]="selectedAdminId" name="adminSelect" id="adminSelect" required>
+            <option *ngFor="let admin of admins" [value]="admin.id">
+                {{ admin.firstName }} {{ admin.lastName }}
+            </option>
+        </select>
+
+        <button type="button" (click)="openAddAdminForm()">Create Admin</button>
+    </div>
+
+    <!-- Container pentru poziționarea butonului de Submit în colțul din dreapta jos -->
+    <div class="submit-container">
+        <button type="submit" [disabled]="!companyForm.valid" class="submit-btn">Submit Company</button>
+    </div>
+</form>
+
+<!-- Formularul de adăugare admin -->
+<app-add-admin *ngIf="isAdminFormVisible" (closeForm)="isAdminFormVisible = false" (adminSubmitted)="onAdminSubmit($event)"></app-add-admin>

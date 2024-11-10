@@ -18,6 +18,8 @@ import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token
 import { SuperadminDashboardComponent } from './pages/dashboard/superadmin-dashboard/superadmin-dashboard.component';
 import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
 import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
+import { AddCompanyComponent } from './functionalities/company-creation/add-company/add-company.component';
+import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { AdministratorDashboardComponent } from './pages/dashboard/administrator
     DashboardComponent,
     SuperadminDashboardComponent,
     EmployeeDashboardComponent,
-    AdministratorDashboardComponent
+    AdministratorDashboardComponent,
+    AddCompanyComponent,
+    AddAdminComponent
   ],
   imports: [
     BrowserModule,
