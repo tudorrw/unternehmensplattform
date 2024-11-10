@@ -33,6 +33,7 @@ public class UserCRUDController {
 
         User currentUser = (User) authentication.getPrincipal();
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                currentUser.getId(),
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
                 currentUser.getEmail(),
@@ -48,5 +49,24 @@ public class UserCRUDController {
             @RequestBody @Valid RegistrationRequest request) {
         authenticationService.register(request);
         return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/modify/{userId}")
+    public ResponseEntity<?> modifyUser(@PathVariable Integer userId,
+                                        @RequestBody @Valid UserDetailsDTO userDetailsDTO) {
+        userService.modifyUser(userId, userDetailsDTO);
+        return ResponseEntity.ok("User updated successfully");
+    }
+
+    @PostMapping("/deactivate/{userId}")
+    public ResponseEntity<?> deactivateUser(@PathVariable Integer userId) {
+        userService.deactivateUser(userId);
+        return ResponseEntity.ok("User deactivated successfully");
+    }
+
+    @PostMapping("/activate/{userId}")
+    public ResponseEntity<?> activateUser(@PathVariable Integer userId) {
+        userService.activateUser(userId);
+        return ResponseEntity.ok("User activated successfully");
     }
 }
