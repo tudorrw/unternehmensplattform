@@ -117,6 +117,8 @@ button[type="button"] {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .admin-selection select,
@@ -212,3 +214,44 @@ app-add-admin {
 .submit-btn {
   margin-top: 20px;
 }
+
+/* Styling for selected admin row */
+.admin-row {
+  display: flex;
+  align-items: center;
+  background-color: #f0f8ff; /* Light blue background */
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  border: 1px solid #007bff; /* Blue border */
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* Admin details styling */
+.admin-details {
+  display: flex;
+  gap: 15px;
+  font-size: 14px;
+  flex: 1;
+  flex-wrap: wrap; /* Allow wrapping if necessary */
+}
+
+.admin-details span {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+/* Remove admin (X) button */
+.remove-admin-btn {
+  background: lightblue;
+  color: black;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.remove-admin-btn:hover {
+  color: darkred;
+}
+

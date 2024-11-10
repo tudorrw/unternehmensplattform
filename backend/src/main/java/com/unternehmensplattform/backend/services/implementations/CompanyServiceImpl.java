@@ -5,6 +5,7 @@ import com.unternehmensplattform.backend.entities.Contract;
 import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
 import com.unternehmensplattform.backend.entities.DTOs.CompanyWithAdminDTO;
 import com.unternehmensplattform.backend.entities.User;
+import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.repositories.CompanyRepository;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
@@ -64,7 +65,10 @@ public class CompanyServiceImpl implements CompanyService {
         // Retrieve admin by ID
         User admin = userRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));
+        if(admin.getRole() != UserRole.Administrator ){
+            throw new IllegalArgumentException("The User is not an admin.");
 
+        }
         // Create and save contract to assign admin to company
         Contract contract = new Contract();
         contract.setCompany(company);

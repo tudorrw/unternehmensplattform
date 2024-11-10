@@ -41,7 +41,7 @@ import { AddAdminComponent } from './functionalities/company-creation/add-admin/
     FormsModule,ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule
+    MessagesModule, MessageModule,
   ],
   providers: [
     HttpClient,

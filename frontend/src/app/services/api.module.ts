@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { UserCrudControllerService } from './services/user-crud-controller.service';
+import { CompanyControllerService } from './services/company-controller.service';
 import { AuthenticationControllerService } from './services/authentication-controller.service';
 
 /**
@@ -18,6 +19,7 @@ import { AuthenticationControllerService } from './services/authentication-contr
   declarations: [],
   providers: [
     UserCrudControllerService,
+    CompanyControllerService,
     AuthenticationControllerService,
     ApiConfiguration
   ],

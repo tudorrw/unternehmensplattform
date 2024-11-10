@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import {RegistrationRequest} from "../../../services/models/registration-request";
+import {AuthenticationRequest} from "../../../services/models/authentication-request";
+import {AuthenticationControllerService} from "../../../services/services/authentication-controller.service";
 
 @Component({
     selector: 'app-add-admin',
@@ -6,9 +9,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
     styleUrls: ['./add-admin.component.scss']
 })
 export class AddAdminComponent {
-    adminData = { firstName: '', lastName: '', email: '' }; // Exemplu de date pentru admin
 
-    @Output() adminSubmitted = new EventEmitter<any>(); // Eveniment pentru trimiterea datelor adminului
+  adminData: RegistrationRequest = { email: '', firstName: '', lastName: '', passwordHash: '' };
+
+
+  @Output() adminSubmitted = new EventEmitter<RegistrationRequest>();
     @Output() closeForm = new EventEmitter<void>(); // Eveniment pentru închiderea formularului
 
     // Metoda care emite evenimentul adminSubmitted

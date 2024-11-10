@@ -1,33 +1,84 @@
 <h2>Add New Company</h2>
-<!-- Formularul de adăugare a companiei -->
 
-
+<!-- Company Form -->
 <form (ngSubmit)="onSubmit()" #companyForm="ngForm" class="company-form">
+    <!-- Company Name -->
     <label for="name">Name:</label>
-    <input type="text" id="name" [(ngModel)]="company.name" name="name" required minlength="3" #name="ngModel" />
+    <input
+            type="text"
+            id="name"
+            [(ngModel)]="company.name"
+            name="name"
+            required
+            minlength="3"
+            #name="ngModel"
+    />
 
+    <!-- Company Address -->
     <label for="address">Address:</label>
-    <input type="text" id="address" [(ngModel)]="company.address" name="address" required minlength="5" #address="ngModel" />
+    <input
+            type="text"
+            id="address"
+            [(ngModel)]="company.address"
+            name="address"
+            required
+            minlength="5"
+            #address="ngModel"
+    />
 
+    <!-- Company Phone Number -->
     <label for="telefonNumber">Phone Number:</label>
-    <input type="text" id="telefonNumber" [(ngModel)]="company.telefonNumber" name="telefonNumber" required pattern="^\+?[0-9]{10,15}$" #telefonNumber="ngModel" />
+    <input
+            type="text"
+            id="telefonNumber"
+            [(ngModel)]="company.telefonNumber"
+            name="telefonNumber"
+            required
+            pattern="^\+?[0-9]{10,15}$"
+            #telefonNumber="ngModel"
+    />
 
+    <!-- Admin Selection -->
     <div class="admin-selection">
-        <label for="adminSelect">Select Admin:</label>
-        <select [(ngModel)]="selectedAdminId" name="adminSelect" id="adminSelect" required>
-            <option *ngFor="let admin of admins" [value]="admin.id">
-                {{ admin.firstName }} {{ admin.lastName }}
-            </option>
-        </select>
+        <label>Selected Admin:</label>
 
-        <button type="button" (click)="openAddAdminForm()">Create Admin</button>
+        <!-- Display selected admin in a styled row if exists -->
+        <div *ngIf="selectedAdmin; else noAdminSelected" class="admin-row">
+            <div class="admin-details">
+                <span><strong>First Name:</strong> {{ selectedAdmin.firstName }}</span>
+                <span><strong>Last Name:</strong> {{ selectedAdmin.lastName }}</span>
+                <span><strong>Email:</strong> {{ selectedAdmin.email }}</span>
+            </div>
+            <button pButton class="remove-admin-btn" (click)="removeAdmin()" icon="pi pi-times" aria-label="Remove Admin">
+            </button>
+        </div>
+
+        <!-- Placeholder text if no admin is selected -->
+        <ng-template #noAdminSelected>
+            <span>No admin selected</span>
+        </ng-template>
+
+        <!-- Centered "Create Admin" button -->
+        <div class="centered-button">
+            <button type="button" (click)="openAddAdminForm()">Create Admin</button>
+        </div>
     </div>
 
-    <!-- Container pentru poziționarea butonului de Submit în colțul din dreapta jos -->
+    <!-- Submit Button - Enabled only if the company form is valid and an admin is selected -->
     <div class="submit-container">
-        <button type="submit" [disabled]="!companyForm.valid" class="submit-btn">Submit Company</button>
+        <button
+                type="submit"
+                [disabled]="!companyForm.valid || !selectedAdmin"
+                class="submit-btn"
+        >
+            Submit Company
+        </button>
     </div>
 </form>
 
-<!-- Formularul de adăugare admin -->
-<app-add-admin *ngIf="isAdminFormVisible" (closeForm)="isAdminFormVisible = false" (adminSubmitted)="onAdminSubmit($event)"></app-add-admin>
+<!-- Add Admin Form Component -->
+<app-add-admin
+        *ngIf="isAdminFormVisible"
+        (closeForm)="isAdminFormVisible = false"
+        (adminSubmitted)="onAdminSubmit($event)"
+></app-add-admin>

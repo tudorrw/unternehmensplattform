@@ -4,5 +4,13 @@
 
 export { AuthenticationRequest } from './models/authentication-request';
 export { AuthenticationResponse } from './models/authentication-response';
+export { Company } from './models/company';
+export { CompanyDto } from './models/company-dto';
+export { CompanyWithAdminDto } from './models/company-with-admin-dto';
+export { Contract } from './models/contract';
+export { GrantedAuthority } from './models/granted-authority';
 export { RegistrationRequest } from './models/registration-request';
+export { User } from './models/user';
 export { UserDetailsDto } from './models/user-details-dto';
+export { VacationRequest } from './models/vacation-request';
+export { WorkingDay } from './models/working-day';

@@ -1,6 +1,8 @@
 // superadmin-dashboard.component.ts
 
 import { Component } from '@angular/core';
+import {CompanyControllerService} from "../../../services/services/company-controller.service";
+import {CompanyDto} from "../../../services/models/company-dto";
 
 @Component({
   selector: 'app-superadmin-dashboard',
@@ -9,46 +11,30 @@ import { Component } from '@angular/core';
 })
 export class SuperadminDashboardComponent {
   userRole: string = 'Superadmin'; // Presupunem că rolul este Superadmin
-  companies: any[] = []; // Lista de companii, inițial goală
+  companies: CompanyDto[] = []; // Lista de companii, inițial goală
   showMessage: boolean = false; // Pentru mesajul "No companies found"
   isAddCompanyFormVisible: boolean = false;
   isCompanyCreated: boolean = false; // Variabilă care lipsea
 
 
-  constructor() {
-    // Inițial, nu încărcăm companiile
+  constructor(
+    private companyService: CompanyControllerService,
+  ) {
   }
 
-  showAllCompanies() {
-    // Simulăm o încărcare a companiilor (de exemplu, dintr-un serviciu)
-    // Pentru test, folosim date statice
-    this.companies = [
-      {
-        name: 'Tech Solutions',
-        address: '123 Main St, Tech City',
-        phoneNumber: '(123) 456-7890',
-        email: 'contact@techsolutions.com'
-      },
-      {
-        name: 'Creative Minds',
-        address: '456 Elm St, Innovation Town',
-        phoneNumber: '(987) 654-3210',
-        email: 'hello@creativeminds.com'
-      },
-      {
-        name: 'Eco Goods',
-        address: '789 Maple Ave, Green City',
-        phoneNumber: '(555) 123-4567',
-        email: 'info@ecogoods.com'
-      }
-    ];
 
-    // Verificăm dacă lista de companii a fost încărcată
-    if (this.companies.length > 0) {
-      this.showMessage = false; // Ascundem mesajul "No companies found"
-    } else {
-      this.showMessage = true; // Afișăm mesajul dacă lista este goală
-    }
+  showAllCompanies() {
+    this.companyService.getAllCompanies()
+      .subscribe({
+        next: (companies) => {
+          this.companies = companies;
+          this.showMessage = this.companies.length === 0;
+        },
+        error: (error) => {
+          console.error("Error fetching companies:", error);
+          this.showMessage = true; // Show message if error occurs
+        }
+      });
   }
 
   openAddCompanyForm() {
