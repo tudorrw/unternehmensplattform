@@ -28,7 +28,7 @@ describe('AddAdminComponent', () => {
         const spy = spyOn(component.adminSubmitted, 'emit'); // Creăm un "spy" pe emit
 
         // Setăm datele adminului
-        component.adminData = { firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com' };
+        component.adminData = { firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', passwordHash: 'password' };
 
         component.submitAdmin(); // Apelăm metoda submitAdmin
 
@@ -47,6 +47,7 @@ describe('AddAdminComponent', () => {
         expect(component.adminData.firstName).toBe('');
         expect(component.adminData.lastName).toBe('');
         expect(component.adminData.email).toBe('');
+        expect(component.adminData.passwordHash).toBe('');
     });
 
     it('should disable submit button if form is invalid', () => {
@@ -60,6 +61,7 @@ describe('AddAdminComponent', () => {
         component.adminData.firstName = 'John';
         component.adminData.lastName = 'Doe';
         component.adminData.email = 'john.doe@example.com';
+        component.adminData.passwordHash = 'password';
 
         fixture.detectChanges(); // Recalculează starea formularului
 
