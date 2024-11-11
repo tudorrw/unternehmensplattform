@@ -88,4 +88,13 @@ public class UserCRUDController {
         userService.activateUser(userId);
         return ResponseEntity.accepted().build();
     }
+
+    @GetMapping("/admins")
+    public ResponseEntity<List<UserDetailsDTO>> getAllAdmins() {
+        List<UserDetailsDTO> admins = userService.getAllAdmins();
+        if (admins.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(admins);
+    }
 }

@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         if (currentUser.getRole() == UserRole.Administrator) {
             Contract contract = currentUser.getContract();
             Company company = contract.getCompany();
-            List<User> employees = userRepository.findEmployeesByCompany(UserRole.Employee, company);
+            List<User> employees = userRepository.findUsersByCompany(UserRole.Employee, company);
 
             return employees.stream()
                     .map(user -> new UserDetailsDTO(

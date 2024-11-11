@@ -3,6 +3,7 @@
 import { Component } from '@angular/core';
 import {CompanyControllerService} from "../../../services/services/company-controller.service";
 import {CompanyDto} from "../../../services/models/company-dto";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-superadmin-dashboard',

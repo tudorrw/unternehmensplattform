@@ -45,7 +45,7 @@ export class AddCompanyComponent {
             companyDTO: this.company
         };
 
-        this.companyService.createCompany({ body: companyWithAdmin }).subscribe({
+      this.companyService.createCompany({ body: companyWithAdmin }).subscribe({
             next: () => this.companyCreated.emit(),
             error: (error) => console.error("Error creating company:", error),
         });

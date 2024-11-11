@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String username);
 
     @Query("SELECT u FROM User u JOIN u.contract c WHERE u.role = :role AND c.company = :company")
-    List<User> findEmployeesByCompany(@Param("role") UserRole role, @Param("company") Company company);
+    List<User> findUsersByCompany(@Param("role") UserRole role, @Param("company") Company company);
 
 
     List<User> findByRole(UserRole userRole);

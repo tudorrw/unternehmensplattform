@@ -28,6 +28,8 @@ import { AddCompanyComponent } from './functionalities/company-creation/add-comp
 import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {AvatarModule} from "primeng/avatar";
+import {DialogModule} from "primeng/dialog";
+import {TableModule} from "primeng/table";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,16 @@ import {AvatarModule} from "primeng/avatar";
     FormsModule, ReactiveFormsModule,
     PanelModule,
     InputTextModule,
-    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton, OverlayPanelModule, AvatarModule
+    MessagesModule,
+    MessageModule,
+    MatCheckbox,
+    MatInput,
+    MatDialogContent,
+    MatButton,
+    OverlayPanelModule,
+    AvatarModule,
+    DialogModule,
+    TableModule
   ],
   providers: [
     HttpClient,
