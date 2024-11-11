@@ -12,5 +12,6 @@ export { GrantedAuthority } from './models/granted-authority';
 export { RegistrationRequest } from './models/registration-request';
 export { User } from './models/user';
 export { UserDetailsDto } from './models/user-details-dto';
+export { UserWithCompanyDto } from './models/user-with-company-dto';
 export { VacationRequest } from './models/vacation-request';
 export { WorkingDay } from './models/working-day';

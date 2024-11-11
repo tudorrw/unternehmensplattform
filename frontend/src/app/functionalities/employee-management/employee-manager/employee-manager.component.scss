@@ -64,32 +64,33 @@ table {
 }
 
 .buttons-container {
-  position: fixed;
-  bottom: 620px;
+  position: absolute;
+  top: 35%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   display: flex;
-  gap: 20px;
-  z-index: 1000;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
 }
 
-/* Buttons styling */
-.display-button,
-.register-button {
-  background-color: blue;
-  color: white;
-  font-size: 13px;
-  height: 35px;
-  width: 130px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
 
-.display-button:hover,
-.register-button:hover {
-  background-color: darkblue; /* Darker shade on hover */
-}
+//.display-button,
+//.register-button {
+//  background-color: blue;
+//  color: white;
+//  font-size: 13px;
+//  height: 35px;
+//  width: 130px;
+//  border: none;
+//  border-radius: 5px;
+//  cursor: pointer;
+//}
+//
+//.display-button:hover,
+//.register-button:hover {
+//  background-color: darkblue; /* Darker shade on hover */
+//}
 
 .edit-button {
   background-color: grey;

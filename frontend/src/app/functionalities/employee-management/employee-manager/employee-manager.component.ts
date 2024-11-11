@@ -72,11 +72,9 @@ export class EmployeeManagerComponent {
       error: (error) => console.error("Failed to update employee:", error)
     });
     if (!userDetails.accountLocked) {
-      console.log("daca i locked")
       this.userCrudService.activateUser({ userId: userDetails.id! }).subscribe({
         next: () => {
           userDetails.accountLocked = false;
-          console.log("User activated successfully.");
         },
         error: (error) => console.error("Failed to activate user:", error)
       });
@@ -84,7 +82,6 @@ export class EmployeeManagerComponent {
       this.userCrudService.deactivateUser({ userId: userDetails.id! }).subscribe({
         next: () => {
           userDetails.accountLocked = true;
-          console.log("User deactivated successfully.");
         },
         error: (error) => console.error("Failed to deactivate user:", error)
       });

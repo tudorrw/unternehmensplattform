@@ -2,7 +2,9 @@ package com.unternehmensplattform.backend.controllers;
 
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
+import com.unternehmensplattform.backend.entities.DTOs.UserWithCompanyDTO;
 import com.unternehmensplattform.backend.entities.User;
+import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import com.unternehmensplattform.backend.services.interfaces.UserService;
 import jakarta.validation.Valid;
@@ -30,21 +32,32 @@ public class UserCRUDController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDetailsDTO> authenticatedUser() {
+    public ResponseEntity<UserWithCompanyDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User currentUser = (User) authentication.getPrincipal();
-        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+
+        String companyName = null;
+
+        if (currentUser.getRole() == UserRole.Administrator || currentUser.getRole() == UserRole.Employee) {
+            if (currentUser.getContract() != null && currentUser.getContract().getCompany() != null) {
+                companyName = currentUser.getContract().getCompany().getName();
+            }
+        }
+
+        UserWithCompanyDTO userWithCompanyDTO = new UserWithCompanyDTO(
                 currentUser.getId(),
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
                 currentUser.getEmail(),
                 currentUser.getTelefonNumber(),
                 currentUser.isAccountLocked(),
-                currentUser.getRole()
+                currentUser.getRole(),
+                companyName
         );
-        return ResponseEntity.ok(userDetailsDTO);
+
+        return ResponseEntity.ok(userWithCompanyDTO);
     }
+
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)

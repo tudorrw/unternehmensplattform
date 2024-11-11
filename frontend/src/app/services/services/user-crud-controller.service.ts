@@ -24,6 +24,7 @@ import { ModifyUser$Params } from '../fn/user-crud-controller/modify-user';
 import { register } from '../fn/user-crud-controller/register';
 import { Register$Params } from '../fn/user-crud-controller/register';
 import { UserDetailsDto } from '../models/user-details-dto';
+import { UserWithCompanyDto } from '../models/user-with-company-dto';
 
 @Injectable({ providedIn: 'root' })
 export class UserCrudControllerService extends BaseService {
@@ -156,7 +157,7 @@ export class UserCrudControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  authenticatedUser$Response(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDetailsDto>> {
+  authenticatedUser$Response(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserWithCompanyDto>> {
     return authenticatedUser(this.http, this.rootUrl, params, context);
   }
 
@@ -166,9 +167,9 @@ export class UserCrudControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  authenticatedUser(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<UserDetailsDto> {
+  authenticatedUser(params?: AuthenticatedUser$Params, context?: HttpContext): Observable<UserWithCompanyDto> {
     return this.authenticatedUser$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDetailsDto>): UserDetailsDto => r.body)
+      map((r: StrictHttpResponse<UserWithCompanyDto>): UserWithCompanyDto => r.body)
     );
   }
 
