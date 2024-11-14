@@ -7,5 +7,6 @@ export interface RegistrationRequest {
   firstName: string;
   lastName: string;
   passwordHash: string;
+  signingDate?: string | null;
   telefonNumber?: string;
 }

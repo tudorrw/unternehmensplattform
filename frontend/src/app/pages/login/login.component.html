@@ -4,14 +4,8 @@
 
     <!-- Display error messages if there are any -->
     <div *ngIf="errorMsg.length > 0" class="p-mb-3">
-<!--      <p-messages severity="error">-->
-<!--        <ul>-->
-<!--          <li *ngFor="let msg of errorMsg">{{ msg }}</li>-->
-<!--        </ul>-->
-<!--      </p-messages>-->
       <p-messages [value]="errorMsg" class="display:block;"></p-messages>
-  </div>
-
+    </div>
     <!-- Email input -->
     <div class="p-field p-mb-3" style="margin-bottom: 20px;">
       <label for="login">Email address</label>

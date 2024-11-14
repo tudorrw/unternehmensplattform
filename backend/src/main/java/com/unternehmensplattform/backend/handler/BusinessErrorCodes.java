@@ -14,8 +14,10 @@ public enum BusinessErrorCodes {
     INCORRECT_CURRENT_PASSWORD(300, "current password is incorrect", BAD_REQUEST),
     NEW_PASSWORD_DOES_NOT_MATCH(301, "password does not match", BAD_REQUEST),
     ACCOUNT_DISABLED(303, "User is disabled", FORBIDDEN),
-    BAD_CREDENTIALS(302, "Login and / or password is incorrect", FORBIDDEN)
-    ;
+    BAD_CREDENTIALS(302, "Login and / or password is incorrect", FORBIDDEN),
+    PHONE_NUMBER_ALREADY_EXISTS(304, "Phone number already in use", CONFLICT),
+    EMAIL_ALREADY_EXISTS(304, "Email already in use", CONFLICT);
+
     @Getter
     private final int code;
     @Getter

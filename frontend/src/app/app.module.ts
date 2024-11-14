@@ -28,6 +28,12 @@ import { AddCompanyComponent } from './functionalities/company-creation/add-comp
 import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {AvatarModule} from "primeng/avatar";
+import {TableModule} from "primeng/table";
+import {Ripple} from "primeng/ripple";
+import {InputSwitchModule} from "primeng/inputswitch";
+import {DialogModule} from "primeng/dialog";
+import {CalendarModule} from "primeng/calendar";
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
   declarations: [
@@ -42,17 +48,17 @@ import {AvatarModule} from "primeng/avatar";
     EmployeeManagerComponent,
     EmployeeEditDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    ButtonModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule, ReactiveFormsModule,
-    PanelModule,
-    InputTextModule,
-    MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton, OverlayPanelModule, AvatarModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        ButtonModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule, ReactiveFormsModule,
+        PanelModule,
+        InputTextModule,
+        MessagesModule, MessageModule, MatCheckbox, MatInput, MatDialogContent, MatButton, OverlayPanelModule, AvatarModule, TableModule, Ripple, InputSwitchModule, DialogModule, CalendarModule, ToastModule
+    ],
   providers: [
     HttpClient,
     {

@@ -35,7 +35,7 @@ public class User implements UserDetails, Principal {
     @Column(name = "account_locked")
     private boolean accountLocked;
     private boolean enabled;
-    @Column(name = "telefon_number")
+    @Column(name = "telefon_number", unique = true)
     private String telefonNumber;
 
     @Enumerated(EnumType.ORDINAL)
