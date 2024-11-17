@@ -4,10 +4,14 @@
 
 export interface UserDetailsDto {
   accountLocked?: boolean;
-  email?: string;
+  actualYearVacationDays?: number;
+  companyName?: string;
+  email: string;
   firstName?: string;
   id?: number;
   lastName?: string;
+  previousYearVacationDays?: number;
   role?: 'Superadmin' | 'Administrator' | 'Employee';
+  signingDate?: string;
   telefonNumber?: string;
 }

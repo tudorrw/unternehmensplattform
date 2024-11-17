@@ -4,7 +4,6 @@ import { UserDetailsDto } from "../../services/models/user-details-dto";
 import { Router } from '@angular/router';
 import { TokenService } from "../../services/token/token.service";
 import {UserRole} from "../../services/enums/UserRole";
-import {UserWithCompanyDto} from "../../services/models/user-with-company-dto";
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +11,7 @@ import {UserWithCompanyDto} from "../../services/models/user-with-company-dto";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  userDetails: UserWithCompanyDto | null = null;
+  userDetails: UserDetailsDto | null = null;
 
   constructor(
     private userCrudControllerService: UserCrudControllerService,
@@ -22,7 +21,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.userCrudControllerService.authenticatedUser().subscribe({
-      next: (data: UserWithCompanyDto) => {
+      next: (data: UserDetailsDto) => {
         this.userDetails = data;
       },
       error: (err) => {

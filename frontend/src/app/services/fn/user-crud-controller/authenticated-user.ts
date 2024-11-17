@@ -8,12 +8,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { UserWithCompanyDto } from '../../models/user-with-company-dto';
+import { UserDetailsDto } from '../../models/user-details-dto';
 
 export interface AuthenticatedUser$Params {
 }
 
-export function authenticatedUser(http: HttpClient, rootUrl: string, params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserWithCompanyDto>> {
+export function authenticatedUser(http: HttpClient, rootUrl: string, params?: AuthenticatedUser$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDetailsDto>> {
   const rb = new RequestBuilder(rootUrl, authenticatedUser.PATH, 'get');
   if (params) {
   }
@@ -23,7 +23,7 @@ export function authenticatedUser(http: HttpClient, rootUrl: string, params?: Au
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<UserWithCompanyDto>;
+      return r as StrictHttpResponse<UserDetailsDto>;
     })
   );
 }

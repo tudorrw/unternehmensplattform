@@ -1,8 +1,7 @@
 package com.unternehmensplattform.backend.controllers;
 
-import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
-import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
-import com.unternehmensplattform.backend.entities.DTOs.UserWithCompanyDTO;
+import com.unternehmensplattform.backend.entities.Contract;
+import com.unternehmensplattform.backend.entities.DTOs.*;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
@@ -16,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
@@ -32,30 +30,29 @@ public class UserCRUDController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserWithCompanyDTO> authenticatedUser() {
+    public ResponseEntity<UserDetailsDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
+        UserDetailsDTO.UserDetailsDTOBuilder userDetailsDTOBuilder = UserDetailsDTO.builder()
+                .id(currentUser.getId())
+                .firstName(currentUser.getFirstName())
+                .lastName(currentUser.getLastName())
+                .email(currentUser.getEmail())
+                .telefonNumber(currentUser.getTelefonNumber())
+                .accountLocked(currentUser.isAccountLocked())
+                .role(currentUser.getRole());
 
-        String companyName = null;
-
-        if (currentUser.getRole() == UserRole.Administrator || currentUser.getRole() == UserRole.Employee) {
-            if (currentUser.getContract() != null && currentUser.getContract().getCompany() != null) {
-                companyName = currentUser.getContract().getCompany().getName();
-            }
+        Contract contract = currentUser.getContract();
+        if (contract != null) {
+            userDetailsDTOBuilder
+                    .companyName(contract.getCompany().getName())
+                    .signingDate(contract.getSigningDate())
+                    .previousYearVacationDays(contract.getPreviousYearVacationDays())
+                    .actualYearVacationDays(contract.getActualYearVacationDays());
         }
 
-        UserWithCompanyDTO userWithCompanyDTO = new UserWithCompanyDTO(
-                currentUser.getId(),
-                currentUser.getFirstName(),
-                currentUser.getLastName(),
-                currentUser.getEmail(),
-                currentUser.getTelefonNumber(),
-                currentUser.isAccountLocked(),
-                currentUser.getRole(),
-                companyName
-        );
-
-        return ResponseEntity.ok(userWithCompanyDTO);
+        UserDetailsDTO userDetailsDTO = userDetailsDTOBuilder.build();
+        return ResponseEntity.ok(userDetailsDTO);
     }
 
 
@@ -68,12 +65,12 @@ public class UserCRUDController {
     }
 
     @PostMapping("/modify")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> modifyUser(
          @RequestBody @Valid UserDetailsDTO userDetailsDTO) {
         userService.modifyUser(userDetailsDTO);
         return ResponseEntity.accepted().build();
     }
+
 
     @PostMapping("/deactivate/{userId}")
     @ResponseStatus(HttpStatus.ACCEPTED)

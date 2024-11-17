@@ -7,6 +7,8 @@ import com.unternehmensplattform.backend.entities.DTOs.AuthenticationResponse;
 import com.unternehmensplattform.backend.entities.DTOs.RegistrationRequest;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
+import com.unternehmensplattform.backend.handler.DuplicateEmailException;
+import com.unternehmensplattform.backend.handler.DuplicatePhoneNumberException;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.security.JwtService;
@@ -18,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 @Service
@@ -30,10 +34,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final ContractRepository contractRepository;
 
+    private void duplicatedFields(RegistrationRequest registrationRequest) {
+        if (registrationRequest.getEmail() != null && !registrationRequest.getEmail().isEmpty() &&
+                userRepository.existsByEmail(registrationRequest.getEmail())) {
+            throw new DuplicateEmailException("Email already in use.");
+        }
+
+        if (registrationRequest.getTelefonNumber() != null && !registrationRequest.getTelefonNumber().isEmpty() &&
+                userRepository.existsByTelefonNumber(registrationRequest.getTelefonNumber())) {
+            throw new DuplicatePhoneNumberException("Phone number already in use.");
+        }
+    }
+
     public void register(RegistrationRequest registrationRequest) {
         var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         var contract = currentUser.getContract();
         if((currentUser.getRole() == UserRole.Administrator && contract != null) || currentUser.getRole() == UserRole.Superadmin) {
+
+            duplicatedFields(registrationRequest);
+
             UserRole roleToAssign = getRole(currentUser);
             var createdUser = User.builder()
                     .firstName(registrationRequest.getFirstName())
@@ -41,6 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(registrationRequest.getEmail())
                     .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
                     .accountLocked(false)
+                    .telefonNumber(registrationRequest.getTelefonNumber())
                     .enabled(true)
                     .role(roleToAssign)
                     .build();
@@ -52,6 +72,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 contractToAssign.setCompany(company);
                 contractToAssign.setUser(createdUser);
+                contractToAssign.setSigningDate(registrationRequest.getSigningDate());
+
+
+                LocalDate signingDate = contractToAssign.getSigningDate();
+                LocalDate currentDate = LocalDate.now();
+
+                int totalVacationDaysPerYear = 21;
+                int previousYearVacationDays = 0;
+                int actualYearVacationDays = totalVacationDaysPerYear;
+
+                if (signingDate.getYear() < currentDate.getYear()) {
+                    LocalDate endOfPreviousYear = LocalDate.of(currentDate.getYear() - 1, 12, 31);
+                    long remainingDaysFromPreviousYear = ChronoUnit.DAYS.between(signingDate, endOfPreviousYear.plusDays(1));
+                    previousYearVacationDays = (int) (remainingDaysFromPreviousYear * totalVacationDaysPerYear / 365.0);
+                }
+
+                if (signingDate.getYear() == currentDate.getYear()) {
+                    LocalDate lastDayOfActualYear = LocalDate.of(currentDate.getYear(), 12, 31);
+                    long remainingDaysFromActualYear = ChronoUnit.DAYS.between(signingDate, lastDayOfActualYear.plusDays(1));
+                    actualYearVacationDays = (int) (remainingDaysFromActualYear * totalVacationDaysPerYear / 365.0);
+                }
+
+                contractToAssign.setPreviousYearVacationDays(previousYearVacationDays);
+                contractToAssign.setActualYearVacationDays(actualYearVacationDays);
 
                 contractRepository.save(contractToAssign);
             }
@@ -59,6 +103,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     public void registerSuperadmins(RegistrationRequest registrationRequest) {
+        duplicatedFields(registrationRequest);
+
         var user = User.builder()
                 .firstName(registrationRequest.getFirstName())
                 .lastName(registrationRequest.getLastName())
@@ -67,6 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .accountLocked(false)
                 .enabled(true)
                 .role(UserRole.Superadmin)
+                .telefonNumber(registrationRequest.getTelefonNumber())
                 .build();
         userRepository.save(user);
     }

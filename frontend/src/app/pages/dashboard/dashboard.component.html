@@ -1,4 +1,4 @@
-<div *ngIf="userDetails" style="display: flex; flex-direction: column; min-height: 100vh;">
+<div *ngIf="userDetails" style="display: flex; flex-direction: column; width: 100%; padding: 1rem;">
   <div class="top-bar">
     <div class="user-profile">
       <p-avatar
@@ -24,9 +24,9 @@
     </div>
   </div>
 
-  <div style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
-    <app-superadmin-dashboard *ngIf="userDetails.role === 'Superadmin'"></app-superadmin-dashboard>
-    <app-administrator-dashboard *ngIf="userDetails.role === 'Administrator'"></app-administrator-dashboard>
-    <app-employee-dashboard *ngIf="userDetails.role === 'Employee'"></app-employee-dashboard>
+  <div>
+    <app-superadmin-dashboard *ngIf="userDetails.role === UserRole.Superadmin"></app-superadmin-dashboard>
+    <app-administrator-dashboard *ngIf="userDetails.role === UserRole.Administrator"></app-administrator-dashboard>
+    <app-employee-dashboard *ngIf="userDetails.role === UserRole.Employee"></app-employee-dashboard>
   </div>
 </div>

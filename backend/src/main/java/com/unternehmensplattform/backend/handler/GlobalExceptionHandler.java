@@ -97,4 +97,29 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
+    @ExceptionHandler(DuplicatePhoneNumberException.class)
+    public ResponseEntity<ExceptionResponse> handleDuplicatePhoneNumberException(DuplicatePhoneNumberException exp) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.PHONE_NUMBER_ALREADY_EXISTS.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.PHONE_NUMBER_ALREADY_EXISTS.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+    @ExceptionHandler(DuplicateEmailException.class)
+        public ResponseEntity<ExceptionResponse> handleDuplicateEmailException(DuplicateEmailException exp) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(
+                            ExceptionResponse.builder()
+                                    .businessErrorCode(BusinessErrorCodes.EMAIL_ALREADY_EXISTS.getCode())
+                                    .businessErrorDescription(BusinessErrorCodes.EMAIL_ALREADY_EXISTS.getDescription())
+                                    .error(exp.getMessage())
+                                    .build()
+                    );
+        }
+
 }
