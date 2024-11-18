@@ -6,15 +6,17 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
-public class CompanyWithAdminDTO {
+public class CompanyWithAdminsDTO {
 
     @Valid
     @NotNull
     private CompanyDTO companyDTO;
 
     @Valid
-    private RegistrationRequest adminRegistration;
+    private List<RegistrationRequest> adminRegistrations; // List of administrators
 
 }

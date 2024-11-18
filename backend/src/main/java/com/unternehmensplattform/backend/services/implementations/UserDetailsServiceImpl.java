@@ -3,11 +3,13 @@ package com.unternehmensplattform.backend.services.implementations;
 
 import com.unternehmensplattform.backend.entities.Company;
 import com.unternehmensplattform.backend.entities.Contract;
+import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.handler.DuplicateEmailException;
 import com.unternehmensplattform.backend.handler.DuplicatePhoneNumberException;
+import com.unternehmensplattform.backend.repositories.CompanyRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
 
     @Override
     @Transactional
@@ -104,13 +107,40 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
     }
 
-    public List<UserDetailsDTO> getAllAdmins() {
+    public List<UserDetailsDTO> getAllAdmins(CompanyDTO companyDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
 
-        List<User> adminUsers = userRepository.findByRole(UserRole.Administrator);
 
-        return adminUsers.stream()
-                .map(this::convertToUserDetailsDTO)
-                .collect(Collectors.toList());
+        if (currentUser.getRole() == UserRole.Superadmin) {
+            Company company = companyRepository.findById(companyDTO.getCompanyId()).orElseThrow(() -> new RuntimeException("Company not found"));
+            List<User> employees = userRepository.findUsersByCompany(UserRole.Administrator, company);
+
+            return employees.stream()
+                    .map(this::convertToUserDetailsDTO)
+                    .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("User is not an superadmin");
+        }
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean emailExists(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new DuplicateEmailException("Email already in use.");
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean phoneNumberExists(String phoneNumber) {
+        if (userRepository.existsByTelefonNumber(phoneNumber)) {
+            throw new DuplicatePhoneNumberException("Phone number already in use.");
+        }
+        return false;
     }
 
     public UserDetailsDTO convertToUserDetailsDTO(User user) {

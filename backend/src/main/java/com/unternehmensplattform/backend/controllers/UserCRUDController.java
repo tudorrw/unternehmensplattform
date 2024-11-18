@@ -29,6 +29,14 @@ public class UserCRUDController {
         return ResponseEntity.ok(employees);
     }
 
+    @GetMapping("/get-admins")
+    public ResponseEntity<List<UserDetailsDTO>> getAllAdmins(
+            @RequestBody @Valid CompanyDTO companyDTO
+    ) {
+        List<UserDetailsDTO> admins = userService.getAllAdmins(companyDTO);
+        return ResponseEntity.ok(admins);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserDetailsDTO> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,6 +71,14 @@ public class UserCRUDController {
         authenticationService.register(request);
         return ResponseEntity.accepted().build();
     }
+    @PostMapping("/register/{companyId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> register(
+            @RequestBody @Valid RegistrationRequest request,
+            @PathVariable @Valid Integer companyId) {
+        authenticationService.register(request, companyId);
+        return ResponseEntity.accepted().build();
+    }
 
     @PostMapping("/modify")
     public ResponseEntity<?> modifyUser(
@@ -86,12 +102,16 @@ public class UserCRUDController {
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/admins")
-    public ResponseEntity<List<UserDetailsDTO>> getAllAdmins() {
-        List<UserDetailsDTO> admins = userService.getAllAdmins();
-        if (admins.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(admins);
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<Boolean> checkEmailExists(@PathVariable String email) {
+        boolean exists = userService.emailExists(email);
+        return ResponseEntity.ok(exists);
     }
+
+    @GetMapping("/check-phone/{phoneNumber}")
+    public ResponseEntity<Boolean> checkPhoneNumberExists(@PathVariable String phoneNumber) {
+        boolean exists = userService.phoneNumberExists(phoneNumber);
+        return ResponseEntity.ok(exists);
+    }
+
 }

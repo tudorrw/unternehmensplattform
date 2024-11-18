@@ -122,4 +122,29 @@ public class GlobalExceptionHandler {
                     );
         }
 
+    @ExceptionHandler(DuplicateNameException.class)
+        public ResponseEntity<ExceptionResponse> handleDuplicateNameException(DuplicateNameException exp) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(
+                            ExceptionResponse.builder()
+                                    .businessErrorCode(BusinessErrorCodes.NAME_ALREADY_EXISTS.getCode())
+                                    .businessErrorDescription(BusinessErrorCodes.NAME_ALREADY_EXISTS.getDescription())
+                                    .error(exp.getMessage())
+                                    .build()
+                    );
+            }
+    @ExceptionHandler(NoAdminProvidedException.class)
+        public ResponseEntity<ExceptionResponse> handleNoAdminProvidedException(NoAdminProvidedException exp) {
+            return ResponseEntity
+                    .status(BAD_REQUEST)
+                    .body(
+                            ExceptionResponse.builder()
+                                    .businessErrorCode(BusinessErrorCodes.NO_ADMIN_PROVIDED.getCode())
+                                    .businessErrorDescription(BusinessErrorCodes.NO_ADMIN_PROVIDED.getDescription())
+                                    .error(exp.getMessage())
+                                    .build()
+                    );
+            }
+
 }

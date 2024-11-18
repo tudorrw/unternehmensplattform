@@ -14,7 +14,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { assignAdminToCompany } from '../fn/company-controller/assign-admin-to-company';
 import { AssignAdminToCompany$Params } from '../fn/company-controller/assign-admin-to-company';
 import { Company } from '../models/company';
-import { CompanyDto } from '../models/company-dto';
+import { CompanyDetailsDto } from '../models/company-details-dto';
 import { createCompany } from '../fn/company-controller/create-company';
 import { CreateCompany$Params } from '../fn/company-controller/create-company';
 import { getAllCompanies } from '../fn/company-controller/get-all-companies';
@@ -85,7 +85,7 @@ export class CompanyControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies$Response(params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDto>>> {
+  getAllCompanies$Response(params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
     return getAllCompanies(this.http, this.rootUrl, params, context);
   }
 
@@ -95,9 +95,9 @@ export class CompanyControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies(params?: GetAllCompanies$Params, context?: HttpContext): Observable<Array<CompanyDto>> {
+  getAllCompanies(params?: GetAllCompanies$Params, context?: HttpContext): Observable<Array<CompanyDetailsDto>> {
     return this.getAllCompanies$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<CompanyDto>>): Array<CompanyDto> => r.body)
+      map((r: StrictHttpResponse<Array<CompanyDetailsDto>>): Array<CompanyDetailsDto> => r.body)
     );
   }
 

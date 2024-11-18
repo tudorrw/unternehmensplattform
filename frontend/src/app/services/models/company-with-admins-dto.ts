@@ -4,7 +4,7 @@
 
 import { CompanyDto } from '../models/company-dto';
 import { RegistrationRequest } from '../models/registration-request';
-export interface CompanyWithAdminDto {
-  adminRegistration?: RegistrationRequest;
+export interface CompanyWithAdminsDto {
+  adminRegistrations?: Array<RegistrationRequest>;
   companyDTO: CompanyDto;
 }

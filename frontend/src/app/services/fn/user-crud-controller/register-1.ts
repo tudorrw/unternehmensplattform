@@ -8,16 +8,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Company } from '../../models/company';
-import { CompanyWithAdminsDto } from '../../models/company-with-admins-dto';
+import { RegistrationRequest } from '../../models/registration-request';
 
-export interface CreateCompany$Params {
-      body: CompanyWithAdminsDto
+export interface Register1$Params {
+  companyId: number;
+      body: RegistrationRequest
 }
 
-export function createCompany(http: HttpClient, rootUrl: string, params: CreateCompany$Params, context?: HttpContext): Observable<StrictHttpResponse<Company>> {
-  const rb = new RequestBuilder(rootUrl, createCompany.PATH, 'post');
+export function register1(http: HttpClient, rootUrl: string, params: Register1$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+  const rb = new RequestBuilder(rootUrl, register1.PATH, 'post');
   if (params) {
+    rb.path('companyId', params.companyId, {});
     rb.body(params.body, 'application/json');
   }
 
@@ -26,9 +28,10 @@ export function createCompany(http: HttpClient, rootUrl: string, params: CreateC
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Company>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }
 
-createCompany.PATH = '/company/create';
+register1.PATH = '/users/register/{companyId}';

@@ -15,14 +15,22 @@ import { activateUser } from '../fn/user-crud-controller/activate-user';
 import { ActivateUser$Params } from '../fn/user-crud-controller/activate-user';
 import { authenticatedUser } from '../fn/user-crud-controller/authenticated-user';
 import { AuthenticatedUser$Params } from '../fn/user-crud-controller/authenticated-user';
+import { checkEmailExists } from '../fn/user-crud-controller/check-email-exists';
+import { CheckEmailExists$Params } from '../fn/user-crud-controller/check-email-exists';
+import { checkPhoneNumberExists } from '../fn/user-crud-controller/check-phone-number-exists';
+import { CheckPhoneNumberExists$Params } from '../fn/user-crud-controller/check-phone-number-exists';
 import { deactivateUser } from '../fn/user-crud-controller/deactivate-user';
 import { DeactivateUser$Params } from '../fn/user-crud-controller/deactivate-user';
+import { getAllAdmins } from '../fn/user-crud-controller/get-all-admins';
+import { GetAllAdmins$Params } from '../fn/user-crud-controller/get-all-admins';
 import { getAllEmployees } from '../fn/user-crud-controller/get-all-employees';
 import { GetAllEmployees$Params } from '../fn/user-crud-controller/get-all-employees';
 import { modifyUser } from '../fn/user-crud-controller/modify-user';
 import { ModifyUser$Params } from '../fn/user-crud-controller/modify-user';
 import { register } from '../fn/user-crud-controller/register';
 import { Register$Params } from '../fn/user-crud-controller/register';
+import { register1 } from '../fn/user-crud-controller/register-1';
+import { Register1$Params } from '../fn/user-crud-controller/register-1';
 import { UserDetailsDto } from '../models/user-details-dto';
 
 @Injectable({ providedIn: 'root' })
@@ -54,6 +62,35 @@ export class UserCrudControllerService extends BaseService {
   register(params: Register$Params, context?: HttpContext): Observable<{
 }> {
     return this.register$Response(params, context).pipe(
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
+    );
+  }
+
+  /** Path part for operation `register1()` */
+  static readonly Register1Path = '/users/register/{companyId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `register1()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  register1$Response(params: Register1$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+    return register1(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `register1$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  register1(params: Register1$Params, context?: HttpContext): Observable<{
+}> {
+    return this.register1$Response(params, context).pipe(
       map((r: StrictHttpResponse<{
 }>): {
 } => r.body)
@@ -194,6 +231,81 @@ export class UserCrudControllerService extends BaseService {
   getAllEmployees(params?: GetAllEmployees$Params, context?: HttpContext): Observable<Array<UserDetailsDto>> {
     return this.getAllEmployees$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserDetailsDto>>): Array<UserDetailsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getAllAdmins()` */
+  static readonly GetAllAdminsPath = '/users/get-admins';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAllAdmins()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAdmins$Response(params: GetAllAdmins$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDetailsDto>>> {
+    return getAllAdmins(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAllAdmins$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAllAdmins(params: GetAllAdmins$Params, context?: HttpContext): Observable<Array<UserDetailsDto>> {
+    return this.getAllAdmins$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserDetailsDto>>): Array<UserDetailsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `checkPhoneNumberExists()` */
+  static readonly CheckPhoneNumberExistsPath = '/users/check-phone/{phoneNumber}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `checkPhoneNumberExists()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkPhoneNumberExists$Response(params: CheckPhoneNumberExists$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return checkPhoneNumberExists(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `checkPhoneNumberExists$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkPhoneNumberExists(params: CheckPhoneNumberExists$Params, context?: HttpContext): Observable<boolean> {
+    return this.checkPhoneNumberExists$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
+    );
+  }
+
+  /** Path part for operation `checkEmailExists()` */
+  static readonly CheckEmailExistsPath = '/users/check-email/{email}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `checkEmailExists()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkEmailExists$Response(params: CheckEmailExists$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return checkEmailExists(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `checkEmailExists$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkEmailExists(params: CheckEmailExists$Params, context?: HttpContext): Observable<boolean> {
+    return this.checkEmailExists$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 

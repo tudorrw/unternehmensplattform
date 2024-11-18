@@ -1,5 +1,6 @@
 package com.unternehmensplattform.backend.services.interfaces;
 
+import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 
 import java.util.List;
@@ -10,6 +11,10 @@ public interface UserService {
     void modifyUser( UserDetailsDTO userDetailsDTO);
     void deactivateUser(Integer userId);
     void activateUser(Integer userId);
-    List<UserDetailsDTO> getAllAdmins();
+    List<UserDetailsDTO> getAllAdmins(CompanyDTO companyDTO);
 
-}
+    boolean phoneNumberExists(String phoneNumber);
+    boolean emailExists(String email);
+
+
+    }

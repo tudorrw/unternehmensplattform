@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Builder
 public class CompanyDTO {
+    private Integer companyId;
     private String name;
     private String telefonNumber;
     private String address;

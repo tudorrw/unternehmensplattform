@@ -15,7 +15,6 @@ import { MessageModule } from 'primeng/message';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token.interceptor";
-import { SuperadminDashboardComponent } from './pages/dashboard/superadmin-dashboard/superadmin-dashboard.component';
 import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
 import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
 import { EmployeeManagerComponent } from "./functionalities/employee-management/employee-manager/employee-manager.component";
@@ -24,8 +23,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {MatInput} from "@angular/material/input";
 import {MatDialogContent} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
-import { AddCompanyComponent } from './functionalities/company-creation/add-company/add-company.component';
-import { AddAdminComponent } from './functionalities/company-creation/add-admin/add-admin.component';
+
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {AvatarModule} from "primeng/avatar";
 import {TableModule} from "primeng/table";
@@ -34,6 +32,7 @@ import {InputSwitchModule} from "primeng/inputswitch";
 import {DialogModule} from "primeng/dialog";
 import {CalendarModule} from "primeng/calendar";
 import {ToastModule} from "primeng/toast";
+import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboard/superadmin-dashboard.component";
 
 
 @NgModule({
@@ -42,10 +41,11 @@ import {ToastModule} from "primeng/toast";
     LoginComponent,
     DashboardComponent,
     SuperadminDashboardComponent,
+    // SuperadminDashboardComponent2,
     EmployeeDashboardComponent,
     AdministratorDashboardComponent,
-    AddCompanyComponent,
-    AddAdminComponent,
+    // AddCompanyComponent,
+    // AddAdminComponent,
     EmployeeManagerComponent,
     EmployeeEditDialogComponent
   ],
@@ -67,7 +67,7 @@ import {ToastModule} from "primeng/toast";
     OverlayPanelModule,
     AvatarModule,
     DialogModule,
-    TableModule
+    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple
   ],
   providers: [
     HttpClient,

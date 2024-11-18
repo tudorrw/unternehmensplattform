@@ -5,8 +5,9 @@
 export { AuthenticationRequest } from './models/authentication-request';
 export { AuthenticationResponse } from './models/authentication-response';
 export { Company } from './models/company';
+export { CompanyDetailsDto } from './models/company-details-dto';
 export { CompanyDto } from './models/company-dto';
-export { CompanyWithAdminDto } from './models/company-with-admin-dto';
+export { CompanyWithAdminsDto } from './models/company-with-admins-dto';
 export { Contract } from './models/contract';
 export { GrantedAuthority } from './models/granted-authority';
 export { RegistrationRequest } from './models/registration-request';

@@ -82,39 +82,21 @@ export class AdministratorDashboardComponent implements OnInit {
   }
 
   validateEmail(email: string): boolean {
-    if(email == '') {
-      return true;
+    if (!email || email.trim() === '') {
+      return true; // No validation error for empty email
     }
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      if (!emailRegex.test(email)) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Validation Error',
-          detail: 'Please enter a valid email address.'
-        });
-        return false;
-      }
-      return true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
   }
 
   validatePhoneNumber(phone: string | undefined): boolean {
-    if(phone == '') {
-      return true;
+    if (!phone || phone.trim() === '') {
+      return true; // No validation error for empty phone
     }
-    if (phone == undefined) {
-      return false;
-    }
-    const phoneRegex = /^07[0-9]{8}$/;
-    if (!phoneRegex.test(phone)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Validation Error',
-        detail: 'Phone number must be in Romanian format (e.g., 0712312312).'
-      });
-      return false;
-    }
-    return true;
+    const phoneRegex = /^(07|03)[0-9]{8}$/;
+    return phoneRegex.test(phone);
   }
+
 
   formatPhoneNumber(phone: string): string {
     if (!phone) {
@@ -162,7 +144,7 @@ export class AdministratorDashboardComponent implements OnInit {
       this.newEmployee.signingDate = formattedDate ? formattedDate : undefined; // Ensure signingDate is either string or undefined
     }
 
-    if (this.newEmployee.firstName && this.newEmployee.lastName && this.newEmployee.email) {
+    if (this.newEmployee.firstName && this.newEmployee.lastName && this.newEmployee.email && this.newEmployee.passwordHash && this.newEmployee.signingDate) {
       this.userCrudService.register({body: this.newEmployee}).subscribe({
         next: () => {
           this.showAllEmployees();
@@ -170,9 +152,28 @@ export class AdministratorDashboardComponent implements OnInit {
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Employee added successfully!', key: 'save-add-employee', life: 2500});
           form.resetForm();
         },
+
         error: (error) => {
-          console.error('Failed to add employee:', error);
-          this.messageService.add({severity: 'error', summary: 'Error', detail: error.error.businessErrorDescription,  key: 'cancel-add-employee', life: 2500});
+          if (error.error.validationErrors) {
+            error.error.validationErrors.forEach((msg: string) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Validation Error',
+                detail: msg,
+                key: 'cancel-add-employee',
+                life: 2500
+              });
+            });
+          } else {
+            // Display a single business error
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error.businessErrorDescription,
+              key: 'cancel-add-employee',
+              life: 2500
+            });
+          }
         }
       });
     } else {
@@ -181,8 +182,16 @@ export class AdministratorDashboardComponent implements OnInit {
   }
 
   onCancel(form: NgForm): void {
-    this.showDialog = false;
-    form.resetForm(); // Reset the form validation state
+    form.resetForm(); // Reset the form and clear all validation states
+    this.newEmployee = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      telefonNumber: '',
+      passwordHash: '',
+      signingDate: ''
+    };
+    this.showDialog = false; // Close the dialog
   }
 
 

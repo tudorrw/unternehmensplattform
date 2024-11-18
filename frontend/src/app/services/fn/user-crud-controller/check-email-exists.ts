@@ -8,17 +8,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Company } from '../../models/company';
-import { CompanyWithAdminsDto } from '../../models/company-with-admins-dto';
 
-export interface CreateCompany$Params {
-      body: CompanyWithAdminsDto
+export interface CheckEmailExists$Params {
+  email: string;
 }
 
-export function createCompany(http: HttpClient, rootUrl: string, params: CreateCompany$Params, context?: HttpContext): Observable<StrictHttpResponse<Company>> {
-  const rb = new RequestBuilder(rootUrl, createCompany.PATH, 'post');
+export function checkEmailExists(http: HttpClient, rootUrl: string, params: CheckEmailExists$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+  const rb = new RequestBuilder(rootUrl, checkEmailExists.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.path('email', params.email, {});
   }
 
   return http.request(
@@ -26,9 +24,9 @@ export function createCompany(http: HttpClient, rootUrl: string, params: CreateC
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Company>;
+      return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
     })
   );
 }
 
-createCompany.PATH = '/company/create';
+checkEmailExists.PATH = '/users/check-email/{email}';

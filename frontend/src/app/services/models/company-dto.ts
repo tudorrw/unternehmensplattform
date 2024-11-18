@@ -4,6 +4,7 @@
 
 export interface CompanyDto {
   address?: string;
+  companyId?: number;
   name?: string;
   telefonNumber?: string;
 }

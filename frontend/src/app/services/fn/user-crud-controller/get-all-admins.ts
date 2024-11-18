@@ -8,17 +8,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { Company } from '../../models/company';
-import { CompanyWithAdminsDto } from '../../models/company-with-admins-dto';
+import { CompanyDto } from '../../models/company-dto';
+import { UserDetailsDto } from '../../models/user-details-dto';
 
-export interface CreateCompany$Params {
-      body: CompanyWithAdminsDto
+export interface GetAllAdmins$Params {
+  companyDTO: CompanyDto;
 }
 
-export function createCompany(http: HttpClient, rootUrl: string, params: CreateCompany$Params, context?: HttpContext): Observable<StrictHttpResponse<Company>> {
-  const rb = new RequestBuilder(rootUrl, createCompany.PATH, 'post');
+export function getAllAdmins(http: HttpClient, rootUrl: string, params: GetAllAdmins$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserDetailsDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllAdmins.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.query('companyDTO', params.companyDTO, {});
   }
 
   return http.request(
@@ -26,9 +26,9 @@ export function createCompany(http: HttpClient, rootUrl: string, params: CreateC
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Company>;
+      return r as StrictHttpResponse<Array<UserDetailsDto>>;
     })
   );
 }
 
-createCompany.PATH = '/company/create';
+getAllAdmins.PATH = '/users/get-admins';

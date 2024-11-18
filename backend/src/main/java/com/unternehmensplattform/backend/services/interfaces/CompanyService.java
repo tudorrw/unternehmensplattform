@@ -1,16 +1,16 @@
 package com.unternehmensplattform.backend.services.interfaces;
 
-import com.unternehmensplattform.backend.entities.Company;
 import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
-import com.unternehmensplattform.backend.entities.DTOs.CompanyWithAdminDTO;
+import com.unternehmensplattform.backend.entities.DTOs.CompanyDetailsDTO;
+import com.unternehmensplattform.backend.entities.DTOs.CompanyWithAdminsDTO;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
 public interface CompanyService {
-    List<CompanyDTO> getAllCompanies();
+    List<CompanyDetailsDTO> getAllCompanies();
 
-    Company createCompanyWithAdmin(@Valid CompanyWithAdminDTO companyWithAdminDTO);
+    void createCompanyWithAdmins(@Valid CompanyWithAdminsDTO companyWithAdminDTO);
 
     void assignAdminToCompany(Integer companyId, Integer adminId);
 }

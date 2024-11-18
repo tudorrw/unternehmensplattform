@@ -9,6 +9,7 @@ import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.handler.DuplicateEmailException;
 import com.unternehmensplattform.backend.handler.DuplicatePhoneNumberException;
+import com.unternehmensplattform.backend.repositories.CompanyRepository;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.security.JwtService;
@@ -33,6 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final ContractRepository contractRepository;
+    private final CompanyRepository companyRepository;
 
     private void duplicatedFields(RegistrationRequest registrationRequest) {
         if (registrationRequest.getEmail() != null && !registrationRequest.getEmail().isEmpty() &&
@@ -99,6 +101,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
                 contractRepository.save(contractToAssign);
             }
+        }
+    }
+    public void register(RegistrationRequest registrationRequest, Integer companyId) {
+        var currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(currentUser.getRole() == UserRole.Superadmin) {
+
+            duplicatedFields(registrationRequest);
+
+            UserRole roleToAssign = getRole(currentUser);
+            var createdUser = User.builder()
+                    .firstName(registrationRequest.getFirstName())
+                    .lastName(registrationRequest.getLastName())
+                    .email(registrationRequest.getEmail())
+                    .passwordHash(passwordEncoder.encode(registrationRequest.getPasswordHash()))
+                    .accountLocked(false)
+                    .telefonNumber(registrationRequest.getTelefonNumber())
+                    .enabled(true)
+                    .role(roleToAssign)
+                    .build();
+
+            userRepository.save(createdUser);
+            Company company = companyRepository.findById(companyId).orElse(null);
+            if(company == null) {
+                throw new IllegalArgumentException("Company not found.");
+            }
+            Contract contractToAssign = new Contract();
+
+            contractToAssign.setCompany(company);
+            contractToAssign.setUser(createdUser);
+            contractToAssign.setSigningDate(registrationRequest.getSigningDate());
+            contractRepository.save(contractToAssign);
         }
     }
 

@@ -16,7 +16,11 @@ public enum BusinessErrorCodes {
     ACCOUNT_DISABLED(303, "User is disabled", FORBIDDEN),
     BAD_CREDENTIALS(302, "Login and / or password is incorrect", FORBIDDEN),
     PHONE_NUMBER_ALREADY_EXISTS(304, "Phone number already in use", CONFLICT),
-    EMAIL_ALREADY_EXISTS(304, "Email already in use", CONFLICT);
+    EMAIL_ALREADY_EXISTS(304, "Email already in use", CONFLICT),
+    NAME_ALREADY_EXISTS(304, "Company name already in use", CONFLICT),
+    NO_ADMIN_PROVIDED(305, "At least one admin registration must be provided.", BAD_REQUEST);
+
+
 
     @Getter
     private final int code;

@@ -3,7 +3,8 @@ package com.unternehmensplattform.backend.controllers;
 
 import com.unternehmensplattform.backend.entities.Company;
 import com.unternehmensplattform.backend.entities.DTOs.CompanyDTO;
-import com.unternehmensplattform.backend.entities.DTOs.CompanyWithAdminDTO;
+import com.unternehmensplattform.backend.entities.DTOs.CompanyDetailsDTO;
+import com.unternehmensplattform.backend.entities.DTOs.CompanyWithAdminsDTO;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import com.unternehmensplattform.backend.services.interfaces.CompanyService;
 import jakarta.validation.Valid;
@@ -26,14 +27,15 @@ public class CompanyController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('Superadmin')")
-    public ResponseEntity<Company> createCompany(@RequestBody @Valid CompanyWithAdminDTO companyWithAdminDTO) {
-        Company company = companyService.createCompanyWithAdmin(companyWithAdminDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(company);
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<Company> createCompany(@RequestBody @Valid CompanyWithAdminsDTO companyWithAdminsDTO) {
+        companyService.createCompanyWithAdmins(companyWithAdminsDTO);
+        return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
-        List<CompanyDTO> companies = companyService.getAllCompanies();
+    public ResponseEntity<List<CompanyDetailsDTO>> getAllCompanies() {
+        List<CompanyDetailsDTO> companies = companyService.getAllCompanies();
         if (companies.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

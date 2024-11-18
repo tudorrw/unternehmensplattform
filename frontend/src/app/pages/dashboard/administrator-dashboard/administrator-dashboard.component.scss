@@ -10,9 +10,19 @@
 }
 
 
-::ng-deep .p-datepicker table td {
-  padding: 0.5px !important;
-}
+//::ng-deep .p-datepicker table td {
+//  padding: 2px !important;
+//}
 
+//::ng-deep .p-datepicker table td,tr{
+//  padding: 2px !important;
+//}
+
+::ng-deep {
+  .p-datepicker td>span {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
 
 

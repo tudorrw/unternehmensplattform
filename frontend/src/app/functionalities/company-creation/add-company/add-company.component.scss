@@ -1,257 +1,257 @@
-/* Stil pentru butoane */
-button {
-  background-color: blue;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-
-  &:hover {
-    background-color: darkblue;
-  }
-}
-
-/* Stil pentru pop-up */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Se asigură că pop-up-ul este deasupra altor elemente */
-}
-
-/* Conținutul pop-up-ului */
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-button {
-  background-color: blue;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-
-  &:hover {
-    background-color: darkblue;
-  }
-}
-
-/* Overlay pentru fereastra pop-up */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Fundal semitransparent */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-/* Fereastra pop-up (modală) */
-.modal {
-  background-color: #f8f8f8; /* Nuanta deschisa de gri */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  width: 100%;
-  display: flex;
-  flex-direction: column; /* Asigură aranjarea formularului pe verticală */
-  gap: 20px; /* Adaugă un spațiu între câmpuri */
-  border: 3px solid #007bff; /* Bordură albastră groasă */
-}
-
-/* Stiluri pentru câmpurile de input și select */
-input,
-select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  font-size: 16px;
-  margin-bottom: 10px; /* Spațiu între câmpuri */
-}
-
-input:focus,
-select:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-label {
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-/* Stiluri pentru butoanele din formular */
-button[type="submit"],
-button[type="button"] {
-  background-color: blue;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-.admin-selection {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.admin-selection select,
-.admin-selection button {
-  margin-top: 10px;
-}
-
-
-button[type="submit"]:hover,
-button[type="button"]:hover {
-  background-color: darkblue;
-}
-
-/* Stiluri pentru mesajele de eroare */
-small {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-/* Stiluri pentru mesajele de validare */
-div.ng-invalid.ng-touched {
-  border: 1px solid red;
-}
-.admin-form {
-  max-height: 400px; /* Dimensiunea maximă a formularului */
-  overflow-y: auto;  /* Permite derularea pe verticală */
-  padding-right: 10px; /* Pentru a evita ascunderea conținutului în timpul derulării */
-}
-.add-admin-form {
-  max-height: 400px;  /* Setează o înălțime maximă pentru formular */
-  overflow-y: auto;   /* Permite derularea pe verticală când sunt multe câmpuri */
-}
-
-.add-admin-form input,
-.add-admin-form select,
-.add-admin-form button {
-  width: 100%;  /* Face ca input-urile și butoanele să ocupe întreaga lățime disponibilă */
-  margin-bottom: 10px; /* Adaugă un mic spațiu între elemente */
-}
-
-app-add-admin {
-  display: block;
-  max-height: 500px; /* poți ajusta înălțimea conform necesităților tale */
-  overflow-y: auto;  /* activază scrollbar-ul vertical */
-}
-/* Containerul care conține formularele Add Company și Add Admin */
-.company-form {
-  max-height: 500px; /* Setează înălțimea maximă a containerului */
-  overflow-y: auto; /* Activarea scroll-ului vertical atunci când conținutul depășește înălțimea maximă */
-  padding-right: 15px; /* Spațiu pentru scrollbar, dacă este necesar */
-}
-
-/* (Opțional) Poți ajusta dimensiunile și stilul dacă vrei să îmbunătățești designul */
-.company-form label,
-.company-form input,
-.company-form select {
-  margin-bottom: 10px; /* Spațiu între elemente */
-}
-/* CSS pentru modal */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  position: relative;
-}
-
-/* Stilizare pentru formular */
-.company-form {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Poziționează butonul de submit  */
-.submit-container {
-  display: flex;
-  justify-content: center;
-}
-
-.submit-btn {
-  margin-top: 20px;
-}
-
-/* Styling for selected admin row */
-.admin-row {
-  display: flex;
-  align-items: center;
-  background-color: #f0f8ff; /* Light blue background */
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
-  border: 1px solid #007bff; /* Blue border */
-  width: 100%;
-  justify-content: space-between;
-}
-
-/* Admin details styling */
-.admin-details {
-  display: flex;
-  gap: 15px;
-  font-size: 14px;
-  flex: 1;
-  flex-wrap: wrap; /* Allow wrapping if necessary */
-}
-
-.admin-details span {
-  display: inline-block;
-  margin-right: 15px;
-}
-
-/* Remove admin (X) button */
-.remove-admin-btn {
-  background: lightblue;
-  color: black;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.remove-admin-btn:hover {
-  color: darkred;
-}
-
+///* Stil pentru butoane */
+//button {
+//  background-color: blue;
+//  color: white;
+//  padding: 10px 20px;
+//  border: none;
+//  border-radius: 5px;
+//  cursor: pointer;
+//  margin-top: 10px;
+//
+//  &:hover {
+//    background-color: darkblue;
+//  }
+//}
+//
+///* Stil pentru pop-up */
+//.modal {
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  width: 100%;
+//  height: 100%;
+//  background: rgba(0, 0, 0, 0.5);
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  z-index: 1000; /* Se asigură că pop-up-ul este deasupra altor elemente */
+//}
+//
+///* Conținutul pop-up-ului */
+//.modal-content {
+//  background-color: white;
+//  padding: 20px;
+//  border-radius: 8px;
+//  width: 400px;
+//  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+//}
+//
+//button {
+//  background-color: blue;
+//  color: white;
+//  padding: 10px 20px;
+//  border: none;
+//  border-radius: 5px;
+//  cursor: pointer;
+//  margin-top: 10px;
+//
+//  &:hover {
+//    background-color: darkblue;
+//  }
+//}
+//
+///* Overlay pentru fereastra pop-up */
+//.overlay {
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  bottom: 0;
+//  background-color: rgba(0, 0, 0, 0.5); /* Fundal semitransparent */
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  z-index: 9999;
+//}
+//
+///* Fereastra pop-up (modală) */
+//.modal {
+//  background-color: #f8f8f8; /* Nuanta deschisa de gri */
+//  padding: 20px;
+//  border-radius: 8px;
+//  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//  max-width: 600px;
+//  width: 100%;
+//  display: flex;
+//  flex-direction: column; /* Asigură aranjarea formularului pe verticală */
+//  gap: 20px; /* Adaugă un spațiu între câmpuri */
+//  border: 3px solid #007bff; /* Bordură albastră groasă */
+//}
+//
+///* Stiluri pentru câmpurile de input și select */
+//input,
+//select {
+//  padding: 10px;
+//  border: 1px solid #ccc;
+//  border-radius: 5px;
+//  width: 100%;
+//  font-size: 16px;
+//  margin-bottom: 10px; /* Spațiu între câmpuri */
+//}
+//
+//input:focus,
+//select:focus {
+//  border-color: #007bff;
+//  outline: none;
+//}
+//
+//label {
+//  font-size: 16px;
+//  margin-bottom: 5px;
+//  color: #333;
+//}
+//
+///* Stiluri pentru butoanele din formular */
+//button[type="submit"],
+//button[type="button"] {
+//  background-color: blue;
+//  color: white;
+//  padding: 10px 20px;
+//  border: none;
+//  border-radius: 5px;
+//  cursor: pointer;
+//  font-size: 16px;
+//  transition: background-color 0.3s ease;
+//}
+//.admin-selection {
+//  margin-top: 20px;
+//  display: flex;
+//  flex-direction: column;
+//  align-items: center;
+//  justify-content: center;
+//}
+//
+//.admin-selection select,
+//.admin-selection button {
+//  margin-top: 10px;
+//}
+//
+//
+//button[type="submit"]:hover,
+//button[type="button"]:hover {
+//  background-color: darkblue;
+//}
+//
+///* Stiluri pentru mesajele de eroare */
+//small {
+//  color: red;
+//  font-size: 12px;
+//  margin-top: 5px;
+//}
+//
+///* Stiluri pentru mesajele de validare */
+//div.ng-invalid.ng-touched {
+//  border: 1px solid red;
+//}
+//.admin-form {
+//  max-height: 400px; /* Dimensiunea maximă a formularului */
+//  overflow-y: auto;  /* Permite derularea pe verticală */
+//  padding-right: 10px; /* Pentru a evita ascunderea conținutului în timpul derulării */
+//}
+//.add-admin-form {
+//  max-height: 400px;  /* Setează o înălțime maximă pentru formular */
+//  overflow-y: auto;   /* Permite derularea pe verticală când sunt multe câmpuri */
+//}
+//
+//.add-admin-form input,
+//.add-admin-form select,
+//.add-admin-form button {
+//  width: 100%;  /* Face ca input-urile și butoanele să ocupe întreaga lățime disponibilă */
+//  margin-bottom: 10px; /* Adaugă un mic spațiu între elemente */
+//}
+//
+//app-add-admin {
+//  display: block;
+//  max-height: 500px; /* poți ajusta înălțimea conform necesităților tale */
+//  overflow-y: auto;  /* activază scrollbar-ul vertical */
+//}
+///* Containerul care conține formularele Add Company și Add Admin */
+//.company-form {
+//  max-height: 500px; /* Setează înălțimea maximă a containerului */
+//  overflow-y: auto; /* Activarea scroll-ului vertical atunci când conținutul depășește înălțimea maximă */
+//  padding-right: 15px; /* Spațiu pentru scrollbar, dacă este necesar */
+//}
+//
+///* (Opțional) Poți ajusta dimensiunile și stilul dacă vrei să îmbunătățești designul */
+//.company-form label,
+//.company-form input,
+//.company-form select {
+//  margin-bottom: 10px; /* Spațiu între elemente */
+//}
+///* CSS pentru modal */
+//.overlay {
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  width: 100%;
+//  height: 100%;
+//  background: rgba(0, 0, 0, 0.5);
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//}
+//
+//.modal {
+//  background: #fff;
+//  padding: 20px;
+//  border-radius: 8px;
+//  width: 400px;
+//  position: relative;
+//}
+//
+///* Stilizare pentru formular */
+//.company-form {
+//  display: flex;
+//  flex-direction: column;
+//}
+//
+///* Poziționează butonul de submit  */
+//.submit-container {
+//  display: flex;
+//  justify-content: center;
+//}
+//
+//.submit-btn {
+//  margin-top: 20px;
+//}
+//
+///* Styling for selected admin row */
+//.admin-row {
+//  display: flex;
+//  align-items: center;
+//  background-color: #f0f8ff; /* Light blue background */
+//  padding: 10px;
+//  border-radius: 5px;
+//  margin-top: 10px;
+//  border: 1px solid #007bff; /* Blue border */
+//  width: 100%;
+//  justify-content: space-between;
+//}
+//
+///* Admin details styling */
+//.admin-details {
+//  display: flex;
+//  gap: 15px;
+//  font-size: 14px;
+//  flex: 1;
+//  flex-wrap: wrap; /* Allow wrapping if necessary */
+//}
+//
+//.admin-details span {
+//  display: inline-block;
+//  margin-right: 15px;
+//}
+//
+///* Remove admin (X) button */
+//.remove-admin-btn {
+//  background: lightblue;
+//  color: black;
+//  border: none;
+//  font-size: 18px;
+//  cursor: pointer;
+//}
+//
+//.remove-admin-btn:hover {
+//  color: darkred;
+//}
+//

@@ -17,8 +17,8 @@
       editMode="row"
     >
       <ng-template pTemplate="caption">
-        <div class="flex justify-content-between align-items-center">
-          <p>Employees</p>
+
+        <div style=" display: flex; justify-content: flex-end" class="flex justify-content-end align-items-center">
           <div class="p-input-icon-left ml-auto" style="margin-right: 1rem;">
             <i class="pi pi-search"></i>
             <input
@@ -187,8 +187,8 @@
             </ng-template>
           </p-cellEditor>
         </td>
-        <td>
 
+        <td>
           <div class="flex align-items-center justify-content-center gap-2">
             <button
               *ngIf="!editing"
@@ -260,12 +260,14 @@
           pInputText
           [(ngModel)]="newEmployee.email"
           name="email"
+          #email="ngModel"
           required
           (ngModelChange)="validateEmail(newEmployee.email)"
         />
-        <small *ngIf="employeeForm.submitted && !newEmployee.email" class="p-error">Email is required.</small>
-        <small *ngIf="!validateEmail(newEmployee.email)" class="p-error">Please enter a valid email address.</small>
+        <small *ngIf="email.touched && !newEmployee.email" class="p-error">Email is required.</small>
+        <small *ngIf="email.touched && !validateEmail(newEmployee.email)" class="p-error">Please enter a valid email address.</small>
       </div>
+
       <div class="p-field">
         <label for="telefonNumber">Phone Number</label>
         <input
@@ -273,11 +275,12 @@
           pInputText
           [(ngModel)]="newEmployee.telefonNumber"
           name="telefonNumber"
+          #phone="ngModel"
           (ngModelChange)="validatePhoneNumber(newEmployee.telefonNumber)"
         />
-        <small *ngIf="!validatePhoneNumber(newEmployee.telefonNumber)" class="p-error">Please enter a valid phone number</small>
-
+        <small *ngIf="phone.touched && !validatePhoneNumber(newEmployee.telefonNumber)" class="p-error">Please enter a valid phone number.</small>
       </div>
+
       <div class="p-field">
         <label for="passwordHash">Password</label>
         <input
