@@ -20,6 +20,8 @@ export class AdministratorDashboardComponent implements OnInit {
   searchValue: string | undefined;
   loading: boolean = true;
   showDialog: boolean = false;
+  minDate!: Date;
+  maxDate!: Date;
   newEmployee: RegistrationRequest = {
     email: '',
     firstName: '',
@@ -39,6 +41,10 @@ export class AdministratorDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.showAllEmployees();
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 1, 0, 1);
+    this.maxDate = new Date(currentYear, 11, 31);
+    console.log(this.minDate, this.maxDate);
 
   }
 
