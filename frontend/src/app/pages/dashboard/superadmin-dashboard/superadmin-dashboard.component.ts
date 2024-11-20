@@ -163,8 +163,7 @@ export class SuperadminDashboardComponent implements OnInit {
           }
         });
       }
-
-      if(!ok) {
+      if(ok) {
         return;
       }
 
