@@ -33,6 +33,13 @@ import {DialogModule} from "primeng/dialog";
 import {CalendarModule} from "primeng/calendar";
 import {ToastModule} from "primeng/toast";
 import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboard/superadmin-dashboard.component";
+import { LeaveRequestsAdminComponent } from './pages/leave-requests-admin/leave-requests-admin.component';
+import { TopBarComponent } from './shared/top-bar/top-bar.component';
+import {TabMenuModule} from "primeng/tabmenu";
+import { LayoutComponent } from './shared/layout/layout.component';
+import { ActivityReportsAdminComponent } from "./pages/activity-reports/activity-reports-admin/activity-reports-admin.component";
+import { ActivityReportsEmployeeComponent } from './pages/activity-reports/activity-reports-employee/activity-reports-employee.component';
+import { ActivityReportsComponent } from './pages/activity-reports/activity-reports.component';
 
 
 @NgModule({
@@ -47,7 +54,13 @@ import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboa
     // AddCompanyComponent,
     // AddAdminComponent,
     EmployeeManagerComponent,
-    EmployeeEditDialogComponent
+    EmployeeEditDialogComponent,
+    LeaveRequestsAdminComponent,
+    TopBarComponent,
+    LayoutComponent,
+    ActivityReportsAdminComponent,
+    ActivityReportsEmployeeComponent,
+    ActivityReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +80,7 @@ import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboa
     OverlayPanelModule,
     AvatarModule,
     DialogModule,
-    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple
+    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, TabMenuModule
   ],
   providers: [
     HttpClient,
