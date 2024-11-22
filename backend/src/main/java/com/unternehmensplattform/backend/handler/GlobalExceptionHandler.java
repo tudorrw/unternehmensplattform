@@ -147,4 +147,10 @@ public class GlobalExceptionHandler {
                     );
             }
 
+    @ExceptionHandler(VacationRequestNotFoundException.class)
+    public ResponseEntity<String> handleVacationRequestNotFound(VacationRequestNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+
 }
