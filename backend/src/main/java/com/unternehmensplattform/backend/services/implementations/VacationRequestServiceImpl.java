@@ -7,6 +7,7 @@ import com.unternehmensplattform.backend.entities.VacationRequest;
 import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.enums.VacationReqStatus;
 import com.unternehmensplattform.backend.handler.InvalidVacationRequestException;
+import com.unternehmensplattform.backend.handler.VacationRequestNotFoundException;
 import com.unternehmensplattform.backend.handler.VacationRequestOverlapException;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.UserRepository;
@@ -126,5 +127,21 @@ public class VacationRequestServiceImpl implements VacationReqService {
         if (hasOverlaps) {
             throw new VacationRequestOverlapException("The requested dates overlap with an existing vacation request.");
         }
+    }
+
+    public List<VacationRequest> getVacationRequestsByEmployee(Integer employeeId) {
+        List<VacationRequest> vacationRequests = vacationRequestRepository.findByEmployeeIdOrderByRequestedDateDesc(employeeId);
+        if (vacationRequests.isEmpty()) {
+            throw new VacationRequestNotFoundException("No vacation requests found for the specified employee.");
+        }
+        return vacationRequests;
+    }
+
+
+    public void deleteVacationRequest(Integer requestId) {
+        if (!vacationRequestRepository.existsById(requestId)) {
+            throw new VacationRequestNotFoundException("No vacation request found.");
+        }
+        vacationRequestRepository.deleteById(requestId);
     }
 }
