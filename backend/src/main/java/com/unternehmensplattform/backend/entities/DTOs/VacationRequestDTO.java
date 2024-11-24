@@ -13,5 +13,6 @@ public class VacationRequestDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String description;
+    private Integer assignedAdministratorId;
 
 }
