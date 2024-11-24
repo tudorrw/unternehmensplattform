@@ -31,11 +31,11 @@ public class VacationReqController {
     private final UserDetailsService userDetailsService;
     private final VacationReqService vacationReqService;
 
-    @GetMapping("/admin/{administratorId}")
-    public ResponseEntity<List<VacationRequest>> getRequestsForAdmin(@PathVariable Integer administratorId) {
-        List<VacationRequest> requests = vacationReqService.getRequestsByAdmin(administratorId);
-        return ResponseEntity.ok(requests);
-    }
+//    @GetMapping("/admin/{administratorId}")
+//    public ResponseEntity<List<VacationRequest>> getRequestsForAdmin(@PathVariable Integer administratorId) {
+//        List<VacationRequest> requests = vacationReqService.getRequestsByAdmin(administratorId);
+//        return ResponseEntity.ok(requests);
+//    }
 
     @GetMapping("/get-pending-requests")
     public ResponseEntity<List<VacationRequestDetailsDTO>> getAllPendingVacationRequests() {
