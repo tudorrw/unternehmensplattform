@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Table(name = "vacation_request")
 public class VacationRequest {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

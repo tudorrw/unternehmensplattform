@@ -18,8 +18,11 @@ public enum BusinessErrorCodes {
     PHONE_NUMBER_ALREADY_EXISTS(304, "Phone number already in use", CONFLICT),
     EMAIL_ALREADY_EXISTS(304, "Email already in use", CONFLICT),
     NAME_ALREADY_EXISTS(304, "Company name already in use", CONFLICT),
-    NO_ADMIN_PROVIDED(305, "At least one admin registration must be provided.", BAD_REQUEST);
-
+    NO_ADMIN_PROVIDED(305, "At least one admin registration must be provided.", BAD_REQUEST),
+    LEAVE_REQUEST_OVERLAP(304, "The requested dates overlap with an existing vacation request.", CONFLICT),
+    LEAVE_REQUEST_INVALID(305, "Invalid vacation request", BAD_REQUEST),
+    NO_LEAVE_REQUEST_PROVIDED(305, "No vacation request found.", BAD_REQUEST),
+    VALIDATE_DATES(304, "Validation dates error.", CONFLICT);
 
 
     @Getter

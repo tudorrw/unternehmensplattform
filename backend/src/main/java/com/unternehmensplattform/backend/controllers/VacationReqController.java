@@ -3,6 +3,7 @@ package com.unternehmensplattform.backend.controllers;
 
 import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDTO;
+import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.entities.VacationRequest;
 import com.unternehmensplattform.backend.handler.InvalidVacationRequestException;
@@ -27,22 +28,14 @@ import java.util.List;
 public class VacationReqController {
     private final VacationReqService vacationReqService;
 
-    @GetMapping("/employee/{employeeId}")
-    //@PreAuthorize("hasAuthority('Employee')")
-    public ResponseEntity<?> getVacationRequestsByEmployee(@PathVariable Integer employeeId) {
-        try {
-            List<VacationRequest> requests = vacationReqService.getVacationRequestsByEmployee(employeeId);
-            if (requests.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vacation requests found for this employee.");
-            }
-            return ResponseEntity.ok(requests);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    @GetMapping("/get-all-vacation-requests-for-employee")
+    public ResponseEntity<?> getVacationRequestsByEmployee() {
+        List<VacationRequestDetailsDTO> requests = vacationReqService.getVacationRequestsByEmployee();
+        return ResponseEntity.ok(requests);
     }
 
 
-    @DeleteMapping("/delete/{requestId}")
+    @PostMapping("/delete/{requestId}")
     public ResponseEntity<String> deleteVacationRequest(@PathVariable Integer requestId) {
         try {
             vacationReqService.deleteVacationRequest(requestId);
@@ -51,28 +44,19 @@ public class VacationReqController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-
     @PostMapping("/create")
-    public ResponseEntity<Void> createVacationRequest(@RequestBody @Valid VacationRequestDTO vacationRequestDTO) {
-        try {
-            User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            vacationReqService.createVacationRequest(vacationRequestDTO, loggedInUser);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (InvalidVacationRequestException | VacationRequestOverlapException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createVacationRequest(@RequestBody @Valid VacationRequestDTO vacationRequestDTO) {
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        vacationReqService.createVacationRequest(vacationRequestDTO, loggedInUser);
+        return ResponseEntity.accepted().build();
     }
 
 
     @GetMapping("/available-administrators")
     public ResponseEntity<List<UserDetailsDTO>> getAvailableAdministrators() {
-
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<UserDetailsDTO> availableAdmins = vacationReqService.getAvailableAdministrators(loggedInUser);
-        if (availableAdmins.isEmpty()) {
-            throw new ResourceNotFoundException("No administrators available for your company.");
-        }
         return ResponseEntity.ok(availableAdmins);
     }
 }
