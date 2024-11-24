@@ -7,6 +7,9 @@ import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDetailsDTO
 import com.unternehmensplattform.backend.entities.VacationRequest;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
 import com.unternehmensplattform.backend.services.implementations.VacationReqServiceImpl;
+
+import com.unternehmensplattform.backend.enums.VacationReqStatus;
+import com.unternehmensplattform.backend.services.interfaces.VacationReqService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -23,7 +29,7 @@ import java.util.List;
 public class VacationReqController {
     private final AuthenticationService authenticationService;
     private final UserDetailsService userDetailsService;
-    private final VacationReqServiceImpl vacationReqService;
+    private final VacationReqService vacationReqService;
 
     @GetMapping("/admin/{administratorId}")
     public ResponseEntity<List<VacationRequest>> getRequestsForAdmin(@PathVariable Integer administratorId) {
@@ -45,4 +51,11 @@ public class VacationReqController {
         return ResponseEntity.ok(employees);
     }
 
+    @PutMapping("/{requestId}/status")
+    public ResponseEntity<Void> updateRequestStatus(
+            @PathVariable Integer requestId,
+            @RequestParam VacationReqStatus status) {
+        vacationReqService.updateRequestStatus(requestId, status);
+        return ResponseEntity.ok().build();
+    }
 }
