@@ -1,36 +1,38 @@
 <div class="card flex justify-content-center">
-<p-button (onClick)="viewVacationDetails()" label="Show vacation days information" />
-<p-dialog header="Vacation days information" [modal]="true" [(visible)]="showVacationDetailsDialog" [style]="{ width: '25rem' }">
-  <div class="flex align-items-center gap-3 mb-3">
-    <label for="previousVacationDays" class="font-semibold w-6rem">Previous Vacation Days</label>
-    <input
-      pInputText
-      id="previousVacationDays"
-      class="flex-auto"
-      [value]="userDetails?.previousYearVacationDays || 'No previous vacation days'"
-      disabled
-    />
-  </div>
-  <div class="flex align-items-center gap-3 mb-3">
-    <label for="currentVacationDays" class="font-semibold w-6rem">Vacation days left in the current year</label>
-    <input
-      pInputText
-      id="currentVacationDays"
-      class="flex-auto"
-      [value]="userDetails?.actualYearVacationDays || 'No vacation days left'"
-      disabled
-    />
-  </div>
-</p-dialog>
+  <p-button (onClick)="viewVacationDetails()" label="Show vacation days information" />
+  <p-dialog header="Vacation days information" [modal]="true" [(visible)]="showVacationDetailsDialog" [style]="{ width: '25rem' }">
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="previousVacationDays" class="font-semibold w-6rem">Previous Vacation Days</label>
+      <input
+        pInputText
+        id="previousVacationDays"
+        class="flex-auto"
+        [value]="userDetails?.previousYearVacationDays || 'No previous vacation days'"
+        disabled
+      />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3">
+      <label for="currentVacationDays" class="font-semibold w-6rem">Vacation days left in the current year</label>
+      <input
+        pInputText
+        id="currentVacationDays"
+        class="flex-auto"
+        [value]="userDetails?.actualYearVacationDays || 'No vacation days left'"
+        disabled
+      />
+    </div>
+  </p-dialog>
 </div>
+
 <p-button (onClick)="requestVacation()" label="Request vacation" />
 
 <p-dialog
   header="Request vacation"
   [modal]="true"
   [(visible)]="requestVacationForm"
-  [style]="{ width: dialogWidth, height: dialogHeight}">
-
+  [style]="{ width: dialogWidth, height: dialogHeight}"
+  (onHide)="onDialogHide()"
+>
   <div class="card">
     <p-messages
       [(value)]="messages"
@@ -52,8 +54,13 @@
       [numberOfMonths]="2"
       [showIcon]="true"
       (onSelect)="onSelect($event, calendar)"
-
-
     ></p-calendar>
+
+    <div class="card flex justify-content-center">
+      <p-button (click)="submitVacationRequest()" label="Submit Vacation Request" />
+    </div>
   </div>
 </p-dialog>
+
+<!-- Messages section for dashboard -->
+<p-messages [(value)]="dashboardMessages" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" />
