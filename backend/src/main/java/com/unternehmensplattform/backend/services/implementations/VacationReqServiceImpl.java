@@ -32,41 +32,17 @@ public class VacationReqServiceImpl implements VacationReqService {
         if (!request.getAdministrator().equals(currentAdmin)) {
             throw new RuntimeException("You are not authorized to modify this request");
         }
+        request.setStatus(status);
+        vacationReqRepository.save(request);
 
-        if (status == VacationReqStatus.Approved) {
+        if (status == VacationReqStatus.Rejected) {
             int vacationDays = vacationReqHandler.calculateLeaveDays(request.getStartDate(), request.getEndDate());
-
-            if (!hasSufficientVacationDays(request.getEmployee(), vacationDays)) {
-                request.setStatus(VacationReqStatus.Rejected);
-                vacationReqRepository.save(request);
-                throw new RuntimeException("The employee does not have enough vacation days. The request has been rejected.");
-            }
-
-            request.setStatus(VacationReqStatus.Approved);
-            vacationReqRepository.save(request);
-            updateEmployeeVacationDays(request.getEmployee(), vacationDays);
-
-        } else {
-            request.setStatus(status);
-            vacationReqRepository.save(request);
+            Contract employeeContract = request.getEmployee().getContract();
+            employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
+            contractRepository.save(employeeContract);
         }
+
+
     }
 
-    private boolean hasSufficientVacationDays(User employee, int usedDays) {
-        Contract contract = contractRepository.findByUser(employee);
-        if (contract == null) {
-            throw new RuntimeException("No contract found for the employee");
-        }
-        return contract.getActualYearVacationDays() >= usedDays;
-    }
-
-    private void updateEmployeeVacationDays(User employee, int usedDays) {
-        Contract contract = contractRepository.findByUser(employee);
-        if (contract == null) {
-            throw new RuntimeException("No contract found for the employee");
-        }
-        contract.setActualYearVacationDays(contract.getActualYearVacationDays() - usedDays);
-        contractRepository.save(contract);
-
-    }
 }
