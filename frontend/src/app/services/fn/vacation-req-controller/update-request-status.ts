@@ -8,14 +8,18 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CompanyDetailsDto } from '../../models/company-details-dto';
 
-export interface GetAllCompanies$Params {
+export interface UpdateRequestStatus$Params {
+  requestId: number;
+  status: 'New' | 'Approved' | 'Rejected';
 }
 
-export function getAllCompanies(http: HttpClient, rootUrl: string, params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllCompanies.PATH, 'get');
+export function updateRequestStatus(http: HttpClient, rootUrl: string, params: UpdateRequestStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
+  const rb = new RequestBuilder(rootUrl, updateRequestStatus.PATH, 'post');
   if (params) {
+    rb.path('requestId', params.requestId, {});
+    rb.query('status', params.status, {});
   }
 
   return http.request(
@@ -23,9 +27,10 @@ export function getAllCompanies(http: HttpClient, rootUrl: string, params?: GetA
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CompanyDetailsDto>>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }
 
-getAllCompanies.PATH = '/company/get-all';
+updateRequestStatus.PATH = '/vacation-request/modify-status/{requestId}';

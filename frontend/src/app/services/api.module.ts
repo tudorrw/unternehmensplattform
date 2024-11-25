@@ -6,6 +6,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { VacationReqControllerService } from './services/vacation-req-controller.service';
 import { UserCrudControllerService } from './services/user-crud-controller.service';
 import { CompanyControllerService } from './services/company-controller.service';
 import { AuthenticationControllerService } from './services/authentication-controller.service';
@@ -18,6 +19,7 @@ import { AuthenticationControllerService } from './services/authentication-contr
   exports: [],
   declarations: [],
   providers: [
+    VacationReqControllerService,
     UserCrudControllerService,
     CompanyControllerService,
     AuthenticationControllerService,
