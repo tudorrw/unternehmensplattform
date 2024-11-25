@@ -17,8 +17,8 @@ import { Company } from '../models/company';
 import { CompanyDetailsDto } from '../models/company-details-dto';
 import { createCompany } from '../fn/company-controller/create-company';
 import { CreateCompany$Params } from '../fn/company-controller/create-company';
-import { getAllCompanies1 } from '../fn/company-controller/get-all-companies-1';
-import { GetAllCompanies1$Params } from '../fn/company-controller/get-all-companies-1';
+import { getAllCompanies } from '../fn/company-controller/get-all-companies';
+import { GetAllCompanies$Params } from '../fn/company-controller/get-all-companies';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyControllerService extends BaseService {
@@ -76,27 +76,27 @@ export class CompanyControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `getAllCompanies1()` */
-  static readonly GetAllCompanies1Path = '/company/get-all';
+  /** Path part for operation `getAllCompanies()` */
+  static readonly GetAllCompaniesPath = '/company/get-all';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllCompanies1()` instead.
+   * To access only the response body, use `getAllCompanies()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies1$Response(params?: GetAllCompanies1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
-    return getAllCompanies1(this.http, this.rootUrl, params, context);
+  getAllCompanies$Response(params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
+    return getAllCompanies(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllCompanies1$Response()` instead.
+   * To access the full response (for headers, for example), `getAllCompanies$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies1(params?: GetAllCompanies1$Params, context?: HttpContext): Observable<Array<CompanyDetailsDto>> {
-    return this.getAllCompanies1$Response(params, context).pipe(
+  getAllCompanies(params?: GetAllCompanies$Params, context?: HttpContext): Observable<Array<CompanyDetailsDto>> {
+    return this.getAllCompanies$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<CompanyDetailsDto>>): Array<CompanyDetailsDto> => r.body)
     );
   }

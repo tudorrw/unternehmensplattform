@@ -10,11 +10,11 @@ import { RequestBuilder } from '../../request-builder';
 
 import { UserWithVacationRequestDetailsDto } from '../../models/user-with-vacation-request-details-dto';
 
-export interface GetAllCompanies$Params {
+export interface GetAllEmployeesWithVacationRequests$Params {
 }
 
-export function getAllCompanies(http: HttpClient, rootUrl: string, params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllCompanies.PATH, 'get');
+export function getAllEmployeesWithVacationRequests(http: HttpClient, rootUrl: string, params?: GetAllEmployeesWithVacationRequests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllEmployeesWithVacationRequests.PATH, 'get');
   if (params) {
   }
 
@@ -28,4 +28,4 @@ export function getAllCompanies(http: HttpClient, rootUrl: string, params?: GetA
   );
 }
 
-getAllCompanies.PATH = '/vacation-request/get-employees-with-vacation-requests';
+getAllEmployeesWithVacationRequests.PATH = '/vacation-request/get-employees-with-vacation-requests';

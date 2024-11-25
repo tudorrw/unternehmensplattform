@@ -38,7 +38,7 @@ public class VacationReqController {
         return ResponseEntity.ok(pendingVacationRequests);
     }
     @GetMapping("/get-employees-with-vacation-requests")
-    public ResponseEntity<List<UserWithVacationRequestDetailsDTO>> getAllCompanies() {
+    public ResponseEntity<List<UserWithVacationRequestDetailsDTO>> getAllEmployeesWithVacationRequests() {
         List<UserWithVacationRequestDetailsDTO> employees = vacationReqService.getAllEmployeesWithVacationRequests();
         if (employees.isEmpty()) {
             return ResponseEntity.noContent().build();

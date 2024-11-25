@@ -10,11 +10,11 @@ import { RequestBuilder } from '../../request-builder';
 
 import { CompanyDetailsDto } from '../../models/company-details-dto';
 
-export interface GetAllCompanies1$Params {
+export interface GetAllCompanies$Params {
 }
 
-export function getAllCompanies1(http: HttpClient, rootUrl: string, params?: GetAllCompanies1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
-  const rb = new RequestBuilder(rootUrl, getAllCompanies1.PATH, 'get');
+export function getAllCompanies(http: HttpClient, rootUrl: string, params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CompanyDetailsDto>>> {
+  const rb = new RequestBuilder(rootUrl, getAllCompanies.PATH, 'get');
   if (params) {
   }
 
@@ -28,4 +28,4 @@ export function getAllCompanies1(http: HttpClient, rootUrl: string, params?: Get
   );
 }
 
-getAllCompanies1.PATH = '/company/get-all';
+getAllCompanies.PATH = '/company/get-all';

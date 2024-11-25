@@ -11,8 +11,8 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { getAllCompanies } from '../fn/vacation-req-controller/get-all-companies';
-import { GetAllCompanies$Params } from '../fn/vacation-req-controller/get-all-companies';
+import { getAllEmployeesWithVacationRequests } from '../fn/vacation-req-controller/get-all-employees-with-vacation-requests';
+import { GetAllEmployeesWithVacationRequests$Params } from '../fn/vacation-req-controller/get-all-employees-with-vacation-requests';
 import { getAllPendingVacationRequests } from '../fn/vacation-req-controller/get-all-pending-vacation-requests';
 import { GetAllPendingVacationRequests$Params } from '../fn/vacation-req-controller/get-all-pending-vacation-requests';
 import { updateRequestStatus } from '../fn/vacation-req-controller/update-request-status';
@@ -80,27 +80,27 @@ export class VacationReqControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `getAllCompanies()` */
-  static readonly GetAllCompaniesPath = '/vacation-request/get-employees-with-vacation-requests';
+  /** Path part for operation `getAllEmployeesWithVacationRequests()` */
+  static readonly GetAllEmployeesWithVacationRequestsPath = '/vacation-request/get-employees-with-vacation-requests';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAllCompanies()` instead.
+   * To access only the response body, use `getAllEmployeesWithVacationRequests()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies$Response(params?: GetAllCompanies$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>> {
-    return getAllCompanies(this.http, this.rootUrl, params, context);
+  getAllEmployeesWithVacationRequests$Response(params?: GetAllEmployeesWithVacationRequests$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>> {
+    return getAllEmployeesWithVacationRequests(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getAllCompanies$Response()` instead.
+   * To access the full response (for headers, for example), `getAllEmployeesWithVacationRequests$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAllCompanies(params?: GetAllCompanies$Params, context?: HttpContext): Observable<Array<UserWithVacationRequestDetailsDto>> {
-    return this.getAllCompanies$Response(params, context).pipe(
+  getAllEmployeesWithVacationRequests(params?: GetAllEmployeesWithVacationRequests$Params, context?: HttpContext): Observable<Array<UserWithVacationRequestDetailsDto>> {
+    return this.getAllEmployeesWithVacationRequests$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>): Array<UserWithVacationRequestDetailsDto> => r.body)
     );
   }
