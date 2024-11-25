@@ -6,6 +6,7 @@
 
     <!-- Buton pentru deschiderea formularului de cerere de vacanță -->
     <p-button (onClick)="requestVacation()" label="Request vacation"></p-button>
+    <p-button (onClick)="viewVacationRequests()" label="Show Vacation Requests"></p-button>
   </div>
 </div>
 
@@ -43,7 +44,7 @@
   [modal]="true"
   [(visible)]="requestVacationForm"
   [style]="{ width: dialogWidth, height: dialogHeight }"
-  (onHide)="onDialogHide()"
+
 >
   <div class="card">
     <!-- Mesaje de notificare -->
@@ -90,38 +91,35 @@
   </div>
 </p-dialog>
 <!-- Buton pentru deschiderea tabelului cu cereri de vacanță -->
-<p-button (onClick)="viewVacationRequests()" label="Show Vacation Requests"></p-button>
-<!-- Dialog pentru Vacation Requests -->
-<p-dialog
-  header="Vacation Requests"
-  [modal]="true"
-  [(visible)]="showVacationRequestsDialog"
-  [style]="{ width: '50rem' }">
-  <div class="card">
-    <p-table [value]="vacationRequests" [tableStyle]="{'min-width': '50rem'}">
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th>Date</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Days</th>
-          <th>Status</th>
-          <th>Date of Approval</th>
-          <th>Approved By</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-request>
-        <tr>
-          <td>{{ request.requestedDate | date }}</td>
-          <td>{{ request.startDate | date }}</td>
-          <td>{{ request.endDate | date }}</td>
-          <td>{{ calculateDaysDifference(request.startDate, request.endDate) }}</td>
-          <td>{{ request.status }}</td>
-          <td>{{ request.approvedDate ? (request.approvedDate | date) : 'Not Approved' }}</td>
-          <td>{{ request.administrator?.name || 'N/A' }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-</p-dialog>
+<!-- Buton pentru a afișa cererile de vacanță -->
+
+
+<!-- Tabel pentru cereri de vacanță, care se va afișa doar când showVacationRequests este true -->
+<div *ngIf="showVacationRequestsDialog" class="card">
+  <p-table [value]="vacationRequests" [tableStyle]="{'min-width': '50rem'}">
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th>Date</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Days</th>
+        <th>Status</th>
+        <th>Date of Approval</th>
+        <th>Approved By</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-request>
+      <tr>
+        <td>{{ request.requestedDate | date }}</td>
+        <td>{{ request.startDate | date }}</td>
+        <td>{{ request.endDate | date }}</td>
+        <td>{{ calculateDaysDifference(request.startDate, request.endDate) }}</td>
+        <td>{{ request.status }}</td>
+        <td>{{ request.approvedDate ? (request.approvedDate | date) : 'Not Approved' }}</td>
+        <td>{{ getAdministratorName(request) }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
 
