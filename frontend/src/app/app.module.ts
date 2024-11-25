@@ -33,6 +33,8 @@ import {DialogModule} from "primeng/dialog";
 import {CalendarModule} from "primeng/calendar";
 import {ToastModule} from "primeng/toast";
 import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboard/superadmin-dashboard.component";
+import {MultiSelectModule} from "primeng/multiselect";
+import {DropdownModule} from "primeng/dropdown";
 
 
 @NgModule({
@@ -67,7 +69,7 @@ import {SuperadminDashboardComponent} from "./pages/dashboard/superadmin-dashboa
     OverlayPanelModule,
     AvatarModule,
     DialogModule,
-    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple
+    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, MultiSelectModule, DropdownModule
   ],
   providers: [
     HttpClient,

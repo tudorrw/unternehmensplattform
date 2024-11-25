@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { UserDetailsDto } from '../../../services/models/user-details-dto';
 import { UserCrudControllerService } from '../../../services/services/user-crud-controller.service';
 import { VacationRequestDto } from '../../../services/models/vacation-request-dto';
+import { VacationReqControllerService } from '../../../services/services/vacation-req-controller.service';
 
 @Component({
   selector: 'app-employee-dashboard',
@@ -17,13 +18,10 @@ export class EmployeeDashboardComponent implements OnInit {
   requestVacationForm = false;
   dialogWidth: string = '40rem';
   dialogHeight: string = '30rem';
-  vacationRequest: VacationRequestDto = {
-    description: '',
-    startDate: '',
-    endDate: '',
-  };
   messages: any[] = [];
-  dashboardMessages: any[] = []; // Messages displayed on the dashboard
+  dashboardMessages: any[] = [];
+  availableAdministrators: { name: string; id: number }[] = [];
+  selectedAdministratorId: number | null = null; // Administratorul selectat de utilizator
 
   minDate: Date;
   maxDate: Date;
@@ -32,15 +30,17 @@ export class EmployeeDashboardComponent implements OnInit {
 
   constructor(
     private userCrudControllerService: UserCrudControllerService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private vacationReqControllerService: VacationReqControllerService
   ) {
     this.minDate = new Date();
-    this.maxDate = new Date(this.minDate.getFullYear(), 11, 31); // Dec 31st of the current year
+    this.maxDate = new Date(this.minDate.getFullYear(), 11, 31);
     this.invalidDates = this.getWeekendsForThisYear();
   }
 
   ngOnInit(): void {
     this.fetchUserDetails();
+    this.fetchAvailableAdministrator(); // Obține ID-ul administratorilor disponibili
   }
 
   fetchUserDetails(): void {
@@ -60,6 +60,29 @@ export class EmployeeDashboardComponent implements OnInit {
       },
     });
   }
+  selectAdministrator(admin: { name: string; id: number }): void {
+    this.selectedAdministratorId = admin.id;
+  }
+
+
+  fetchAvailableAdministrator(): void {
+    this.vacationReqControllerService.getAvailableAdministrators().subscribe({
+      next: (administrators) => {
+        this.availableAdministrators = administrators
+          .filter(admin => admin.id !== undefined) // Exclude administratorii fără ID
+          .map(admin => ({
+            name: `${admin.firstName} ${admin.lastName}`,
+            id: admin.id as number // Păstrează doar id-ul administratorului
+          }));
+      },
+      error: (error) => {
+        console.error('Failed to fetch administrators:', error);
+        this.availableAdministrators = [];
+        this.selectedAdministratorId = null; // Administratorul nu este selectat
+      },
+    });
+  }
+
 
   processVacationHistory(): void {
     if (this.userDetails && this.userDetails.previousYearVacationDays) {
@@ -71,10 +94,6 @@ export class EmployeeDashboardComponent implements OnInit {
 
   viewVacationDetails(): void {
     this.showVacationDetailsDialog = true;
-  }
-
-  closeVacationDetailsDialog(): void {
-    this.showVacationDetailsDialog = false;
   }
 
   requestVacation(): void {
@@ -119,7 +138,7 @@ export class EmployeeDashboardComponent implements OnInit {
     return weekends;
   }
 
-  onSelect(event: any, calendar: any): void {
+  onSelect(event: any): void {
     if (!event || event.length === 0) {
       this.messages = [
         {
@@ -145,6 +164,19 @@ export class EmployeeDashboardComponent implements OnInit {
       return;
     }
 
+    if (this.selectedAdministratorId === null) {
+      this.messages = [
+        {
+          severity: 'warn',
+          summary: 'No administrator selected',
+          detail: 'Please select an administrator before submitting your request.',
+        },
+      ];
+      return;
+    }
+
+    console.log('Selected Administrator ID:', this.selectedAdministratorId); // Verifică dacă ID-ul este corect
+
     const startDate = this.date5[0];
     const endDate = this.date5[1];
     const daysSelected = this.calculateDaysDifference(startDate, endDate);
@@ -164,10 +196,43 @@ export class EmployeeDashboardComponent implements OnInit {
       description: 'Requested vacation period',
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
+      assignedAdministratorId: this.selectedAdministratorId, // Asigură-te că trimiti doar ID-ul
     };
 
-    console.log('Vacation request submitted:', vacationRequest);
-    this.requestVacationForm = false;
+    this.vacationReqControllerService.createVacationRequest({
+      body: vacationRequest,
+    }).subscribe({
+      next: (response) => {
+        console.log('Backend response:', response);
+        this.messages = [
+          {
+            severity: 'success',
+            summary: 'Vacation Request Submitted',
+            detail: 'Your vacation request has been successfully submitted.',
+          },
+        ];
+        this.dashboardMessages = [
+          {
+            severity: 'success',
+            summary: 'Vacation Request Submitted',
+            detail: 'Your vacation request has been successfully submitted.',
+          },
+        ];
+        console.log('Vacation request submitted:', response);
+      },
+      error: (error) => {
+        this.messages = [
+          {
+            severity: 'error',
+            summary: 'Error',
+            detail: 'There was an error submitting your vacation request.',
+          },
+        ];
+        console.error('Error submitting vacation request:', error);
+      },
+    });
+
+    this.requestVacationForm = false; // Închide formularul
   }
 
   onDialogHide(): void {

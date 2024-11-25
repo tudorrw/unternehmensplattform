@@ -1,6 +1,13 @@
 <div class="card flex justify-content-center">
-  <p-button (onClick)="viewVacationDetails()" label="Show vacation days information" />
-  <p-dialog header="Vacation days information" [modal]="true" [(visible)]="showVacationDetailsDialog" [style]="{ width: '25rem' }">
+  <!-- Buton pentru afișarea informațiilor despre zilele de vacanță -->
+  <p-button (onClick)="viewVacationDetails()" label="Show vacation days information"></p-button>
+
+  <!-- Dialog pentru afișarea zilelor de vacanță -->
+  <p-dialog
+    header="Vacation days information"
+    [modal]="true"
+    [(visible)]="showVacationDetailsDialog"
+    [style]="{ width: '25rem' }">
     <div class="flex align-items-center gap-3 mb-3">
       <label for="previousVacationDays" class="font-semibold w-6rem">Previous Vacation Days</label>
       <input
@@ -24,26 +31,29 @@
   </p-dialog>
 </div>
 
-<p-button (onClick)="requestVacation()" label="Request vacation" />
+<!-- Buton pentru deschiderea formularului de cerere de vacanță -->
+<p-button (onClick)="requestVacation()" label="Request vacation"></p-button>
 
+<!-- Dialog pentru cererea de vacanță -->
 <p-dialog
   header="Request vacation"
   [modal]="true"
   [(visible)]="requestVacationForm"
-  [style]="{ width: dialogWidth, height: dialogHeight}"
+  [style]="{ width: dialogWidth, height: dialogHeight }"
   (onHide)="onDialogHide()"
 >
   <div class="card">
+    <!-- Mesaje de notificare -->
     <p-messages
       [(value)]="messages"
       [showTransitionOptions]="'500ms'"
       [hideTransitionOptions]="'500ms'"
       [enableService]="false"
-    />
+    ></p-messages>
 
+    <!-- Calendar pentru selecția perioadei de vacanță -->
     <label>Vacation Period</label>
     <p-calendar
-      #calendar
       [(ngModel)]="date5"
       selectionMode="range"
       [readonlyInput]="true"
@@ -53,14 +63,35 @@
       [maxDate]="maxDate"
       [numberOfMonths]="2"
       [showIcon]="true"
-      (onSelect)="onSelect($event, calendar)"
+      (onSelect)="onSelect($event)"
     ></p-calendar>
 
+    <!-- Dropdown pentru selectarea administratorului -->
+    <div class="flex align-items-center gap-3 mb-3">
+      <label class="font-semibold w-6rem">Select Admin</label>
+      <p-dropdown
+        [options]="availableAdministrators"
+        [(ngModel)]="selectedAdministratorId"
+        optionLabel="name"
+        placeholder="Select an administrator"
+        [disabled]="availableAdministrators.length === 0"
+        (onChange)="selectAdministrator($event.value)"
+      ></p-dropdown>
+    </div>
+
+
+
+
+    <!-- Buton pentru trimiterea cererii -->
     <div class="card flex justify-content-center">
-      <p-button (click)="submitVacationRequest()" label="Submit Vacation Request" />
+      <p-button (click)="submitVacationRequest()" label="Submit Vacation Request"></p-button>
     </div>
   </div>
 </p-dialog>
 
-<!-- Messages section for dashboard -->
-<p-messages [(value)]="dashboardMessages" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" />
+<!-- Mesaje pentru tabloul de bord -->
+<p-messages
+  [(value)]="dashboardMessages"
+  [showTransitionOptions]="'500ms'"
+  [hideTransitionOptions]="'500ms'"
+></p-messages>
