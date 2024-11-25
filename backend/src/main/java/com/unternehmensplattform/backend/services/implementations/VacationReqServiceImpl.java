@@ -38,7 +38,7 @@ public class VacationReqServiceImpl implements VacationReqService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentAdmin = (User) authentication.getPrincipal();
 
-        if (!request.getAdministrator().equals(currentAdmin)) {
+    if (request.getAdministrator().getId() != currentAdmin.getId()) {
             throw new RuntimeException("You are not authorized to modify this request");
         }
         request.setStatus(status);

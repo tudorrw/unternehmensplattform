@@ -51,8 +51,8 @@ public class VacationReqController {
         return ResponseEntity.ok(employees);
     }
 
-    @PutMapping("/{requestId}/status")
-    public ResponseEntity<Void> updateRequestStatus(
+    @PostMapping("/modify-status/{requestId}")
+    public ResponseEntity<?> updateRequestStatus(
             @PathVariable Integer requestId,
             @RequestParam VacationReqStatus status) {
         vacationReqService.updateRequestStatus(requestId, status);
