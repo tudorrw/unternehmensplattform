@@ -14,5 +14,6 @@ export { RegistrationRequest } from './models/registration-request';
 export { User } from './models/user';
 export { UserDetailsDto } from './models/user-details-dto';
 export { VacationRequest } from './models/vacation-request';
+export { VacationRequestDetailsDto } from './models/vacation-request-details-dto';
 export { VacationRequestDto } from './models/vacation-request-dto';
 export { WorkingDay } from './models/working-day';

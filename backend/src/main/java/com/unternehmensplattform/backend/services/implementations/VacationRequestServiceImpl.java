@@ -158,7 +158,9 @@ public class VacationRequestServiceImpl implements VacationReqService {
                                 .startDate(vacationRequest.getStartDate())
                                 .endDate(vacationRequest.getEndDate())
                                 .description(vacationRequest.getDescription())
-                                .status(vacationRequest.getStatus()).build())
+                                .status(vacationRequest.getStatus())
+                                .vacationDays((int)calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
+                                .build())
                         .collect(Collectors.toList());
             }
             else {

@@ -29,20 +29,16 @@ public class VacationReqController {
     private final VacationReqService vacationReqService;
 
     @GetMapping("/get-all-vacation-requests-for-employee")
-    public ResponseEntity<?> getVacationRequestsByEmployee() {
+    public ResponseEntity<List<VacationRequestDetailsDTO>> getVacationRequestsByEmployee() {
         List<VacationRequestDetailsDTO> requests = vacationReqService.getVacationRequestsByEmployee();
         return ResponseEntity.ok(requests);
     }
 
 
     @PostMapping("/delete/{requestId}")
-    public ResponseEntity<String> deleteVacationRequest(@PathVariable Integer requestId) {
-        try {
-            vacationReqService.deleteVacationRequest(requestId);
-            return ResponseEntity.ok("Vacation request deleted successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteVacationRequest(@PathVariable Integer requestId) {
+        vacationReqService.deleteVacationRequest(requestId);
+        return ResponseEntity.accepted().build();
     }
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)

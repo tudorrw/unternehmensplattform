@@ -20,6 +20,7 @@ import { GetAvailableAdministrators$Params } from '../fn/vacation-req-controller
 import { getVacationRequestsByEmployee } from '../fn/vacation-req-controller/get-vacation-requests-by-employee';
 import { GetVacationRequestsByEmployee$Params } from '../fn/vacation-req-controller/get-vacation-requests-by-employee';
 import { UserDetailsDto } from '../models/user-details-dto';
+import { VacationRequestDetailsDto } from '../models/vacation-request-details-dto';
 
 @Injectable({ providedIn: 'root' })
 export class VacationReqControllerService extends BaseService {
@@ -36,7 +37,8 @@ export class VacationReqControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteVacationRequest$Response(params: DeleteVacationRequest$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  deleteVacationRequest$Response(params: DeleteVacationRequest$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
     return deleteVacationRequest(this.http, this.rootUrl, params, context);
   }
 
@@ -46,9 +48,12 @@ export class VacationReqControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  deleteVacationRequest(params: DeleteVacationRequest$Params, context?: HttpContext): Observable<string> {
+  deleteVacationRequest(params: DeleteVacationRequest$Params, context?: HttpContext): Observable<{
+}> {
     return this.deleteVacationRequest$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<{
+}>): {
+} => r.body)
     );
   }
 
@@ -90,8 +95,7 @@ export class VacationReqControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVacationRequestsByEmployee$Response(params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+  getVacationRequestsByEmployee$Response(params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VacationRequestDetailsDto>>> {
     return getVacationRequestsByEmployee(this.http, this.rootUrl, params, context);
   }
 
@@ -101,12 +105,9 @@ export class VacationReqControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getVacationRequestsByEmployee(params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<{
-}> {
+  getVacationRequestsByEmployee(params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<Array<VacationRequestDetailsDto>> {
     return this.getVacationRequestsByEmployee$Response(params, context).pipe(
-      map((r: StrictHttpResponse<{
-}>): {
-} => r.body)
+      map((r: StrictHttpResponse<Array<VacationRequestDetailsDto>>): Array<VacationRequestDetailsDto> => r.body)
     );
   }
 

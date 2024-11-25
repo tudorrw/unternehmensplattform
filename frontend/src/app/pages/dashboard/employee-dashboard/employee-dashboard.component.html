@@ -8,16 +8,6 @@ header="Vacation days information"
         [style]="{ width: '25rem' }">
 
   <div class="flex align-items-center gap-3 mb-3">
-    <label for="previousVacationDays" class="font-semibold w-6rem">Previous Vacation Days</label>
-    <input
-            pInputText
-            id="previousVacationDays"
-            class="flex-auto"
-            [value]="userDetails?.previousYearVacationDays || 'No previous vacation days'"
-            disabled
-    />
-  </div>
-  <div class="flex align-items-center gap-3 mb-3">
     <label for="currentVacationDays" class="font-semibold w-6rem">Vacation days left in the current year</label>
     <input
             pInputText
@@ -25,6 +15,16 @@ header="Vacation days information"
             class="flex-auto"
             [value]="userDetails?.actualYearVacationDays || 'No vacation days left'"
             disabled
+    />
+  </div>
+  <div class="flex align-items-center gap-3 mb-3">
+    <label for="signingDate" class="font-semibold w-6rem">Signing Date</label>
+    <input
+      pInputText
+      id="signingDate"
+      class="flex-auto"
+      [value]="userDetails?.signingDate | date: 'MM/dd/yyyy' || 'Not available'"
+      disabled
     />
   </div>
 </p-dialog>
@@ -44,7 +44,7 @@ header="Vacation days information"
           [enableService]="false">
   </p-messages>
 
-  <form #vacationForm="ngForm" (ngSubmit)="submitVacationRequest()">
+  <form #vacationForm="ngForm" (ngSubmit)="submitVacationRequest(vacationForm)">
     <div class="p-fluid">
       <!-- Descriere -->
       <div class="p-field">
@@ -66,7 +66,7 @@ header="Vacation days information"
         <label class="font-bold">Select Admin</label>
         <p-dropdown
                 [options]="availableAdministrators"
-                [(ngModel)]="selectedAdministratorId"
+                [(ngModel)]="selectedAdministrator"
                 name="administrator"
                 optionLabel="email"
                 placeholder="Select an administrator"
@@ -74,7 +74,7 @@ header="Vacation days information"
                 (onChange)="selectAdministrator($event.value)"
                 required
         ></p-dropdown>
-        <small *ngIf="vacationForm.submitted && !selectedAdministratorId" class="p-error">Administrator selection is required.</small>
+        <small *ngIf="vacationForm.submitted && !selectedAdministrator" class="p-error">Administrator selection is required.</small>
       </div>
 
       <!-- Calendar pentru perioada vacanței -->
@@ -99,13 +99,11 @@ header="Vacation days information"
     </div>
 
     <div class="p-dialog-footer flex justify-content-center">
-      <button
-              pButton
-              label="Submit"
-              icon="pi pi-check"
-              type="submit"
-              class="p-button-primary">
-      </button>
+
+    </div>
+    <div class="p-dialog-footer button-container">
+      <button pButton label="Cancel" icon="pi pi-times" (click)="onCancelAddVacReqForm(vacationForm)" type="button" class="p-button-secondary"></button>
+      <button pButton label="Submit" icon="pi pi-check" type="submit" class="p-button-primary"></button>
     </div>
 
   </form>
@@ -117,67 +115,73 @@ header="Vacation days information"
         [enableService]="false">
 </p-messages>
 <!-- Header pentru tabelul cererilor de vacanță -->
-<div *ngIf="showVacationRequestsDialog" class="vacation-requests-header">
-  <h2>Vacation Requests</h2>
-</div>
+
+<!-- toast-uri pentru a arata validarile -->
+<p-toast position="bottom-left" key="save-delete-vac-req" />
+<p-toast position="bottom-left" key="cancel-delete-vac-req" />
 
 
 <!-- Tabelul cererilor de vacanță -->
-<div *ngIf="showVacationRequestsDialog" class="card">
-  <p-table [value]="vacationRequests" [tableStyle]="{'min-width': '50rem'}">
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th>Date</th>
-        <th>From</th>
-        <th>To</th>
-        <th>Days</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Date of Approval</th>
-        <th>Approved By</th>
-        <th>Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-request>
-      <tr>
-        <td [ngClass]="'date-highlight'">{{ request.requestedDate | date }}</td>
-        <td>{{ request.startDate | date }}</td>
-        <td>{{ request.endDate | date }}</td>
-        <td>{{ calculateDaysDifference(request.startDate, request.endDate) }}</td>
-        <td>{{ request.description }}</td>
-        <td [ngClass]="{
-                    'status-approved': request.status === 'Approved',
-                    'status-pending': request.status === 'New',
-                    'status-rejected': request.status === 'Rejected',
-                    'status-default': !request.status
-                    }">
-          {{ request.status }}
-        </td>
-        <td>{{ request.status === 'Approved' ? (request.requestedDate | date) : 'Not Approved' }}</td>
-        <td>{{ request.adminEmail || 'Not Assigned' }}</td>
-        <td>
-          <p-button
-                  label="Delete"
-                  icon="pi pi-trash"
-                  class="p-button-danger"
-                  (onClick)="deleteVacationRequest(request.id)">
-          </p-button>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="empty">
-      <tr>
-        <td colspan="5" class="text-center">No vacation requests</td>
-      </tr>
-    </ng-template>
-  </p-table>
+<p-table [value]="vacationRequests" [tableStyle]="{'min-width': '50rem'}">
+  <ng-template pTemplate="caption">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <!-- Title -->
+      <h2 style="margin: 0; font-size: 1.5rem; font-weight: bold; color: #3A8BC4;">
+        Vacation Requests
+      </h2>
 
-</div>
+      <!-- Buttons -->
+      <div style="display: flex; gap: 10px;">
+        <p-button (onClick)="requestVacation()" label="Request vacation" class="button-spacing"></p-button>
+        <p-button (onClick)="viewVacationDetails()" label="See more details" class="button-spacing"></p-button>
+      </div>
+    </div>
+  </ng-template>
 
-<!-- Butoane -->
-<div class="card flex justify-content-end">
-  <p-button (onClick)="requestVacation()" label="Request vacation" class="mr-2 button-spacing"></p-button>
-  <p-button (onClick)="viewVacationDetails()" label="See more details" class="button-spacing"></p-button>
-</div>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th>Requested Date</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Days Off</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Assigned Admin</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-request>
+    <tr>
+      <td [ngClass]="'date-highlight'">{{ request.requestedDate | date: 'MM/dd/yyyy, HH:mm' }}</td>
+      <td>{{ request.startDate | date: 'MM/dd/yyyy' }}</td>
+      <td>{{ request.endDate | date: 'MM/dd/yyyy' }}</td>
+      <td>{{ request.vacationDays }}</td>
+      <td>{{ request.description }}</td>
+      <td [ngClass]="{
+                  'status-approved': request.status === VacationRequestStatus.Approved,
+                  'status-pending': request.status === VacationRequestStatus.New,
+                  'status-rejected': request.status === VacationRequestStatus.Rejected,
+                  'status-default': !request.status
+                  }">
+        {{ request.status }}
+      </td>
+      <td>{{ request.adminEmail || 'Not Assigned' }}</td>
+      <td>
+        <button
+          *ngIf="request.status === VacationRequestStatus.New"
+          pButton
+          icon="pi pi-trash"
+          class="p-button-text p-button-danger"
+          (click)="deleteVacationRequest(request.id)"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="5" class="text-center">No vacation requests found.</td>
+    </tr>
+  </ng-template>
+</p-table>
 
 

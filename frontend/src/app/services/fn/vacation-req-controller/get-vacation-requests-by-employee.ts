@@ -8,12 +8,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { VacationRequestDetailsDto } from '../../models/vacation-request-details-dto';
 
 export interface GetVacationRequestsByEmployee$Params {
 }
 
-export function getVacationRequestsByEmployee(http: HttpClient, rootUrl: string, params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-}>> {
+export function getVacationRequestsByEmployee(http: HttpClient, rootUrl: string, params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VacationRequestDetailsDto>>> {
   const rb = new RequestBuilder(rootUrl, getVacationRequestsByEmployee.PATH, 'get');
   if (params) {
   }
@@ -23,8 +23,7 @@ export function getVacationRequestsByEmployee(http: HttpClient, rootUrl: string,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      }>;
+      return r as StrictHttpResponse<Array<VacationRequestDetailsDto>>;
     })
   );
 }

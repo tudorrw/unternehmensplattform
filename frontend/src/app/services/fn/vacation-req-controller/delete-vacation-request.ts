@@ -13,7 +13,8 @@ export interface DeleteVacationRequest$Params {
   requestId: number;
 }
 
-export function deleteVacationRequest(http: HttpClient, rootUrl: string, params: DeleteVacationRequest$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+export function deleteVacationRequest(http: HttpClient, rootUrl: string, params: DeleteVacationRequest$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+}>> {
   const rb = new RequestBuilder(rootUrl, deleteVacationRequest.PATH, 'post');
   if (params) {
     rb.path('requestId', params.requestId, {});
@@ -24,7 +25,8 @@ export function deleteVacationRequest(http: HttpClient, rootUrl: string, params:
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string>;
+      return r as StrictHttpResponse<{
+      }>;
     })
   );
 }

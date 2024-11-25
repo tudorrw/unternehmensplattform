@@ -23,4 +23,8 @@ public class VacationRequestDetailsDTO {
 
 
     private String adminEmail;
+    private Integer employeeId;
+    private String employeeEmail;
+
+    private Integer vacationDays;
 }
