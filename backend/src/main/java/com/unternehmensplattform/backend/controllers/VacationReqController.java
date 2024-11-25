@@ -1,12 +1,8 @@
 package com.unternehmensplattform.backend.controllers;
 
-import com.unternehmensplattform.backend.entities.DTOs.CompanyDetailsDTO;
-import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.UserWithVacationRequestDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDetailsDTO;
-import com.unternehmensplattform.backend.entities.VacationRequest;
 import com.unternehmensplattform.backend.services.interfaces.AuthenticationService;
-import com.unternehmensplattform.backend.services.implementations.VacationReqServiceImpl;
 
 import com.unternehmensplattform.backend.enums.VacationReqStatus;
 import com.unternehmensplattform.backend.services.interfaces.VacationReqService;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 

@@ -5,7 +5,6 @@ import com.unternehmensplattform.backend.enums.VacationReqStatus;
 
 import com.unternehmensplattform.backend.entities.DTOs.UserWithVacationRequestDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDetailsDTO;
-import com.unternehmensplattform.backend.entities.VacationRequest;
 
 import java.util.List;
 
