@@ -17,4 +17,6 @@ public interface VacationReqService {
     void createVacationRequest(VacationRequestDTO vacationRequestDTO, User employee);
 
     List<UserDetailsDTO> getAvailableAdministrators(User loggedInUser);
+
+    VacationRequest getVacationRequestById(Integer requestId);
 }

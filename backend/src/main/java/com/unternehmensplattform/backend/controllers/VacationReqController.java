@@ -12,13 +12,17 @@ import com.unternehmensplattform.backend.handler.VacationRequestOverlapException
 import com.unternehmensplattform.backend.services.interfaces.VacationReqService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
 
+import java.io.File;
 import java.util.List;
 
 @Slf4j
@@ -46,6 +50,25 @@ public class VacationReqController {
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         vacationReqService.createVacationRequest(vacationRequestDTO, loggedInUser);
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/download-pdf/{requestId}")
+    public ResponseEntity<FileSystemResource> downloadVacationRequestPdf(@PathVariable Integer requestId) {
+        VacationRequest vacationRequest = vacationReqService.getVacationRequestById(requestId);
+        if (vacationRequest == null) {
+            throw new IllegalArgumentException("Vacantion Request with this id does not exist");
+        }
+        File pdfFile = new File(vacationRequest.getPdfPath());
+        if (!pdfFile.exists()) {
+            throw new ResourceNotFoundException("PDF file not found for this request.");
+        }
+
+        FileSystemResource resource = new FileSystemResource(pdfFile);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdfFile.length())
+                .body(resource);
     }
 
 

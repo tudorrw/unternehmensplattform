@@ -15,6 +15,8 @@ import { createVacationRequest } from '../fn/vacation-req-controller/create-vaca
 import { CreateVacationRequest$Params } from '../fn/vacation-req-controller/create-vacation-request';
 import { deleteVacationRequest } from '../fn/vacation-req-controller/delete-vacation-request';
 import { DeleteVacationRequest$Params } from '../fn/vacation-req-controller/delete-vacation-request';
+import { downloadVacationRequestPdf } from '../fn/vacation-req-controller/download-vacation-request-pdf';
+import { DownloadVacationRequestPdf$Params } from '../fn/vacation-req-controller/download-vacation-request-pdf';
 import { getAvailableAdministrators } from '../fn/vacation-req-controller/get-available-administrators';
 import { GetAvailableAdministrators$Params } from '../fn/vacation-req-controller/get-available-administrators';
 import { getVacationRequestsByEmployee } from '../fn/vacation-req-controller/get-vacation-requests-by-employee';
@@ -108,6 +110,31 @@ export class VacationReqControllerService extends BaseService {
   getVacationRequestsByEmployee(params?: GetVacationRequestsByEmployee$Params, context?: HttpContext): Observable<Array<VacationRequestDetailsDto>> {
     return this.getVacationRequestsByEmployee$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<VacationRequestDetailsDto>>): Array<VacationRequestDetailsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `downloadVacationRequestPdf()` */
+  static readonly DownloadVacationRequestPdfPath = '/vacation-request/download-pdf/{requestId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `downloadVacationRequestPdf()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadVacationRequestPdf$Response(params: DownloadVacationRequestPdf$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    return downloadVacationRequestPdf(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `downloadVacationRequestPdf$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  downloadVacationRequestPdf(params: DownloadVacationRequestPdf$Params, context?: HttpContext): Observable<Blob> {
+    return this.downloadVacationRequestPdf$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }
 

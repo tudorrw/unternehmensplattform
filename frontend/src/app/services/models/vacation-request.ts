@@ -9,6 +9,7 @@ export interface VacationRequest {
   employee?: User;
   endDate: string;
   id?: number;
+  pdfPath?: string;
   requestedDate: string;
   startDate: string;
   status: 'New' | 'Approved' | 'Rejected';

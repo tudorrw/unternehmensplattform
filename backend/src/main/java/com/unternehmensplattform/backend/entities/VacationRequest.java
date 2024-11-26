@@ -52,4 +52,7 @@ public class VacationRequest {
     @Column(name = "description", nullable = false, length = 256)
     private String description;
 
+    @Column(name = "pdf_path")
+    private String pdfPath;
+
 }

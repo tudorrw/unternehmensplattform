@@ -1,20 +1,18 @@
 package com.unternehmensplattform.backend.services.implementations;
 
-import com.unternehmensplattform.backend.entities.Contract;
-import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
-import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDTO;
-import com.unternehmensplattform.backend.entities.DTOs.VacationRequestDetailsDTO;
-import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.entities.VacationRequest;
-import com.unternehmensplattform.backend.enums.UserRole;
-import com.unternehmensplattform.backend.enums.VacationReqStatus;
-import com.unternehmensplattform.backend.handler.InvalidVacationRequestException;
-import com.unternehmensplattform.backend.handler.VacationRequestNotFoundException;
-import com.unternehmensplattform.backend.handler.VacationRequestOverlapException;
-import com.unternehmensplattform.backend.handler.VacationRequestValidationDatesException;
-import com.unternehmensplattform.backend.repositories.ContractRepository;
-import com.unternehmensplattform.backend.repositories.UserRepository;
-import com.unternehmensplattform.backend.repositories.VacationReqRepository;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import com.unternehmensplattform.backend.entities.*;
+import com.unternehmensplattform.backend.entities.DTOs.*;
+import com.unternehmensplattform.backend.enums.*;
+import com.unternehmensplattform.backend.handler.*;
+import com.unternehmensplattform.backend.repositories.*;
 import com.unternehmensplattform.backend.services.interfaces.VacationReqService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -65,10 +65,22 @@ public class VacationRequestServiceImpl implements VacationReqService {
                             requestedWeekdays, employee.getContract().getActualYearVacationDays())
             );
         }
+
+        // Build the vacation request
         VacationRequest vacationRequest = buildVacationRequest(vacationRequestDTO, employee, administrator);
-        vacationRequestRepository.save(vacationRequest);
+
         contract.setActualYearVacationDays(contract.getActualYearVacationDays() - (int)requestedWeekdays);
         contractRepository.save(contract);
+
+        vacationRequest = vacationRequestRepository.save(vacationRequest);
+
+        String pdfPath = generatePdf(vacationRequest);
+
+        vacationRequest.setPdfPath(pdfPath);
+        vacationRequestRepository.save(vacationRequest);
+
+
+
 
     }
 
@@ -119,6 +131,37 @@ public class VacationRequestServiceImpl implements VacationReqService {
                 .requestedDate(Instant.now())
                 .status(VacationReqStatus.New)
                 .build();
+    }
+
+    private String generatePdf(VacationRequest vacationRequest) {
+        String directoryPath = "vacation_requests";
+        String filePath = directoryPath + "/vacation_request_" + vacationRequest.getId() + ".pdf";
+
+        // Ensure the directory exists
+        try {
+            Files.createDirectories(Paths.get(directoryPath));
+        } catch (IOException e) {
+            throw new RuntimeException("Error creating directory: " + directoryPath, e);
+        }
+
+        Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+
+            document.add(new Paragraph("Vacation Request Details"));
+            document.add(new Paragraph("Employee Name: " + vacationRequest.getEmployee().getFirstName() + " " + vacationRequest.getEmployee().getLastName()));
+            document.add(new Paragraph("Administrator: " + vacationRequest.getAdministrator().getFirstName() + " " + vacationRequest.getAdministrator().getLastName()));
+            document.add(new Paragraph("Start Date: " + vacationRequest.getStartDate()));
+            document.add(new Paragraph("End Date: " + vacationRequest.getEndDate()));
+            document.add(new Paragraph("Description: " + vacationRequest.getDescription()));
+        } catch (DocumentException | IOException e) {
+            throw new RuntimeException("Error generating PDF", e);
+        } finally {
+            document.close();
+        }
+
+        return filePath;
     }
 
     @Override
@@ -200,5 +243,9 @@ public class VacationRequestServiceImpl implements VacationReqService {
             throw new RuntimeException("User is not an employee");
         }
     }
+    public VacationRequest getVacationRequestById(Integer requestId) {
+        return vacationRequestRepository.findById(requestId).orElse(null);
+    }
+
 }
 // sa vad cv la branch daca se schimb

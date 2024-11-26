@@ -4,13 +4,13 @@ import { UserDetailsDto } from '../../../services/models/user-details-dto';
 import { UserCrudControllerService } from '../../../services/services/user-crud-controller.service';
 import { VacationRequestDto } from '../../../services/models/vacation-request-dto';
 import { VacationReqControllerService } from '../../../services/services/vacation-req-controller.service';
-import { VacationRequest } from "../../../services/models/vacation-request";
-import {map} from "rxjs/operators";
+
 import {HttpErrorResponse} from "@angular/common/http";
 import {VacationRequestStatus} from "../../../services/enums/VacationRequestStatus";
 import {VacationRequestDetailsDto} from "../../../services/models/vacation-request-details-dto";
 import {NgForm} from "@angular/forms";
 import {DatePipe} from "@angular/common";
+
 
 @Component({
     selector: 'app-employee-dashboard',
@@ -316,6 +316,26 @@ export class EmployeeDashboardComponent implements OnInit {
       form.resetForm();
       this.requestVacationForm = false;
   }
+
+  downloadPdf(requestId: number): void {
+    this.vacationReqControllerService.downloadVacationRequestPdf({ requestId }).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `VacationRequest_${requestId}.pdf`;
+
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error downloading PDF:', err);
+      },
+    });
+  }
+
 
   protected readonly VacationRequestStatus = VacationRequestStatus;
 }
