@@ -126,8 +126,20 @@ export class EmployeeDashboardComponent implements OnInit {
           return 0;
       }
 
-      const timeDifference = end.getTime() - start.getTime();
-      return timeDifference / (1000 * 3600 * 24);
+    let count = 0;
+    let currentDate = new Date(start);
+
+    // Loop through each day in the range
+    while (currentDate <= end) {
+      const dayOfWeek = currentDate.getDay();
+      // Count the day if it's not a weekend (0 = Sunday, 6 = Saturday)
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        count++;
+      }
+      // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return count;
   }
 
   submitVacationRequest(form: NgForm): void {
