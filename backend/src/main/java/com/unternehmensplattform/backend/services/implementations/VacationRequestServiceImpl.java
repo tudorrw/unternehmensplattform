@@ -1,8 +1,8 @@
 package com.unternehmensplattform.backend.services.implementations;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.FileOutputStream;
@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -52,7 +53,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
         User administrator = userRepository.findById(vacationRequestDTO.getAssignedAdministratorId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
 
-        if(administrator.getContract().getCompany().getId() != contract.getCompany().getId()) {
+        if (administrator.getContract().getCompany().getId() != contract.getCompany().getId()) {
             throw new IllegalArgumentException("Admin does not have the same company as the employee");
         }
 
@@ -69,7 +70,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
         // Build the vacation request
         VacationRequest vacationRequest = buildVacationRequest(vacationRequestDTO, employee, administrator);
 
-        contract.setActualYearVacationDays(contract.getActualYearVacationDays() - (int)requestedWeekdays);
+        contract.setActualYearVacationDays(contract.getActualYearVacationDays() - (int) requestedWeekdays);
         contractRepository.save(contract);
 
         vacationRequest = vacationRequestRepository.save(vacationRequest);
@@ -78,8 +79,6 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
         vacationRequest.setPdfPath(pdfPath);
         vacationRequestRepository.save(vacationRequest);
-
-
 
 
     }
@@ -146,15 +145,72 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
         Document document = new Document();
         try {
+
+            document.setMargins(72, 72, 72, 72);
+
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
-            document.add(new Paragraph("Vacation Request Details"));
-            document.add(new Paragraph("Employee Name: " + vacationRequest.getEmployee().getFirstName() + " " + vacationRequest.getEmployee().getLastName()));
-            document.add(new Paragraph("Administrator: " + vacationRequest.getAdministrator().getFirstName() + " " + vacationRequest.getAdministrator().getLastName()));
-            document.add(new Paragraph("Start Date: " + vacationRequest.getStartDate()));
-            document.add(new Paragraph("End Date: " + vacationRequest.getEndDate()));
-            document.add(new Paragraph("Description: " + vacationRequest.getDescription()));
+            Font normalFont = new Font(Font.FontFamily.HELVETICA, 14);
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18 , Font.UNDERLINE);
+
+            Paragraph title = new Paragraph(vacationRequest.getDescription(), titleFont);
+            title.setSpacingAfter(20);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("\n"));
+
+            Paragraph tabbedParagraph = new Paragraph("Dear Administrator,", normalFont);
+            tabbedParagraph.setIndentationLeft(36); // Adjust this number to control tab space
+            tabbedParagraph.setAlignment(Element.ALIGN_LEFT);
+            document.add(tabbedParagraph);
+
+            document.add(new Paragraph("\n"));
+
+            long vacationDays = calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate());
+            int year = vacationRequest.getStartDate().getYear();
+
+            String text = String.format(
+                    "The undersigned %s %s, employee of the company %s, " +
+                            "kindly request your approval of this application through which I request to take %d days " +
+                            "of leave for the year %d, during the period %s - %s.\n\n" +
+                            "I thank you in advance for your consideration and support.\n\n",
+                    vacationRequest.getEmployee().getFirstName(),
+                    vacationRequest.getEmployee().getLastName(),
+                    vacationRequest.getEmployee().getContract().getCompany().getName(),
+                    vacationDays,
+                    year,
+                    vacationRequest.getStartDate(),
+                    vacationRequest.getEndDate()
+            );
+
+            Paragraph requestText = new Paragraph(text, normalFont);
+            requestText.setLeading(30);
+            requestText.setAlignment(Element.ALIGN_JUSTIFIED);
+            document.add(requestText);
+
+            document.add(new Paragraph("\n"));
+            document.add(new Paragraph("\n"));
+
+            PdfPTable table = new PdfPTable(2);
+
+            PdfPCell dateCell = new PdfPCell(new Phrase("Date: " + LocalDate.now().toString(), normalFont));
+            dateCell.setBorder(Rectangle.NO_BORDER);
+            dateCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            dateCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            PdfPCell handledByCell = new PdfPCell(new Phrase("Handled by: " + vacationRequest.getAdministrator().getFirstName() + " " + vacationRequest.getAdministrator().getLastName(), normalFont));
+            handledByCell.setBorder(Rectangle.NO_BORDER);
+            handledByCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            handledByCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            table.addCell(dateCell);
+            table.addCell(handledByCell);
+
+            document.add(table);
+
         } catch (DocumentException | IOException e) {
             throw new RuntimeException("Error generating PDF", e);
         } finally {
@@ -187,8 +243,8 @@ public class VacationRequestServiceImpl implements VacationReqService {
     public List<VacationRequestDetailsDTO> getVacationRequestsByEmployee() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        if(currentUser.getRole() == UserRole.Employee) {
-            if(currentUser.getContract() != null) {
+        if (currentUser.getRole() == UserRole.Employee) {
+            if (currentUser.getContract() != null) {
 
 
                 List<VacationRequest> vacationRequests = vacationRequestRepository.findByEmployeeIdOrderByRequestedDateDesc(currentUser.getId());
@@ -202,15 +258,13 @@ public class VacationRequestServiceImpl implements VacationReqService {
                                 .endDate(vacationRequest.getEndDate())
                                 .description(vacationRequest.getDescription())
                                 .status(vacationRequest.getStatus())
-                                .vacationDays((int)calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
+                                .vacationDays((int) calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
                                 .build())
                         .collect(Collectors.toList());
-            }
-            else {
+            } else {
                 throw new RuntimeException("Employee has no contract");
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("User is not an employee");
         }
     }
@@ -218,31 +272,29 @@ public class VacationRequestServiceImpl implements VacationReqService {
     public void deleteVacationRequest(Integer requestId) {
 
         VacationRequest vacationRequest = vacationRequestRepository.findById(requestId).orElse(null);
-        if(vacationRequest == null) {
+        if (vacationRequest == null) {
             throw new VacationRequestNotFoundException("Vacation request with id " + requestId + " not found.");
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        if(currentUser.getRole() == UserRole.Employee) {
+        if (currentUser.getRole() == UserRole.Employee) {
             Contract contract = currentUser.getContract();
-            if(contract != null) {
-                if(vacationRequest.getEmployee().getId() == currentUser.getId()) {
-                    contract.setActualYearVacationDays(contract.getActualYearVacationDays() + (int)calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()));
+            if (contract != null) {
+                if (vacationRequest.getEmployee().getId() == currentUser.getId()) {
+                    contract.setActualYearVacationDays(contract.getActualYearVacationDays() + (int) calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()));
                     contractRepository.save(contract);
                     vacationRequestRepository.deleteById(requestId);
-                }
-                else {
+                } else {
                     throw new IllegalArgumentException("the vacation request does not belong to the employee who made the request");
                 }
-            }
-            else {
+            } else {
                 throw new RuntimeException("Employee has no contract");
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("User is not an employee");
         }
     }
+
     public VacationRequest getVacationRequestById(Integer requestId) {
         return vacationRequestRepository.findById(requestId).orElse(null);
     }
