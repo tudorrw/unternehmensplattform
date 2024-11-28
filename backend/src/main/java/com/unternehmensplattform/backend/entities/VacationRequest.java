@@ -19,7 +19,8 @@ import java.time.LocalDate;
 @Table(name = "vacation_request")
 public class VacationRequest {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,5 +51,8 @@ public class VacationRequest {
     @NotNull
     @Column(name = "description", nullable = false, length = 256)
     private String description;
+
+    @Column(name = "pdf_path")
+    private String pdfPath;
 
 }

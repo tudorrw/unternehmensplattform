@@ -43,6 +43,8 @@ import { ActivityReportsComponent } from './pages/activity-reports/activity-repo
 import {TagModule} from "primeng/tag";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
+import {MultiSelectModule} from "primeng/multiselect";
+import {DropdownModule} from "primeng/dropdown";
 
 
 @NgModule({
@@ -83,7 +85,8 @@ import {InputIconModule} from "primeng/inputicon";
     OverlayPanelModule,
     AvatarModule,
     DialogModule,
-    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, TabMenuModule, TagModule, IconFieldModule, InputIconModule
+    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, MultiSelectModule, DropdownModule,
+    TabMenuModule, TagModule, IconFieldModule, InputIconModule
   ],
   providers: [
     HttpClient,

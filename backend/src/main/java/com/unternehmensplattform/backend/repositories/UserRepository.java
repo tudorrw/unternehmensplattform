@@ -14,10 +14,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String username);
 
     boolean existsByTelefonNumber(String telefonNumber);
+
     boolean existsByEmail(String email);
 
     @Query("SELECT u FROM User u JOIN u.contract c WHERE u.role = :role AND c.company = :company")
     List<User> findUsersByCompany(@Param("role") UserRole role, @Param("company") Company company);
 
     List<User> findByRole(UserRole userRole);
+
+    @Query("SELECT u FROM User u JOIN u.contract c WHERE u.role = :role AND c.company = :company")
+    List<User> findUsersByRoleAndCompany(@Param("role") UserRole role, @Param("company") Company company);
+
+
+
 }
