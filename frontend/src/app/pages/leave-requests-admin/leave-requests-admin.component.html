@@ -1,1 +1,157 @@
-<p>leave-requests-admin works!</p>
+
+<div class="requests-container">
+  <p-table
+    *ngIf="!loading"
+    [value]="requests"
+    styleClass="p-datatable-gridlines"
+    [scrollable]="true"
+    scrollHeight="500px"
+    [tableStyle]="{ 'min-width': '40rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width:110px" pSortableColumn="description">
+          Description <p-sortIcon field="description" />
+        </th>
+        <th style="min-width:110px" pSortableColumn="startDate">
+          Start Date <p-sortIcon field="startDate" />
+        </th>
+        <th style="min-width:110px" pSortableColumn="endDate">
+          End Date <p-sortIcon field="endDate" />
+        </th>
+        <th style="min-width:110px" pSortableColumn="vacationDays">
+          Vacation Days <p-sortIcon field="vacationDays" />
+        </th>
+        <th style="min-width:110px" pSortableColumn="status">
+          Status <p-sortIcon field="status" />
+        </th>
+        <th style="min-width:140px">
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-request>
+      <tr>
+        <td>{{ request.description }}</td>
+        <td>{{ request.startDate }}</td>
+        <td>{{ request.endDate }}</td>
+        <td>{{ request.vacationDays }}</td>
+        <td>{{ request.status }}</td>
+        <td>
+          <p-button
+            label="Approve"
+            [text]="true"
+            [raised]="true"
+            severity="success"
+            styleClass="custom-button"
+            (onClick)="onApprove(request.id, 'Approved')"
+          ></p-button>
+          <p-button
+            label="Decline"
+            [text]="true"
+            [raised]="true"
+            severity="danger"
+            styleClass="custom-button"
+            (onClick)="onDecline(request.id, 'Rejected')"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<div class="userRequests-container">
+<p-table
+  #dt2
+  [value]="employeesWithRequests"
+  [style]="{ 'min-width': '30vw' }"
+  styleClass="p-datatable-striped p-datatable-gridlines"
+  [expandedRowKeys]="expandedRows"
+  dataKey="userDetailsDTO.id"
+  [paginator]="true"
+  [rows]="11"
+  [rowsPerPageOptions]="[5, 10, 25]"
+  [globalFilterFields]="['userDetailsDTO.firstName', 'userDetailsDTO.lastName', 'userDetailsDTO.role', 'userDetailsDTO.companyName']"
+  >
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <p-button
+        label="Clear"
+        [outlined]="true"
+        icon="pi pi-filter-slash"
+        (onClick)="clear(dt2)"
+      ></p-button>
+      <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchValue"
+            (input)="dt2?.filterGlobal(searchValue, 'contains')"
+            placeholder="Search keyword"
+          />
+        </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 5rem"></th>
+      <th pSortableColumn="userDetailsDTO.firstName">Name<p-sortIcon field="userDetailsDTO.firstName" /></th>
+      <th pSortableColumn="userDetailsDTO.role">Role<p-sortIcon field="userDetailsDTO.role" /></th>
+      <th pSortableColumn="userDetailsDTO.companyName">Company<p-sortIcon field="userDetailsDTO.companyName" /></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-employeesWithRequests let-expanded="expanded">
+    <tr>
+      <td>
+        <p-button type="button" pRipple [pRowToggler]="employeesWithRequests" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+      </td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.lastName + ' ' + employeesWithRequests.userDetailsDTO.firstName }}</td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.role }}</td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.companyName }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-employeesWithRequests>
+    <tr>
+      <td colspan="7">
+        <div class="p-3">
+          <br>
+          <p-table
+            [value]="employeesWithRequests.vacationRequests"
+            dataKey="id"
+            scrollable="true"
+            [scrollHeight]="'150px'"
+          >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="description">Description<p-sortIcon field="description" /></th>
+              <th pSortableColumn="startDate">Start Date<p-sortIcon field="startDate" /></th>
+              <th pSortableColumn="endDate">End Date<p-sortIcon field="endDate" /></th>
+              <th pSortableColumn="status">Status<p-sortIcon field="status" /></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-vacationRequests>
+            <tr>
+              <td>{{ vacationRequests.description }}</td>
+              <td>{{ vacationRequests.startDate }}</td>
+              <td>{{ vacationRequests.endDate }}</td>
+              <td>{{ vacationRequests.status }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6">There are no requests for this user.</td>
+            </tr>
+          </ng-template>
+</p-table>
+
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+</div>
+
+<br><br><br>
+
+
+

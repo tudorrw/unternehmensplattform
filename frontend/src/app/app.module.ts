@@ -40,6 +40,9 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { ActivityReportsAdminComponent } from "./pages/activity-reports/activity-reports-admin/activity-reports-admin.component";
 import { ActivityReportsEmployeeComponent } from './pages/activity-reports/activity-reports-employee/activity-reports-employee.component';
 import { ActivityReportsComponent } from './pages/activity-reports/activity-reports.component';
+import {TagModule} from "primeng/tag";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
 
 
 @NgModule({
@@ -80,7 +83,7 @@ import { ActivityReportsComponent } from './pages/activity-reports/activity-repo
     OverlayPanelModule,
     AvatarModule,
     DialogModule,
-    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, TabMenuModule
+    TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, TabMenuModule, TagModule, IconFieldModule, InputIconModule
   ],
   providers: [
     HttpClient,
