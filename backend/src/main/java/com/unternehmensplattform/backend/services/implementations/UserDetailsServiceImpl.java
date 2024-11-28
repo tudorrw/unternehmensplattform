@@ -151,6 +151,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
                 .email(user.getEmail())
                 .telefonNumber(user.getTelefonNumber())
                 .accountLocked(user.isAccountLocked())
+                .fullName(user.getFirstName() + " " + user.getLastName())
                 .role(user.getRole());
 
         // Include company name if the user has a contract with a company

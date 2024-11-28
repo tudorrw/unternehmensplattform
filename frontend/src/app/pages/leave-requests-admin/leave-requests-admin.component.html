@@ -9,8 +9,8 @@
     [tableStyle]="{ 'min-width': '40rem' }">
     <ng-template pTemplate="header">
       <tr>
-        <th style="min-width:110px" pSortableColumn="description">
-          Description <p-sortIcon field="description" />
+        <th style="min-width:110px" pSortableColumn="employeeFullName">
+          Name <p-sortIcon field="employeeFullName" />
         </th>
         <th style="min-width:110px" pSortableColumn="startDate">
           Start Date <p-sortIcon field="startDate" />
@@ -19,10 +19,10 @@
           End Date <p-sortIcon field="endDate" />
         </th>
         <th style="min-width:110px" pSortableColumn="vacationDays">
-          Vacation Days <p-sortIcon field="vacationDays" />
+          Requested Days <p-sortIcon field="vacationDays" />
         </th>
-        <th style="min-width:110px" pSortableColumn="status">
-          Status <p-sortIcon field="status" />
+        <th style="min-width:110px" pSortableColumn="description">
+          Description <p-sortIcon field="description" />
         </th>
         <th style="min-width:140px">
         </th>
@@ -30,11 +30,11 @@
     </ng-template>
     <ng-template pTemplate="body" let-request>
       <tr>
-        <td>{{ request.description }}</td>
+        <td>{{ request.employeeFullName }}</td>
         <td>{{ request.startDate }}</td>
         <td>{{ request.endDate }}</td>
         <td>{{ request.vacationDays }}</td>
-        <td>{{ request.status }}</td>
+        <td>{{ request.description }}</td>
         <td>
           <p-button
             label="Approve"
@@ -69,7 +69,7 @@
   [paginator]="true"
   [rows]="11"
   [rowsPerPageOptions]="[5, 10, 25]"
-  [globalFilterFields]="['userDetailsDTO.firstName', 'userDetailsDTO.lastName', 'userDetailsDTO.role', 'userDetailsDTO.companyName']"
+  [globalFilterFields]="['userDetailsDTO.fullName', 'userDetailsDTO.email', 'useDetailsDTO.actualYearVacationDays']"
   >
   <ng-template pTemplate="caption">
     <div class="flex">
@@ -95,9 +95,9 @@
   <ng-template pTemplate="header">
     <tr>
       <th style="width: 5rem"></th>
-      <th pSortableColumn="userDetailsDTO.firstName">Name<p-sortIcon field="userDetailsDTO.firstName" /></th>
-      <th pSortableColumn="userDetailsDTO.role">Role<p-sortIcon field="userDetailsDTO.role" /></th>
-      <th pSortableColumn="userDetailsDTO.companyName">Company<p-sortIcon field="userDetailsDTO.companyName" /></th>
+      <th pSortableColumn="userDetailsDTO.fullName">Name<p-sortIcon field="userDetailsDTO.fullName" /></th>
+      <th pSortableColumn="userDetailsDTO.email">Email<p-sortIcon field="userDetailsDTO.email" /></th>
+      <th pSortableColumn="userDetailsDTO.actualYearVacationDays">Vacation Days Left<p-sortIcon field="userDetailsDTO.actualYearVacationDays" /></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-employeesWithRequests let-expanded="expanded">
@@ -105,9 +105,9 @@
       <td>
         <p-button type="button" pRipple [pRowToggler]="employeesWithRequests" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
       </td>
-      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.lastName + ' ' + employeesWithRequests.userDetailsDTO.firstName }}</td>
-      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.role }}</td>
-      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.companyName }}</td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.fullName}}</td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.email }}</td>
+      <td class="bold-text">{{ employeesWithRequests.userDetailsDTO.actualYearVacationDays }}</td>
     </tr>
   </ng-template>
   <ng-template pTemplate="rowexpansion" let-employeesWithRequests>
@@ -123,18 +123,20 @@
           >
           <ng-template pTemplate="header">
             <tr>
-              <th pSortableColumn="description">Description<p-sortIcon field="description" /></th>
               <th pSortableColumn="startDate">Start Date<p-sortIcon field="startDate" /></th>
               <th pSortableColumn="endDate">End Date<p-sortIcon field="endDate" /></th>
+              <th pSortableColumn="vacationDays">Requested Days<p-sortIcon field="vacationDays" /></th>
+              <th pSortableColumn="description">Description<p-sortIcon field="description" /></th>
               <th pSortableColumn="status">Status<p-sortIcon field="status" /></th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-vacationRequests>
+          <ng-template pTemplate="body" let-vacationRequest>
             <tr>
-              <td>{{ vacationRequests.description }}</td>
-              <td>{{ vacationRequests.startDate }}</td>
-              <td>{{ vacationRequests.endDate }}</td>
-              <td>{{ vacationRequests.status }}</td>
+              <td>{{ vacationRequest.startDate }}</td>
+              <td>{{ vacationRequest.endDate }}</td>
+              <td>{{ vacationRequest.vacationDays }}</td>
+              <td>{{ vacationRequest.description }}</td>
+              <td>{{ vacationRequest.status }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">

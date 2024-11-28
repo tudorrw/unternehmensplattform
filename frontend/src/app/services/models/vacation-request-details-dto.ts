@@ -6,6 +6,7 @@ export interface VacationRequestDetailsDto {
   adminEmail?: string;
   description?: string;
   employeeEmail?: string;
+  employeeFullName?: string;
   employeeId?: number;
   endDate?: string;
   id?: number;
