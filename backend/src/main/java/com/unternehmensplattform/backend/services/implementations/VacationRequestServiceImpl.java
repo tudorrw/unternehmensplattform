@@ -298,6 +298,4 @@ public class VacationRequestServiceImpl implements VacationReqService {
     public VacationRequest getVacationRequestById(Integer requestId) {
         return vacationRequestRepository.findById(requestId).orElse(null);
     }
-
 }
-// sa vad cv la branch daca se schimb
