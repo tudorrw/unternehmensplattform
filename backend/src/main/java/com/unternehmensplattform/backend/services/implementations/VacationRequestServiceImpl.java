@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VacationReqServiceImpl implements VacationReqService {
+public class VacationRequestServiceImpl implements VacationReqService {
     private final VacationReqRepository vacationReqRepository;
     private final VacationReqHandler vacationReqHandler;
     private final ContractRepository contractRepository;
