@@ -168,6 +168,7 @@ header="Vacation days information"
       <td>{{ request.adminEmail || 'Not Assigned' }}</td>
       <td>
         <button
+          *ngIf="request.status !== VacationRequestStatus.Rejected"
           pButton
           icon="pi pi-file-pdf"
           class="p-button-text p-button-info p-button-lg"

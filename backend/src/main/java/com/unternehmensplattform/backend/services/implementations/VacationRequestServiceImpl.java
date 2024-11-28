@@ -154,7 +154,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
             Font normalFont = new Font(Font.FontFamily.HELVETICA, 14);
             Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18 , Font.UNDERLINE);
 
-            Paragraph title = new Paragraph(vacationRequest.getDescription(), titleFont);
+            Paragraph title = new Paragraph("Leave request", titleFont);
             title.setSpacingAfter(20);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
