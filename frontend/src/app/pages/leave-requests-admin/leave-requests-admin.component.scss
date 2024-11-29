@@ -1,10 +1,4 @@
-:host ::ng-deep .custom-button {
-  width: 95px;
-  height: 22px;
-  font-size: 10px;
-  padding: 8px;
-  margin: 2px;
-}
+
 :host ::ng-deep .p-datatable tbody tr {
   height: 40px;
 }
@@ -21,23 +15,25 @@
   overflow-y: auto;
 }
 
-.userRequests-container {
-  width: 55%;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: 153px;
-  left: 0;
-}
 
-.requests-container {
-  width: 40%;
-  margin: 0;
-  padding: 0;
-  margin-left: 868px;
-  position: absolute;
-  top: 280px;
-}
+
+//.userRequests-container {
+//  width: 55%;
+//  margin: 0;
+//  padding: 0;
+//  position: absolute;
+//  top: 153px;
+//  left: 0;
+//}
+//
+//.requests-container {
+//  width: 40%;
+//  margin: 0;
+//  padding: 0;
+//  margin-left: 868px;
+//  position: absolute;
+//  top: 280px;
+//}
 
 .flex {
   display: flex;
@@ -50,4 +46,23 @@
 }
 
 
+/* Culori pentru diferite statusuri */
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
 
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-rejected {
+  color: red;
+  font-weight: bold;
+}
+
+.status-default {
+  color: gray;
+  font-weight: bold;
+}

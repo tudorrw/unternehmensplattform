@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -39,7 +38,6 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
     private final VacationReqRepository vacationRequestRepository;
     private final UserRepository userRepository;
-    private final VacationReqHandler vacationReqHandler;
     private final ContractRepository contractRepository;
 
 
@@ -58,7 +56,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
         vacationRequestRepository.save(request);
 
         if (status == VacationReqStatus.Rejected) {
-            int vacationDays = vacationReqHandler.calculateLeaveDays(request.getStartDate(), request.getEndDate());
+            int vacationDays = (int)calculateWeekdays(request.getStartDate(), request.getEndDate());
             Contract employeeContract = request.getEmployee().getContract();
             employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
             contractRepository.save(employeeContract);
@@ -72,7 +70,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
         if (currentUser.getRole() == UserRole.Administrator) {
             if (currentUser.getContract() != null) {
-                List<VacationRequest> vacationRequests = vacationReqRepository.findByAdministratorIdAndStatus(currentUser.getId(), VacationReqStatus.New);
+                List<VacationRequest> vacationRequests = vacationRequestRepository.findByAdministratorIdAndStatus(currentUser.getId(), VacationReqStatus.New);
                 return vacationRequests.stream()
                         .map(vacationRequest -> VacationRequestDetailsDTO.builder()
                                 .id(vacationRequest.getId())
@@ -84,7 +82,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
                                 .endDate(vacationRequest.getEndDate())
                                 .description(vacationRequest.getDescription())
                                 .status(vacationRequest.getStatus())
-                                .vacationDays(vacationReqHandler.calculateLeaveDays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
+                                .vacationDays((int)calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
                                 .build())
                         .collect(Collectors.toList());
             } else {
@@ -108,7 +106,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
             throw new RuntimeException("Admin has no contract");
         }
 
-        List<VacationRequest> vacationRequests = vacationReqRepository
+        List<VacationRequest> vacationRequests = vacationRequestRepository
                 .findByAdministratorIdAndStatusInOrderByStartDateDesc(
                         currentUser.getId(),
                         VacationReqStatus.Approved,
@@ -144,7 +142,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
                                             .endDate(vacationRequest.getEndDate())
                                             .description(vacationRequest.getDescription())
                                             .status(vacationRequest.getStatus())
-                                            .vacationDays(vacationReqHandler.calculateLeaveDays(
+                                            .vacationDays((int)calculateWeekdays(
                                                     vacationRequest.getStartDate(),
                                                     vacationRequest.getEndDate()
                                             ))

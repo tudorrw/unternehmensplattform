@@ -17,19 +17,26 @@
       editMode="row"
     >
       <ng-template pTemplate="caption">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <!-- Left-aligned title -->
+          <h2 style="margin: 0; font-size: 1.5rem; font-weight: bold; color: #3A8BC4;">
+            Pending Vacation Requests
+          </h2>
 
-        <div style=" display: flex; justify-content: flex-end" class="flex justify-content-end align-items-center">
-          <div class="p-input-icon-left ml-auto" style="margin-right: 1rem;">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              type="text"
-              [(ngModel)]="searchValue"
-              (input)="dt1.filterGlobal($any($event).target.value, 'contains')"
-              placeholder="Search keyword"
-            />
+          <!-- Right-aligned search bar and button -->
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="searchValue"
+                (input)="dt1?.filterGlobal(searchValue, 'contains')"
+                placeholder="Search keyword"
+              />
+            </div>
+            <button pButton icon="pi pi-plus" label="Add Employee" (click)="showDialog = true"></button>
           </div>
-          <button pButton icon="pi pi-plus" label="Add Employee" (click)="showDialog = true"></button>
         </div>
       </ng-template>
 

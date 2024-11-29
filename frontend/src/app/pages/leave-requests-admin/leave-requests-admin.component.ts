@@ -3,6 +3,7 @@ import {VacationReqControllerService} from "../../services/services/vacation-req
 import {VacationRequestDetailsDto} from "../../services/models/vacation-request-details-dto";
 import {UserWithVacationRequestDetailsDto} from "../../services/models/user-with-vacation-request-details-dto";
 import {Table} from "primeng/table";
+import {VacationRequestStatus} from "../../services/enums/VacationRequestStatus";
 
 @Component({
   selector: 'app-leave-requests-admin',
@@ -12,7 +13,6 @@ import {Table} from "primeng/table";
 export class LeaveRequestsAdminComponent implements OnInit{
   requests: VacationRequestDetailsDto[] = [];
   employeesWithRequests: UserWithVacationRequestDetailsDto[] = [];
-  loading: boolean = true;
   expandedRows: { [key: number]: boolean } = {};
   searchValue: string = '';
   @ViewChild('dt2') dt2: Table | undefined;
@@ -28,11 +28,9 @@ export class LeaveRequestsAdminComponent implements OnInit{
     this.vacationReqService.getAllPendingVacationRequests().subscribe({
       next: (data: VacationRequestDetailsDto[]) => {
         this.requests = data;
-        this.loading = false;
       },
       error: (error) => {
         console.error('Failed to fetch requests:', error);
-        this.loading = false;
       }
     });
   }
@@ -67,11 +65,9 @@ export class LeaveRequestsAdminComponent implements OnInit{
     this.vacationReqService.getAllEmployeesWithVacationRequests().subscribe({
       next: (data) => {
         this.employeesWithRequests = data;
-        this.loading = false;
       },
       error: (err) => {
         console.error('Error fetching vacation requests:', err);
-        this.loading = false;
       }
     });
   }
@@ -80,4 +76,6 @@ export class LeaveRequestsAdminComponent implements OnInit{
     table.clear();
     this.searchValue = '';
   }
+
+  protected readonly VacationRequestStatus = VacationRequestStatus;
 }
