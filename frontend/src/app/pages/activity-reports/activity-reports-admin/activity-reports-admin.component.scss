@@ -1,0 +1,120 @@
+.activity-report-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  color: #333;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #444;
+  }
+
+  .container {
+    display: flex; /* Flexbox to position calendar on left and details on right */
+    justify-content: space-between;
+    gap: 20px; /* Space between calendar and details */
+    flex-wrap: wrap;
+  }
+
+  .calendar-section {
+    flex: 1; /* Take up available space */
+    max-width: 50%; /* Limit the calendar width to 50% */
+    overflow-x: auto; /* Allow horizontal scrolling for smaller screens */
+    min-width: 250px; /* Prevent calendar from becoming too small */
+  }
+
+  .calendar {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    th {
+      background: #f4f4f4;
+      padding: 8px;
+      font-weight: bold;
+      border-bottom: 2px solid #ddd;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    td {
+      height: 60px;
+      padding: 5px;
+      text-align: center;
+      vertical-align: top;
+      border: 1px solid #eee;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+
+      &.today {
+        background: #ffeb3b;
+        color: #000;
+        font-weight: bold;
+      }
+
+      &.selected {
+        background: #4caf50;
+        color: #fff;
+        border: 2px solid #388e3c;
+        transform: scale(1.05);
+      }
+
+      &:hover {
+        background: #e0e0e0;
+      }
+
+      .day-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        font-size: 14px;
+        border-radius: 50%;
+        transition: background 0.3s;
+
+        span {
+          display: block;
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+
+  .activity-details {
+    flex: 1;
+    max-width: 50%; /* Limit the details section to 50% */
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin: 5px 0;
+        padding: 8px;
+        border: 1px solid #ddd;
+        background: #f9f9f9;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+    }
+
+    p {
+      text-align: center;
+      font-style: italic;
+      color: #999;
+    }
+  }
+}
