@@ -1,1 +1,39 @@
-<p>activity-reports-admin works!</p>
+<div class="activity-report-container">
+  <h1>Activity Reports - Admin</h1>
+
+  <!-- Calendar Section -->
+  <div class="calendar-section">
+    <table class="calendar">
+      <thead>
+      <tr>
+        <th *ngFor="let day of weekDays">{{ day }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let week of calendar">
+        <td
+          *ngFor="let date of week"
+          [class.today]="isToday(date)"
+          [class.selected]="isSelectedDate(date)"
+          (click)="onDayClicked(date)"
+        >
+          {{ date.getDate() }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Activity Details Section -->
+  <div class="activity-details" *ngIf="selectedDate">
+    <h2>Activities on {{ selectedDate | date: 'longDate' }}</h2>
+    <ul *ngIf="activities.length > 0; else noActivities">
+      <li *ngFor="let activity of activities">
+        {{ activity.description }} ({{ activity.hours }} hours)
+      </li>
+    </ul>
+    <ng-template #noActivities>
+      <p>No activities recorded for this day.</p>
+    </ng-template>
+  </div>
+</div>
