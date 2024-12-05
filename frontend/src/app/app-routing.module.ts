@@ -3,12 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 // import { LeaveRequestsComponent } from './pages/leave-requests/leave-requests.component';
-// import { ActivityReportsComponent } from './pages/activity-reports/activity-reports.component';
+// import { EmployeeActivityReportComponent } from './pages/activity-reports/activity-reports.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { authGuard } from './services/guard/auth.guard';
 import { loginGuard } from './services/guard/login.guard';
 import {LeaveRequestsAdminComponent} from "./pages/leave-requests-admin/leave-requests-admin.component";
-import {ActivityReportsComponent} from "./pages/activity-reports/activity-reports.component";
+import {EmployeeActivityReportComponent} from "./pages/activity-reports/activity-reports.component";
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'leave-requests', component: LeaveRequestsAdminComponent },
-      { path: 'activity-reports', component: ActivityReportsComponent },
+      { path: 'activity-reports', component: EmployeeActivityReportComponent },
     ],
   },
 ];

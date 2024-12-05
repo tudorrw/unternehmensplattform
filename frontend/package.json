@@ -26,7 +26,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "angular-calendar": "^0.31.1",
-    "date-fns": "^2.x.x",
+    "date-fns": "^2.30.0",
     "express": "^4.18.2",
     "ng-openapi-gen": "^0.52.0",
     "primeflex": "^3.3.1",

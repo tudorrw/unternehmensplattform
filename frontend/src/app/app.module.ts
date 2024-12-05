@@ -39,7 +39,7 @@ import {TabMenuModule} from "primeng/tabmenu";
 import { LayoutComponent } from './shared/layout/layout.component';
 import { ActivityReportsAdminComponent } from "./pages/activity-reports/activity-reports-admin/activity-reports-admin.component";
 import { ActivityReportsEmployeeComponent } from './pages/activity-reports/activity-reports-employee/activity-reports-employee.component';
-import { ActivityReportsComponent } from './pages/activity-reports/activity-reports.component';
+import { EmployeeActivityReportComponent } from './pages/activity-reports/activity-reports.component';
 import {TagModule} from "primeng/tag";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
@@ -65,7 +65,7 @@ import {DropdownModule} from "primeng/dropdown";
     LayoutComponent,
     ActivityReportsAdminComponent,
     ActivityReportsEmployeeComponent,
-    ActivityReportsComponent
+    EmployeeActivityReportComponent
   ],
   imports: [
     BrowserModule,
