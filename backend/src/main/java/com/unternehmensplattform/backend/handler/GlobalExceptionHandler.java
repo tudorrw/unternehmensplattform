@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -146,5 +147,55 @@ public class GlobalExceptionHandler {
                                     .build()
                     );
             }
+
+    @ExceptionHandler(VacationRequestNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleVacationRequestNotFound(VacationRequestNotFoundException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.NO_LEAVE_REQUEST_PROVIDED.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.NO_LEAVE_REQUEST_PROVIDED.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(VacationRequestOverlapException.class)
+    public ResponseEntity<ExceptionResponse> handleVacationRequestOverlapException(VacationRequestOverlapException exp) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.LEAVE_REQUEST_OVERLAP.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.LEAVE_REQUEST_OVERLAP.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+    @ExceptionHandler(VacationRequestValidationDatesException.class)
+    public ResponseEntity<ExceptionResponse> handleVacationRequestValidationDatesException(VacationRequestValidationDatesException exp) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.VALIDATE_DATES.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.VALIDATE_DATES.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+    @ExceptionHandler(InvalidVacationRequestException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidVacationRequestException(InvalidVacationRequestException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.LEAVE_REQUEST_INVALID.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.LEAVE_REQUEST_INVALID.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
 
 }

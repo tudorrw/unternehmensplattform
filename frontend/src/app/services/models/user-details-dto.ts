@@ -8,6 +8,7 @@ export interface UserDetailsDto {
   companyName?: string;
   email: string;
   firstName?: string;
+  fullName?: string;
   id?: number;
   lastName?: string;
   previousYearVacationDays?: number;

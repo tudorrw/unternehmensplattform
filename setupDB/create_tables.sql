@@ -49,6 +49,7 @@ CREATE TABLE `vacation_request` (
     `end_date` date NOT NULL,
     `status` int NOT NULL,
     `description` varchar(256) NOT NULL,
+    `pdf_path` varchar(256),
     PRIMARY KEY (`id`),
     KEY `user_id_idx` (`employee_id`),
     KEY `administrator_id_idx` (`administrator_id`),

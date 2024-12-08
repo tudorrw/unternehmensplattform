@@ -15,8 +15,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private userCrudControllerService: UserCrudControllerService,
-    private router: Router,
-    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -29,15 +27,5 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
-  goToProfile(): void {
-    // this.router.navigate(['/profile']);
-  }
-
-  logout(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-  }
-
   protected readonly UserRole = UserRole;
 }

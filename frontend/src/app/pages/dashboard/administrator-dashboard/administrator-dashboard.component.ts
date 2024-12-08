@@ -17,7 +17,7 @@ export class AdministratorDashboardComponent implements OnInit {
   @ViewChild('employeeForm') employeeForm!: NgForm; // Access the form
   employees: UserDetailsDto[] = [];
   clonedEmployees: { [s: string]: UserDetailsDto } = {};
-  searchValue: string | undefined;
+  searchValue: string = '';
   loading: boolean = true;
   showDialog: boolean = false;
   minDate!: Date;

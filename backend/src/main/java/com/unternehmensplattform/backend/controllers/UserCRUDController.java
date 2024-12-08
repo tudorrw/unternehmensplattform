@@ -55,7 +55,6 @@ public class UserCRUDController {
             userDetailsDTOBuilder
                     .companyName(contract.getCompany().getName())
                     .signingDate(contract.getSigningDate())
-                    .previousYearVacationDays(contract.getPreviousYearVacationDays())
                     .actualYearVacationDays(contract.getActualYearVacationDays());
         }
 

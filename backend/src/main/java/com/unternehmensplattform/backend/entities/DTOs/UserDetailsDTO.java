@@ -19,6 +19,7 @@ public class UserDetailsDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    private String fullName;
     @Email(message = "Email is not formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotBlank(message = "Email is mandatory")
