@@ -1,41 +1,41 @@
-<div class="activity-report-container">
-  <h1>Employee Activity Report</h1>
+<!--<div class="activity-report-container">-->
+<!--  <h1>Employee Activity Report</h1>-->
 
-  <div class="container">
-    <!-- Calendar Section (left side) -->
-    <div class="calendar-section">
-      <table class="calendar">
-        <thead>
-        <tr>
-          <th *ngFor="let day of weekDays">{{ day }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let week of calendar">
-          <td
-            *ngFor="let cell of week"
-            [class.today]="isToday(cell.date)"
-            [class.selected]="isSelectedDate(cell.date)"
-            (click)="onDayClicked(cell.date)"
-          >
-            <div class="day-content">
-              <span>{{ cell.date.getDate() }}</span>
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+<!--  <div class="container">-->
+<!--    &lt;!&ndash; Calendar Section (left side) &ndash;&gt;-->
+<!--    <div class="calendar-section">-->
+<!--      <table class="calendar">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th *ngFor="let day of weekDays">{{ day }}</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr *ngFor="let week of calendar">-->
+<!--          <td-->
+<!--            *ngFor="let cell of week"-->
+<!--            [class.today]="isToday(cell.date)"-->
+<!--            [class.selected]="isSelectedDate(cell.date)"-->
+<!--            (click)="onDayClicked(cell.date)"-->
+<!--          >-->
+<!--            <div class="day-content">-->
+<!--              <span>{{ cell.date.getDate() }}</span>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
 
-    <!-- Hours Worked Section (right side) -->
-    <div class="activity-details" *ngIf="selectedDate">
-      <h2>Hours Worked on {{ selectedDate | date: 'longDate' }}</h2>
-      <p *ngIf="totalHoursWorked >= 0; else noHours">
-        Total Hours Worked: {{ totalHoursWorked }} hours
-      </p>
-      <ng-template #noHours>
-        <p>No hours worked on this day.</p>
-      </ng-template>
-    </div>
-  </div>
-</div>
+<!--    &lt;!&ndash; Hours Worked Section (right side) &ndash;&gt;-->
+<!--    <div class="activity-details" *ngIf="selectedDate">-->
+<!--      <h2>Hours Worked on {{ selectedDate | date: 'longDate' }}</h2>-->
+<!--      <p *ngIf="totalHoursWorked >= 0; else noHours">-->
+<!--        Total Hours Worked: {{ totalHoursWorked }} hours-->
+<!--      </p>-->
+<!--      <ng-template #noHours>-->
+<!--        <p>No hours worked on this day.</p>-->
+<!--      </ng-template>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
