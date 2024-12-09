@@ -32,11 +32,7 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
             Contract contract = currentUser.getContract();
             if (contract != null) {
                 if (Objects.equals(workingDay.getEmployee().getId(), currentUser.getId())) {
-//                    contract.setActualYearVacationDays(contract.getActualYearVacationDays() + (int) calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()));
-//                    contractRepository.save(contract);
-
-
-                    ///acolo ar trb logica de scazut 8 ore
+//
                     workingDaysRepository.deleteById(requestId);
                 } else {
                     throw new IllegalArgumentException("working day does not belong to the employee who made the request");
