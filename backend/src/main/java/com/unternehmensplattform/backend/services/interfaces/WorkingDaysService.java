@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface WorkingDaysService {
 
+    void deleteWorkingDay(Integer requestId);
+
     void createActivityReport(WorkingDaysDTO dto, User loggedInUser);
 
     void editDescription(WorkingDaysDTO dto, User loggedInUser);
