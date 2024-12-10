@@ -198,4 +198,57 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(WorkingDaysOverlapException.class)
+    public ResponseEntity<ExceptionResponse> handleWorkingDaysOverlapException(WorkingDaysOverlapException exp) {
+        return ResponseEntity
+                .status(CONFLICT)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.ACTIVITY_REPORT_OVERLAP.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.ACTIVITY_REPORT_OVERLAP.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(WDOverlapWithVDException.class)
+    public ResponseEntity<ExceptionResponse> handleWDOverlapWithVDException(WDOverlapWithVDException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.WD_OVERLAP_WITH_VD.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.WD_OVERLAP_WITH_VD.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(ArrivalBeforeLeaveException.class)
+    public ResponseEntity<ExceptionResponse> handleArrivalBeforeDepartureException(ArrivalBeforeLeaveException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.ARRIVAL_BEFORE_LEAVE.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.ARRIVAL_BEFORE_LEAVE.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(WorkingDaySameDatesException.class)
+    public ResponseEntity<ExceptionResponse> handleWorkingDaySameDatesException(WorkingDaySameDatesException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.ALL_DATES_SAME.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.ALL_DATES_SAME.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
+
 }

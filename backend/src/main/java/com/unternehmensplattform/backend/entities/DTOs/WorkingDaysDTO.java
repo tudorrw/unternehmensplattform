@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class WorkingDaysDTO {
+    private Integer id;
 
     private LocalDate date;
 
@@ -18,4 +19,7 @@ public class WorkingDaysDTO {
     private Instant endDate;
 
     private String description;
+    private String effectiveTime;
+    private Double effectiveHours;
+
 }

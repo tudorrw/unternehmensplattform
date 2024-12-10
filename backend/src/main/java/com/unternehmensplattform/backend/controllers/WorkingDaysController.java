@@ -20,35 +20,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("working_days")
+@RequestMapping("working-days")
 @RequiredArgsConstructor
 public class WorkingDaysController {
     private final WorkingDaysService workingDaysService;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> createActivityReport(@RequestBody @Valid WorkingDaysDTO dto) {
+    public ResponseEntity<?> createWorkingDay(@RequestBody @Valid WorkingDaysDTO dto) {
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        try {
             workingDaysService.createActivityReport(dto, loggedInUser);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Activity report created successfully.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+            return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/edit")
-    public ResponseEntity<String> editActivityReport(@RequestBody @Valid WorkingDaysDTO dto) {
+    @PostMapping("/modify")
+    public ResponseEntity<?> modifyWorkingDay(@RequestBody @Valid WorkingDaysDTO dto) {
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        try {
-            workingDaysService.editDescription(dto, loggedInUser);
-            return ResponseEntity.ok("Activity report updated successfully.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        workingDaysService.modifyActivityReport(dto, loggedInUser);
+        return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get-all-working-days-by-employee")
     public ResponseEntity<List<WorkingDaysDTO>> getAllActivityReports() {
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<WorkingDaysDTO> activityReports = workingDaysService.getAllActivityReports(loggedInUser);

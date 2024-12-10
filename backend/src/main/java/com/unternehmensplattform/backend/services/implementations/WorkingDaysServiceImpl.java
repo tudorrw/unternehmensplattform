@@ -2,13 +2,10 @@ package com.unternehmensplattform.backend.services.implementations;
 
 import com.unternehmensplattform.backend.entities.Contract;
 import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.entities.VacationRequest;
 import com.unternehmensplattform.backend.entities.WorkingDay;
 import com.unternehmensplattform.backend.enums.UserRole;
-import com.unternehmensplattform.backend.handler.VacationRequestNotFoundException;
+import com.unternehmensplattform.backend.handler.*;
 import com.unternehmensplattform.backend.entities.DTOs.WorkingDaysDTO;
-import com.unternehmensplattform.backend.entities.User;
-import com.unternehmensplattform.backend.entities.WorkingDay;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
 import com.unternehmensplattform.backend.repositories.VacationReqRepository;
 import com.unternehmensplattform.backend.repositories.WorkingDaysRepository;
@@ -18,11 +15,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Objects;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +38,9 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
+        if (!workingDay.getEmployee().getId().equals(currentUser.getId())) {
+            throw new IllegalArgumentException("You can only edit your own activity reports.");
+        }
         if (currentUser.getRole() == UserRole.Employee || currentUser.getRole()==UserRole.Administrator) {
             Contract contract = currentUser.getContract();
             if (contract != null) {
@@ -62,14 +62,13 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
 
     @Override
     public void createActivityReport(WorkingDaysDTO dto, User loggedInUser) {
-
-        validateCreateConditions(dto, loggedInUser);
-
+        validateContractExists(loggedInUser);
         validateStartAndEndDateConsistency(dto);
+        validateDateConditionsForCreate(dto, loggedInUser);
 
         WorkingDay newWorkingDay = WorkingDay.builder()
                 .employee(loggedInUser)
-                .date(LocalDate.now())
+                .date(dto.getDate())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .description(dto.getDescription())
@@ -79,21 +78,19 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
     }
 
     @Override
-    public void editDescription(WorkingDaysDTO dto, User loggedInUser) {
-        WorkingDay workingDay = workingDaysRepository.findWorkingDayByEmployeeAndDate(loggedInUser, LocalDate.now())
-                .orElseThrow(() -> new IllegalArgumentException("No activity report for today found to edit."));
-
-        System.out.println(workingDay.getDate());
-
-        validateEditConditions(dto, loggedInUser);
-
+    public void modifyActivityReport(WorkingDaysDTO dto, User loggedInUser) {
+        WorkingDay workingDay = workingDaysRepository.findById(dto.getId()).orElseThrow(() -> new IllegalArgumentException("No activity report found for the specified id."));
+        if (!workingDay.getEmployee().getId().equals(loggedInUser.getId())) {
+            throw new IllegalArgumentException("You can only edit your own activity reports.");
+        }
         validateStartAndEndDateConsistency(dto);
+        validateDateConditionsForEdit(dto, loggedInUser);
 
 
         workingDay.setStartDate(dto.getStartDate());
         workingDay.setEndDate(dto.getEndDate());
         workingDay.setDescription(dto.getDescription());
-        workingDay.setDate(LocalDate.now());
+        workingDay.setDate(dto.getDate());
         workingDaysRepository.save(workingDay);
     }
 
@@ -101,7 +98,7 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
     public List<WorkingDaysDTO> getAllActivityReports(User loggednInUser) {
         return workingDaysRepository.findAllByEmployee(loggednInUser)
                 .stream()
-                .map(this::convertToDto)
+                .map(this::convertWorkingDaysToDto)
                 .collect(Collectors.toList());
     }
 
@@ -109,41 +106,41 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
     public WorkingDaysDTO getActivityReportByDate(User loggedInUser, LocalDate date) {
         WorkingDay workingDay = workingDaysRepository.findWorkingDayByEmployeeAndDate(loggedInUser, date)
                 .orElseThrow(() -> new IllegalArgumentException("No activity report found for the specified date."));
-        return convertToDto(workingDay);
+        return convertWorkingDaysToDto(workingDay);
     }
 
-    private void validateCreateConditions(WorkingDaysDTO dto, User loggedInUser) {
-        if (dto.getStartDate().isAfter(dto.getEndDate())) {
-            throw new IllegalArgumentException("Start date must be before end date.");
+    private void validateDateConditionsForCreate(WorkingDaysDTO dto, User loggedInUser) {
+        boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
+                .anyMatch(existingReport ->
+                        !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
+                                dto.getEndDate().isBefore(existingReport.getStartDate())));
+
+        if (overlaps) {
+            throw new WorkingDaysOverlapException("The time interval overlaps with an existing activity report.");
         }
 
-        if (workingDaysRepository.findWorkingDayByEmployeeAndDate(loggedInUser, LocalDate.now()).isPresent()) {
-            throw new IllegalArgumentException("An activity report already exists for the given date.");
-        }
-
-        hasVacationToday(loggedInUser);
-        validateContractExists(loggedInUser);
+        hasVacationToday(dto, loggedInUser);
     }
 
-    private void validateEditConditions(WorkingDaysDTO dto, User loggedInUser) {
-        if (dto.getStartDate().isAfter(dto.getEndDate())) {
-            throw new IllegalArgumentException("Start date must be before end date.");
+    private void validateDateConditionsForEdit(WorkingDaysDTO dto, User loggedInUser) {
+        boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
+                .anyMatch(existingReport ->
+                        !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
+                                dto.getEndDate().isBefore(existingReport.getStartDate())) && !existingReport.getId().equals(dto.getId()));
+
+        if (overlaps) {
+            throw new WorkingDaysOverlapException("The time interval overlaps with an existing activity report.");
         }
 
-//        if (!dto.getDate().equals(LocalDate.now())) {
-//            throw new IllegalArgumentException("You can only edit today's activity report.");
-//        }
-
-        hasVacationToday(loggedInUser);
-        validateContractExists(loggedInUser);
+        hasVacationToday(dto, loggedInUser);
     }
 
 
-    private void hasVacationToday(User loggedInUser) {
-        LocalDate today = LocalDate.now();
+    private void hasVacationToday(WorkingDaysDTO workingDaysDTO, User loggedInUser) {
         if (vacationRequestRepository.findByEmployeeIdOrderByRequestedDateDesc(loggedInUser.getId()).stream()
-                .anyMatch(vacationReq -> !today.isBefore(vacationReq.getStartDate()) && !today.isAfter(vacationReq.getEndDate())))
-            throw new IllegalArgumentException("A vacation request overlaps with today's date");
+                .anyMatch(vacationReq -> (workingDaysDTO.getDate().isBefore(vacationReq.getEndDate()) && workingDaysDTO.getDate().isAfter(vacationReq.getStartDate()))
+                        || workingDaysDTO.getDate().isEqual(vacationReq.getStartDate()) || workingDaysDTO.getDate().isEqual(vacationReq.getEndDate())))
+            throw new WDOverlapWithVDException("A vacation request overlaps with the provided date.");
     }
 
     private void validateContractExists(User loggedInUser) {
@@ -152,28 +149,35 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         }
     }
 
-    private WorkingDaysDTO convertToDto(WorkingDay workingDay) {
+    private WorkingDaysDTO convertWorkingDaysToDto(WorkingDay workingDay) {
+        Duration duration = Duration.between(workingDay.getStartDate(), workingDay.getEndDate());
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        double effectiveHours = hours + (minutes / 60.0);
+
         return WorkingDaysDTO.builder()
-                .date(LocalDate.now())
+                .id(workingDay.getId())
+                .date(workingDay.getDate())
                 .startDate(workingDay.getStartDate())
                 .endDate(workingDay.getEndDate())
                 .description(workingDay.getDescription())
+                .effectiveTime(String.format("%d hours %d minutes", hours, minutes))
+                .effectiveHours(effectiveHours)
                 .build();
     }
 
     private void validateStartAndEndDateConsistency(WorkingDaysDTO dto) {
         Instant startDateInstant = dto.getStartDate();
         Instant endDateInstant = dto.getEndDate();
-        LocalDate date = LocalDate.now();
 
         LocalDate startDate = startDateInstant.atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDate = endDateInstant.atZone(ZoneId.systemDefault()).toLocalDate();
 
-        if (!startDate.equals(date)) {
-            throw new IllegalArgumentException("Start date must be on the same day as the provided date.");
+        if (!dto.getDate().equals(startDate) || !dto.getDate().equals(endDate)) {
+            throw new WorkingDaySameDatesException("Date, start date, and end date must all be on the same day.");
         }
-        if (!endDate.equals(date)) {
-            throw new IllegalArgumentException("End date must be on the same day as the provided date.");
+        if (dto.getStartDate().isAfter(dto.getEndDate())) {
+            throw new ArrivalBeforeLeaveException("Start date must be before end date.");
         }
     }
 

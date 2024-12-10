@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface WorkingDaysRepository extends JpaRepository<WorkingDay, Integer> {
     Optional<WorkingDay> findWorkingDayByEmployeeAndDate(User loggedInUser, LocalDate date);
+    List<WorkingDay> findAllByEmployeeAndDate(User loggedInUser, LocalDate date);
 
     List<WorkingDay> findAllByEmployee(User employee);
 

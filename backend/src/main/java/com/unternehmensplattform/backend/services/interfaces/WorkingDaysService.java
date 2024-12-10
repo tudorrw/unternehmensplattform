@@ -12,7 +12,7 @@ public interface WorkingDaysService {
 
     void createActivityReport(WorkingDaysDTO dto, User loggedInUser);
 
-    void editDescription(WorkingDaysDTO dto, User loggedInUser);
+    void modifyActivityReport(WorkingDaysDTO dto, User loggedInUser);
 
     List<WorkingDaysDTO> getAllActivityReports(User user);
 
