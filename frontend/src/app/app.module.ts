@@ -39,12 +39,13 @@ import {TabMenuModule} from "primeng/tabmenu";
 import { LayoutComponent } from './shared/layout/layout.component';
 import { ActivityReportsAdminComponent } from "./pages/activity-reports/activity-reports-admin/activity-reports-admin.component";
 import { ActivityReportsEmployeeComponent } from './pages/activity-reports/activity-reports-employee/activity-reports-employee.component';
-import { EmployeeActivityReportComponent } from './pages/activity-reports/activity-reports.component';
+import { ActivityReportsComponent } from './pages/activity-reports/activity-reports.component';
 import {TagModule} from "primeng/tag";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {MultiSelectModule} from "primeng/multiselect";
 import {DropdownModule} from "primeng/dropdown";
+import {FullCalendarModule} from "@fullcalendar/angular";
 
 
 @NgModule({
@@ -65,7 +66,7 @@ import {DropdownModule} from "primeng/dropdown";
     LayoutComponent,
     ActivityReportsAdminComponent,
     ActivityReportsEmployeeComponent,
-    EmployeeActivityReportComponent
+    ActivityReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +87,7 @@ import {DropdownModule} from "primeng/dropdown";
     AvatarModule,
     DialogModule,
     TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, MultiSelectModule, DropdownModule,
-    TabMenuModule, TagModule, IconFieldModule, InputIconModule
+    TabMenuModule, TagModule, IconFieldModule, InputIconModule, FullCalendarModule
   ],
   providers: [
     HttpClient,
