@@ -1,0 +1,15 @@
+.calendar-content {
+    min-height: calc(100vh - 13.5rem);
+    padding: 2rem;
+
+}
+
+.fc {
+  height: 720px;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: inline-block;
+  padding: 2px 4px;
+}
+

@@ -8,7 +8,7 @@ import { LayoutComponent } from './shared/layout/layout.component';
 import { authGuard } from './services/guard/auth.guard';
 import { loginGuard } from './services/guard/login.guard';
 import {LeaveRequestsAdminComponent} from "./pages/leave-requests-admin/leave-requests-admin.component";
-import {EmployeeActivityReportComponent} from "./pages/activity-reports/activity-reports.component";
+import {ActivityReportsComponent} from "./pages/activity-reports/activity-reports.component";
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'leave-requests', component: LeaveRequestsAdminComponent },
-      { path: 'activity-reports', component: EmployeeActivityReportComponent },
+      { path: 'activity-reports', component: ActivityReportsComponent },
     ],
   },
 ];
