@@ -117,4 +117,5 @@ public class VacationReqController {
         List<UserDetailsDTO> availableAdmins = vacationReqService.getAvailableAdministrators(loggedInUser);
         return ResponseEntity.ok(availableAdmins);
     }
+
 }

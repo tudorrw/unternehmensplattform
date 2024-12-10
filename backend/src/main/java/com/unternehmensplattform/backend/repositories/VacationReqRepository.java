@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VacationReqRepository extends JpaRepository<VacationRequest, Integer> {
+
     List<VacationRequest> findByEmployeeIdOrderByRequestedDateDesc(Integer employeeId);
 
     void deleteById(Integer id);
