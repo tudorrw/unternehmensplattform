@@ -15,12 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.time.*;
 import java.util.Objects;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -170,8 +167,8 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         Instant startDateInstant = dto.getStartDate();
         Instant endDateInstant = dto.getEndDate();
 
-        LocalDate startDate = startDateInstant.atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = endDateInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate startDate = LocalDate.ofInstant(startDateInstant, ZoneOffset.UTC);
+        LocalDate endDate = LocalDate.ofInstant(endDateInstant, ZoneOffset.UTC);
 
         if (!dto.getDate().equals(startDate) || !dto.getDate().equals(endDate)) {
             throw new WorkingDaySameDatesException("Date, start date, and end date must all be on the same day.");

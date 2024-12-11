@@ -388,6 +388,28 @@ public class VacationRequestServiceImpl implements VacationReqService {
         }
     }
 
+    public List<VacationRequestDetailsDTO> getApprovedVacationRequestsByEmployee() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        if (currentUser.getRole() == UserRole.Employee) {
+            if (currentUser.getContract() != null) {
+                List<VacationRequest> vacationRequests = vacationRequestRepository.findApprovedVacationRequestsByEmployeeId(currentUser.getId(), VacationReqStatus.Approved);
+                return vacationRequests.stream()
+                        .map(vacationRequest -> VacationRequestDetailsDTO.builder()
+                                .id(vacationRequest.getId())
+                                .startDate(vacationRequest.getStartDate())
+                                .endDate(vacationRequest.getEndDate())
+                                .description(vacationRequest.getDescription())
+                                .vacationDays((int) calculateWeekdays(vacationRequest.getStartDate(), vacationRequest.getEndDate()))
+                                .build())
+                        .collect(Collectors.toList());
+            } else {
+                throw new RuntimeException("Employee has no contract");
+            }
+        } else {
+            throw new RuntimeException("User is not an employee");
+        }
+    }
 
     public void deleteVacationRequest(Integer requestId) {
 

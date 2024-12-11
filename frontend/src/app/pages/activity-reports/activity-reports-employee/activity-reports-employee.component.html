@@ -2,28 +2,39 @@
   <full-calendar [options]="calendarOptions"></full-calendar>
 </div>
 
+
 <!-- Pop-up pentru adăugare activitate -->
 <p-dialog [(visible)]="activityDialog" [style]="{ width: '50rem' }" [modal]="true" [closable]="true" header="Add Activity">
+  <p-messages
+    [(value)]="messages"
+    [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"
+    [enableService]="false">
+  </p-messages>
+
   <form #activityForm="ngForm" (ngSubmit)="submitActivity(activityForm)">
     <div class="p-fluid">
       <!-- Data selectată -->
       <div class="p-field">
         <label for="selectedDate">Selected Date</label>
-        <input type="text" id="selectedDate" pInputText [(ngModel)]="selectedDate" name="selectedDate" [readonly]="true">
+        <input type="text" id="selectedDate" pInputText [(ngModel)]="selectedDate" [value]="selectedDate | date: 'dd-MM-yyyy'"
+               name="selectedDate" [readonly]="true">
       </div>
 
+      <div class="p-field p-grid">
       <!-- Ora sosirii -->
-      <div class="p-field">
-        <label>Arrival Time</label>
-        <p-calendar [(ngModel)]="startDate" timeOnly="true" name="startDate" inputId="startDate" [showTime]="true" hourFormat="24" required></p-calendar>
-        <small *ngIf="activityForm.submitted && !startDate" class="p-error">Arrival time is required.</small>
-      </div>
+        <div class="p-field">
+          <label>Arrival Time</label>
+          <p-calendar [(ngModel)]="startDate" timeOnly="true" name="startDate" inputId="startDate" [showTime]="true" hourFormat="24" required></p-calendar>
+          <small *ngIf="activityForm.submitted && !startDate" class="p-error">Arrival time is required.</small>
+        </div>
 
-      <!-- Ora plecării -->
-      <div class="p-field">
-        <label>Departure Time</label>
-        <p-calendar [(ngModel)]="endDate" timeOnly="true" name="endDate" inputId="endDate" [showTime]="true" hourFormat="24" required></p-calendar>
-        <small *ngIf="activityForm.submitted && !endDate" class="p-error">Departure time is required.</small>
+        <!-- Ora plecării -->
+        <div class="p-field">
+          <label>Departure Time</label>
+          <p-calendar [(ngModel)]="endDate" timeOnly="true" name="endDate" inputId="endDate" [showTime]="true" hourFormat="24" required></p-calendar>
+          <small *ngIf="activityForm.submitted && !endDate" class="p-error">Departure time is required.</small>
+        </div>
       </div>
 
       <!-- Descriere -->
@@ -35,8 +46,11 @@
     </div>
 
     <!-- Butoane de acțiune -->
-    <div class="p-dialog-footer p-d-flex p-justify-center">
-      <button pButton label="Cancel" icon="pi pi-times" type="button" (click)="activityDialog = false" class="p-button-secondary"></button>
+    <div class="p-dialog-footer flex justify-content-center">
+
+    </div>
+    <div class="p-dialog-footer button-container">
+      <button pButton label="Cancel" icon="pi pi-times" type="button" (click)="onCancelSubmitWorkingDayForm(activityForm)" class="p-button-secondary"></button>
       <button pButton label="Submit" icon="pi pi-check" type="submit" class="p-button-primary"></button>
     </div>
   </form>
@@ -76,3 +90,12 @@
     </div>
   </p-footer>
 </p-dialog>
+
+
+<p-toast position="bottom-left" key="save-create-working-day" />
+<p-toast position="bottom-left" key="save-modify-working-day" />
+<p-toast position="bottom-left" key="save-delete-working-day" />
+<p-toast position="bottom-left" key="cancel-delete-working-day" />
+<p-toast position="bottom-left" key="warn-vacation-event" />
+<p-toast position="bottom-left" key="info-vacation-event" />
+

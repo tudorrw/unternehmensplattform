@@ -10,6 +10,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
+import {VacationReqControllerService} from "../../../services/services/vacation-req-controller.service";
+import {VacationRequestDetailsDto} from "../../../services/models/vacation-request-details-dto";
 
 interface ExtendedEventProps {
     description?: string;
@@ -35,10 +37,12 @@ export class ActivityReportsEmployeeComponent implements OnInit {
     endDate: Date | null = null;
     description: string = '';
     events: CustomEventInput[] = [];
+    vacationRequests: VacationRequestDetailsDto[] = [];
     isEditMode: boolean = false;
+    messages: any[] = [];
 
     calendarOptions: CalendarOptions = {
-        initialView: 'dayGridMonth',
+        initialView: 'timeGridWeek',
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
         headerToolbar: {
             left: 'prev,next today',
@@ -46,37 +50,34 @@ export class ActivityReportsEmployeeComponent implements OnInit {
             right: 'dayGridMonth,timeGridWeek',
         },
         selectable: true,
-        dateClick: (info) => this.onDateClick(info),
-        eventClick: (info) => this.onEventClick(info),
+        dateClick: this.onDateClick.bind(this),
+        eventClick: this.onEventClick.bind(this),
         events: this.events,
-        validRange: {
-            end: new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('en-CA'),
-        },
+        eventColor: '#378006',
+        timeZone: 'UTC',
+        weekends: false
     };
 
     constructor(
         private workingDaysService: WorkingDaysControllerService,
+        private vacationReqControllerService: VacationReqControllerService,
         private datePipe: DatePipe,
         private messageService: MessageService // Injectează MessageService pentru Toast
     ) {}
 
     ngOnInit() {
+        this.fetchVacationRequests();
         this.loadEvents();
     }
 
     loadEvents() {
         this.workingDaysService.getAllActivityReports().subscribe({
             next: (data: WorkingDaysDto[]) => {
-                this.events = data.map((report) => {
-                    const startDate = report.startDate ? new Date(report.startDate) : undefined;
-                    const endDate = report.endDate ? new Date(report.endDate) : undefined;
-                    if (startDate) {
-                        this.selectedDate = startDate;
-                    }
+                const activityReports = data.map((report) => {
                     return {
                         id: report.id?.toString(),
-                        start: startDate,
-                        end: endDate,
+                        start: report.startDate,
+                        end: report.endDate,
                         title: report.description || 'Activity',
                         backgroundColor: '#007bff',
                         extendedProps: {
@@ -84,8 +85,39 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                         },
                     };
                 });
-                this.calendarOptions.events = this.events;
-            },
+                this.vacationReqControllerService.getVacationRequestsByEmployee().subscribe({
+                next: (vacationRequests: VacationRequestDetailsDto[]) => {
+                  const vacationEvents = vacationRequests
+                    .filter((request) => request.status === 'Approved') // Only include approved requests
+                    .map((request) => ({
+                      id: `vacation-${request.id}`,
+                      start: request.startDate,
+                      // end: request.endDate,
+                      end: new Date(new Date(request.endDate as string).setDate(new Date(request.endDate as string).getDate() + 1)).toISOString(), // Add one day to the end date
+                      title: request.description || 'Vacation',
+                      backgroundColor: '#f39c12', // Vacation events in a distinct color
+                      editable: false, // Prevent users from editing vacation events
+                      extendedProps: {
+                        type: 'vacation',
+                        description: request.description,
+                      },
+                    }));
+
+                  // Combine both activity and vacation events
+                  this.events = [...activityReports, ...vacationEvents];
+                  this.calendarOptions.events = this.events; // Update the calendar options
+                },
+                error: (error: HttpErrorResponse) => {
+                  console.error('Error fetching vacation requests:', error);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Unable to fetch vacation requests.',
+                    life: 5000,
+                  });
+                },
+              });
+              },
             error: (error: HttpErrorResponse) => {
                 this.messageService.add({
                     severity: 'error',
@@ -101,7 +133,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
         if (this.description && this.startDate && this.endDate && this.selectedDate) {
             const formattedStartDate = this.datePipe.transform(this.startDate, 'yyyy-MM-ddTHH:mm:ss') + 'Z';
             const formattedEndDate = this.datePipe.transform(this.endDate, 'yyyy-MM-ddTHH:mm:ss') + 'Z';
-            const formattedSelectedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-ddTHH:mm:ss') + 'Z';
+            const formattedSelectedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd');
 
             if (!formattedStartDate || !formattedEndDate || !formattedSelectedDate) {
                 this.messageService.add({
@@ -129,7 +161,8 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                             severity: 'success',
                             summary: 'Activity Updated',
                             detail: 'Your activity has been successfully updated.',
-                            life: 5000,
+                            key: 'save-modify-working-day',
+                            life: 2500,
                         });
                         this.loadEvents();
                         this.activityDialog = false;
@@ -138,19 +171,17 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                     error: (error: HttpErrorResponse) => {
                         console.error('Error updating activity:', error);
                         if (error.status === 409) {
-                            this.messageService.add({
+                            this.messages = [{
                                 severity: 'error',
                                 summary: 'Conflict',
                                 detail: error.error.businessErrorDescription,
-                                life: 5000,
-                            });
-                        } else {
-                            this.messageService.add({
+                            }];
+                        } else if(error.status === 400){
+                            this.messages = [{
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: error.error.error,
-                                life: 5000,
-                            });
+                                detail: error.error.businessErrorDescription,
+                            }];
                         }
                     },
                 });
@@ -161,7 +192,8 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                             severity: 'success',
                             summary: 'Activity Submitted',
                             detail: 'Your activity has been successfully submitted.',
-                            life: 5000,
+                            key: 'save-create-working-day',
+                            life: 2500,
                         });
                         this.loadEvents();
                         this.activityDialog = false;
@@ -170,57 +202,100 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                     error: (error: HttpErrorResponse) => {
                         console.error('Error submitting activity:', error);
                         if (error.status === 409) {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Conflict',
-                                detail: error.error.businessErrorDescription,
-                                life: 5000,
-                            });
-                        } else {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: error.error.error,
-                                life: 5000,
-                            });
+                            this.messages = [{
+                              severity: 'error',
+                              summary: 'Conflict',
+                              detail: error.error.businessErrorDescription,
+                            }];
+                        } else if(error.status === 400){
+                          this.messages = [{
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.error.businessErrorDescription,
+                          }];
                         }
                     },
                 });
             }
         } else {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Validation Error',
-                detail: 'Please complete all required fields!',
-                life: 5000,
-            });
+          this.messages =  [{
+            severity: 'error',
+            summary: 'validation Error',
+            detail: 'Complete the required fields!'
+          }];
         }
     }
 
-    onDateClick(info: any): void {
-        // Your implementation for the date click event
-        this.selectedEventId = undefined;  // Reset selectedEventId
-        this.selectedDate = new Date(info.dateStr);  // Set selectedDate to the clicked date
-        this.startDate = new Date(info.dateStr);  // Set startDate
-        this.endDate = null;  // Reset endDate
-        this.description = '';  // Reset description
-        this.activityDialog = true;  // Open activity dialog
-        this.isEditMode = false;  // Set to false, as this is a new activity
+  onDateClick(info: any): void {
+    const clickedDate = new Date(info.dateStr);
+    const isVacationDay = this.vacationRequests.some((request) => {
+      const startDate = new Date(request.startDate as string);
+      const endDate = new Date(request.endDate as string);
+      console.log(startDate, endDate, clickedDate);
+      return (
+        request.status === 'Approved' &&
+        clickedDate >= startDate &&
+        clickedDate <= endDate
+      );
+    });
+    console.log(isVacationDay);
+    if (isVacationDay) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Vacation Day',
+        detail: 'You cannot add activity reports on vacation days.',
+        key: 'warn-vacation-event',
+        life: 3000,
+      });
+      return; // Prevent opening the activity dialog
     }
+    this.selectedEventId = undefined;  // Reset selectedEventId
+    this.selectedDate = info.dateStr;
+    this.startDate = this.parseUTCDate(info.dateStr);
+    this.endDate = new Date(info.dateStr);
+    this.description = '';
+    this.activityDialog = true;
+    this.isEditMode = false;
+  }
 
-    onEventClick(info: any): void {
-        // Your implementation for the event click event
-        const event = this.events.find((e) => e.id === info.event.id);
-        if (event && event.extendedProps) {
-            this.selectedEventId = event.id ? parseInt(event.id as string, 10) : undefined;
-            this.startDate = new Date(event.start as string);
-            this.endDate = new Date(event.end as string);
-            this.description = event.extendedProps.description || '';
-            this.selectedDate = new Date(event.start?.toString() || '');
-            this.detailDialog = true;  // Open event details dialog
-            this.isEditMode = true;    // Set to true, as this is an existing activity
-        }
+  onEventClick(info: any): void {
+    const event = this.events.find((e) => e.id === info.event.id);
+    if (event && event.extendedProps) {
+      console.log('Event clicked:', event.extendedProps);
+      if (event.extendedProps['type'] === 'vacation') {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Vacation Event',
+          detail: 'You cannot edit or interact with vacation events.',
+          key: 'info-vacation-event',
+          life: 3000,
+        });
+        return; // Prevent further action
+      }
+      this.selectedEventId = event.id ? parseInt(event.id as string, 10) : undefined;
+
+      this.startDate = new Date(Date.UTC(
+        new Date(event.start as string).getUTCFullYear(),
+        new Date(event.start as string).getUTCMonth(),
+        new Date(event.start as string).getUTCDate(),
+        new Date(event.start as string).getUTCHours() - 2,
+        new Date(event.start as string).getUTCMinutes()
+      ));
+
+      this.endDate = new Date(Date.UTC(
+        new Date(event.end as string).getUTCFullYear(),
+        new Date(event.end as string).getUTCMonth(),
+        new Date(event.end as string).getUTCDate(),
+        new Date(event.end as string).getUTCHours() - 2,
+        new Date(event.end as string).getUTCMinutes()
+      ));
+
+      this.description = event.extendedProps.description || '';
+      this.selectedDate = new Date(this.startDate.toISOString());
+      this.detailDialog = true;
+      this.isEditMode = true;
     }
+  }
 
     deleteActivity(eventId: string) {
         const params = { requestId: parseInt(eventId, 10) };
@@ -232,7 +307,8 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                     severity: 'success',
                     summary: 'Activity Deleted',
                     detail: 'The activity has been successfully deleted.',
-                    life: 5000,
+                  key: 'save-delete-working-day',
+                  life: 5000,
                 });
             },
             error: (error: HttpErrorResponse) => {
@@ -241,6 +317,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                     severity: 'error',
                     summary: 'Error',
                     detail: 'Failed to delete the activity.',
+                    key: 'cancel-delete-working-day',
                     life: 5000,
                 });
             },
@@ -252,4 +329,40 @@ export class ActivityReportsEmployeeComponent implements OnInit {
         this.isEditMode = true;
         this.detailDialog = false;
     }
+  onCancelSubmitWorkingDayForm(form: NgForm) {
+    form.resetForm();
+    this.activityDialog = false;
+  }
+
+  parseUTCDate(dateString: string): Date {
+    // Use the Date constructor explicitly with `Date.UTC`
+    const date = new Date(dateString);
+    return new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours() - 2,
+      date.getUTCMinutes(),
+    ));
+  }
+
+  fetchVacationRequests(): void {
+    this.vacationReqControllerService.getVacationRequestsByEmployee().subscribe({
+      next: (data: any) => {
+        this.vacationRequests = data as VacationRequestDetailsDto[];
+        console.log('Fetched vacation requests:', this.vacationRequests);
+      },
+      error: (error) => {
+        console.error('Failed to fetch vacation requests:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Unable to fetch vacation requests.',
+          life: 3000,
+        });
+      },
+    });
+  }
+
 }
+
