@@ -85,15 +85,14 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                         },
                     };
                 });
-                this.vacationReqControllerService.getVacationRequestsByEmployee().subscribe({
+                this.vacationReqControllerService.getApprovedVacationRequestsByEmployee().subscribe({
                 next: (vacationRequests: VacationRequestDetailsDto[]) => {
                   const vacationEvents = vacationRequests
-                    .filter((request) => request.status === 'Approved') // Only include approved requests
                     .map((request) => ({
                       id: `vacation-${request.id}`,
                       start: request.startDate,
                       // end: request.endDate,
-                      end: new Date(new Date(request.endDate as string).setDate(new Date(request.endDate as string).getDate() + 1)).toISOString(), // Add one day to the end date
+                      end: new Date(new Date(request.endDate as string).setDate(new Date(request.endDate as string).getDate() + 1)).toISOString().split('T')[0],
                       title: request.description || 'Vacation',
                       backgroundColor: '#f39c12', // Vacation events in a distinct color
                       editable: false, // Prevent users from editing vacation events
@@ -231,9 +230,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
     const isVacationDay = this.vacationRequests.some((request) => {
       const startDate = new Date(request.startDate as string);
       const endDate = new Date(request.endDate as string);
-      console.log(startDate, endDate, clickedDate);
       return (
-        request.status === 'Approved' &&
         clickedDate >= startDate &&
         clickedDate <= endDate
       );
@@ -347,10 +344,9 @@ export class ActivityReportsEmployeeComponent implements OnInit {
   }
 
   fetchVacationRequests(): void {
-    this.vacationReqControllerService.getVacationRequestsByEmployee().subscribe({
+    this.vacationReqControllerService.getApprovedVacationRequestsByEmployee().subscribe({
       next: (data: any) => {
         this.vacationRequests = data as VacationRequestDetailsDto[];
-        console.log('Fetched vacation requests:', this.vacationRequests);
       },
       error: (error) => {
         console.error('Failed to fetch vacation requests:', error);
