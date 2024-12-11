@@ -42,6 +42,7 @@
   </form>
 </p-dialog>
 
+
 <!-- Pop-up pentru detalii activitate -->
 <p-dialog [(visible)]="detailDialog" [modal]="true" [closable]="true" header="Event Details" [style]="{ width: '30rem' }">
   <div *ngIf="selectedDate" class="flex flex-column">
@@ -69,7 +70,9 @@
   <!-- Butoane de acțiune -->
   <p-footer class="button-container">
     <div *ngIf="isEditMode">
+
       <button pButton label="Edit" icon="pi pi-pencil" (click)="openEditDialog()" class="p-button-warning"></button>
+      <button pButton label="Delete" icon="pi pi-trash" (click)="selectedEventId ? deleteActivity(selectedEventId.toString()) : null" class="p-button-danger"></button>
     </div>
   </p-footer>
 </p-dialog>
