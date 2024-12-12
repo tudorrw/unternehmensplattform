@@ -13,3 +13,13 @@
   padding: 2px 4px;
 }
 
+:host ::ng-deep .button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+:host ::ng-deep .p-dialog-footer {
+  padding-top: 1rem;
+}

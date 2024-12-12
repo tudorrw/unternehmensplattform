@@ -21,6 +21,8 @@ import { getAllEmployeesWithVacationRequests } from '../fn/vacation-req-controll
 import { GetAllEmployeesWithVacationRequests$Params } from '../fn/vacation-req-controller/get-all-employees-with-vacation-requests';
 import { getAllPendingVacationRequests } from '../fn/vacation-req-controller/get-all-pending-vacation-requests';
 import { GetAllPendingVacationRequests$Params } from '../fn/vacation-req-controller/get-all-pending-vacation-requests';
+import { getApprovedVacationRequestsByEmployee } from '../fn/vacation-req-controller/get-approved-vacation-requests-by-employee';
+import { GetApprovedVacationRequestsByEmployee$Params } from '../fn/vacation-req-controller/get-approved-vacation-requests-by-employee';
 import { getAvailableAdministrators } from '../fn/vacation-req-controller/get-available-administrators';
 import { GetAvailableAdministrators$Params } from '../fn/vacation-req-controller/get-available-administrators';
 import { getVacationRequestsByEmployee } from '../fn/vacation-req-controller/get-vacation-requests-by-employee';
@@ -171,6 +173,31 @@ export class VacationReqControllerService extends BaseService {
   getAllEmployeesWithVacationRequests(params?: GetAllEmployeesWithVacationRequests$Params, context?: HttpContext): Observable<Array<UserWithVacationRequestDetailsDto>> {
     return this.getAllEmployeesWithVacationRequests$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<UserWithVacationRequestDetailsDto>>): Array<UserWithVacationRequestDetailsDto> => r.body)
+    );
+  }
+
+  /** Path part for operation `getApprovedVacationRequestsByEmployee()` */
+  static readonly GetApprovedVacationRequestsByEmployeePath = '/vacation-request/get-approved-vacation-requests-for-employee';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getApprovedVacationRequestsByEmployee()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getApprovedVacationRequestsByEmployee$Response(params?: GetApprovedVacationRequestsByEmployee$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<VacationRequestDetailsDto>>> {
+    return getApprovedVacationRequestsByEmployee(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getApprovedVacationRequestsByEmployee$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getApprovedVacationRequestsByEmployee(params?: GetApprovedVacationRequestsByEmployee$Params, context?: HttpContext): Observable<Array<VacationRequestDetailsDto>> {
+    return this.getApprovedVacationRequestsByEmployee$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<VacationRequestDetailsDto>>): Array<VacationRequestDetailsDto> => r.body)
     );
   }
 

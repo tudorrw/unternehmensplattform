@@ -58,7 +58,7 @@ public class WorkingDaysController {
 
 
     @PostMapping("/delete/{requestId}")
-    public ResponseEntity<?> deleteVacationRequest(@PathVariable Integer requestId) {
+    public ResponseEntity<?> deleteWorkingDay(@PathVariable Integer requestId) {
         workingDaysService.deleteWorkingDay(requestId);
         return ResponseEntity.accepted().build();
     }

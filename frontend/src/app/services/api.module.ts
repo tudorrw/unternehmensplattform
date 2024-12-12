@@ -6,6 +6,7 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { WorkingDaysControllerService } from './services/working-days-controller.service';
 import { VacationReqControllerService } from './services/vacation-req-controller.service';
 import { UserCrudControllerService } from './services/user-crud-controller.service';
 import { CompanyControllerService } from './services/company-controller.service';
@@ -19,6 +20,7 @@ import { AuthenticationControllerService } from './services/authentication-contr
   exports: [],
   declarations: [],
   providers: [
+    WorkingDaysControllerService,
     VacationReqControllerService,
     UserCrudControllerService,
     CompanyControllerService,
