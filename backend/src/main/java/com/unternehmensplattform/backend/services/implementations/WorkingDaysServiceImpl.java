@@ -1,6 +1,7 @@
 package com.unternehmensplattform.backend.services.implementations;
 
 import com.unternehmensplattform.backend.entities.Contract;
+import com.unternehmensplattform.backend.entities.DTOs.UserDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.UserWithWorkingDaysDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.entities.WorkingDay;
@@ -8,6 +9,7 @@ import com.unternehmensplattform.backend.enums.UserRole;
 import com.unternehmensplattform.backend.handler.*;
 import com.unternehmensplattform.backend.entities.DTOs.WorkingDaysDTO;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
+import com.unternehmensplattform.backend.repositories.UserRepository;
 import com.unternehmensplattform.backend.repositories.VacationReqRepository;
 import com.unternehmensplattform.backend.repositories.WorkingDaysRepository;
 import com.unternehmensplattform.backend.services.interfaces.WorkingDaysService;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WorkingDaysServiceImpl implements WorkingDaysService {
     private final WorkingDaysRepository workingDaysRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void deleteWorkingDay(Integer requestId) {
