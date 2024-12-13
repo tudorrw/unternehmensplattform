@@ -39,6 +39,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
     private final VacationReqRepository vacationRequestRepository;
     private final UserRepository userRepository;
     private final ContractRepository contractRepository;
+    private final WorkingDaysRepository workingDaysRepository;
 
 
     @Override
@@ -168,6 +169,8 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
         validateDates(vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate(), employee);
         ensureNoOverlappingRequests(vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate(), employee);
+        hasWorkingDay(vacationRequestDTO, employee);
+
 
         User administrator = userRepository.findById(vacationRequestDTO.getAssignedAdministratorId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -202,6 +205,19 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
     }
 
+    private void hasWorkingDay(VacationRequestDTO vacationRequestDTO, User loggedInUser) {
+        boolean hasWorkingDayOverlap = workingDaysRepository.findAllByEmployeeAndDateBetween(loggedInUser, vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate())
+                .stream()
+                .anyMatch(workingDay ->
+                        (vacationRequestDTO.getStartDate().isBefore(workingDay.getDate()) && vacationRequestDTO.getEndDate().isAfter(workingDay.getDate())) ||
+                                vacationRequestDTO.getStartDate().isEqual(workingDay.getDate()) ||
+                                vacationRequestDTO.getEndDate().isEqual(workingDay.getDate())
+                );
+
+        if (hasWorkingDayOverlap) {
+            throw new VROverlapsWithWD("An activity report overlaps with the requested vacation period.");
+        }
+    }
 
     private void validateDates(LocalDate startDate, LocalDate endDate, User employee) {
 
