@@ -1,5 +1,6 @@
 package com.unternehmensplattform.backend.controllers;
 
+import com.unternehmensplattform.backend.entities.DTOs.UserWithWorkingDaysDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.WorkingDaysDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.services.interfaces.WorkingDaysService;
@@ -61,6 +62,12 @@ public class WorkingDaysController {
     public ResponseEntity<?> deleteWorkingDay(@PathVariable Integer requestId) {
         workingDaysService.deleteWorkingDay(requestId);
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/get-employees-with-working-days")
+    public ResponseEntity<List<UserWithWorkingDaysDetailsDTO>> getEmployeesWithWorkingDays() {
+        List<UserWithWorkingDaysDetailsDTO> activityReports = workingDaysService.getEmployeesWithWorkingDays();
+        return ResponseEntity.ok(activityReports);
     }
 }
 

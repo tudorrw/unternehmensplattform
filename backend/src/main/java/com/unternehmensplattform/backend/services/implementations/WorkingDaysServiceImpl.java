@@ -1,6 +1,7 @@
 package com.unternehmensplattform.backend.services.implementations;
 
 import com.unternehmensplattform.backend.entities.Contract;
+import com.unternehmensplattform.backend.entities.DTOs.UserWithWorkingDaysDetailsDTO;
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.entities.WorkingDay;
 import com.unternehmensplattform.backend.enums.UserRole;
@@ -178,5 +179,32 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         }
     }
 
+    @Override
+    public List<UserWithWorkingDaysDetailsDTO> getEmployeesWithWorkingDays() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
 
+        if (currentUser.getRole() != UserRole.Administrator) {
+            throw new RuntimeException("User is not an administrator");
+        }
+
+        if (currentUser.getContract() == null) {
+            throw new RuntimeException("Admin has no contract");
+        }
+
+        List<User> employees = userRepository.findUsersByCompany(UserRole.Employee, currentUser.getContract().getCompany());
+
+        return employees.stream().map(userWithWD -> UserWithWorkingDaysDetailsDTO.builder()
+                        .userDetailsDTO(UserDetailsDTO.builder()
+                                .id(userWithWD.getId())
+                                .firstName(userWithWD.getFirstName())
+                                .lastName(userWithWD.getLastName())
+                                .email(userWithWD.getEmail())
+                                .build())
+                        .workingDays(workingDaysRepository.findAllByEmployee(userWithWD).stream()
+                                .map(this::convertWorkingDaysToDto)
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

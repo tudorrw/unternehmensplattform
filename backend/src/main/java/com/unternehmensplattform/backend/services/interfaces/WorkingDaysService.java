@@ -1,5 +1,6 @@
 package com.unternehmensplattform.backend.services.interfaces;
 
+import com.unternehmensplattform.backend.entities.DTOs.UserWithWorkingDaysDetailsDTO;
 import com.unternehmensplattform.backend.entities.DTOs.WorkingDaysDTO;
 import com.unternehmensplattform.backend.entities.User;
 
@@ -17,4 +18,6 @@ public interface WorkingDaysService {
     List<WorkingDaysDTO> getAllActivityReports(User user);
 
     WorkingDaysDTO getActivityReportByDate(User user, LocalDate date);
+
+    List<UserWithWorkingDaysDetailsDTO> getEmployeesWithWorkingDays();
 }
