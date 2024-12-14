@@ -53,16 +53,37 @@ public class VacationRequestServiceImpl implements VacationReqService {
         if (request.getAdministrator().getId() != currentAdmin.getId()) {
             throw new RuntimeException("You are not authorized to modify this request");
         }
+
+        if (status == VacationReqStatus.Approved) {
+            List<WorkingDay> workingDays = workingDaysRepository.findAllByEmployeeAndDateBetween(
+                    request.getEmployee(),
+                    request.getStartDate(),
+                    request.getEndDate()
+            );
+
+            if (!workingDays.isEmpty()) {
+                request.setStatus(VacationReqStatus.Rejected);
+                vacationRequestRepository.save(request);
+                recalculateVacationDays(request);
+                throw new VROverlapsWithWDException("Ceva nu-i bine");
+            }
+        }
+
         request.setStatus(status);
         vacationRequestRepository.save(request);
 
         if (status == VacationReqStatus.Rejected) {
-            int vacationDays = (int)calculateWeekdays(request.getStartDate(), request.getEndDate());
-            Contract employeeContract = request.getEmployee().getContract();
-            employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
-            contractRepository.save(employeeContract);
+            recalculateVacationDays(request);
         }
     }
+
+    private void recalculateVacationDays(VacationRequest request) {
+        int vacationDays = (int) calculateWeekdays(request.getStartDate(), request.getEndDate());
+        Contract employeeContract = request.getEmployee().getContract();
+        employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
+        contractRepository.save(employeeContract);
+    }
+
 
     @Override
     public List<VacationRequestDetailsDTO> getAllPendingVacationRequests() {
@@ -215,7 +236,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
                 );
 
         if (hasWorkingDayOverlap) {
-            throw new VROverlapsWithWD("An activity report overlaps with the requested vacation period.");
+            throw new VROverlapsWithWDException("An activity report overlaps with the requested vacation period.");
         }
     }
 
