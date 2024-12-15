@@ -4,20 +4,25 @@ import {VacationRequestDetailsDto} from "../../services/models/vacation-request-
 import {UserWithVacationRequestDetailsDto} from "../../services/models/user-with-vacation-request-details-dto";
 import {Table} from "primeng/table";
 import {VacationRequestStatus} from "../../services/enums/VacationRequestStatus";
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-leave-requests-admin',
   templateUrl: './leave-requests-admin.component.html',
-  styleUrl: './leave-requests-admin.component.scss'
+  styleUrls: ['./leave-requests-admin.component.scss'],
+  providers: [MessageService]
 })
-export class LeaveRequestsAdminComponent implements OnInit{
+export class LeaveRequestsAdminComponent implements OnInit {
   requests: VacationRequestDetailsDto[] = [];
   employeesWithRequests: UserWithVacationRequestDetailsDto[] = [];
   expandedRows: { [key: number]: boolean } = {};
   searchValue: string = '';
   @ViewChild('dt2') dt2: Table | undefined;
 
-  constructor(private vacationReqService: VacationReqControllerService) {}
+  constructor(
+    private vacationReqService: VacationReqControllerService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.showPendingRequests();
@@ -43,7 +48,20 @@ export class LeaveRequestsAdminComponent implements OnInit{
         this.loadEmployeesWithVacationRequests();
       },
       error: (error) => {
-        console.error(`Failed to update request ${requestId}:`, error);
+        console.log('error', error);
+        if (error.status === 400) {
+          this.showPendingRequests();
+          this.loadEmployeesWithVacationRequests();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Request Rejected',
+            detail: error.error.businessErrorDescription,
+            key: 'decline-request-overlap-activity'
+          });
+
+        } else {
+          console.error(`Failed to update request ${requestId}:`, error);
+        }
       },
     });
   }
@@ -56,7 +74,15 @@ export class LeaveRequestsAdminComponent implements OnInit{
         this.loadEmployeesWithVacationRequests();
       },
       error: (error) => {
-        console.error(`Failed to update request ${requestId}:`, error);
+        if (error.status === 400 && error.error?.message?.includes("Request rejected due to overlap with working days")) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Request Rejected',
+            detail: 'The request was automatically rejected due to overlap with a working day.'
+          });
+        } else {
+          console.error(`Failed to update request ${requestId}:`, error);
+        }
       },
     });
   }

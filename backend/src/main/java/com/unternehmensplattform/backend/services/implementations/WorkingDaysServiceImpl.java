@@ -6,6 +6,7 @@ import com.unternehmensplattform.backend.entities.DTOs.UserWithWorkingDaysDetail
 import com.unternehmensplattform.backend.entities.User;
 import com.unternehmensplattform.backend.entities.WorkingDay;
 import com.unternehmensplattform.backend.enums.UserRole;
+import com.unternehmensplattform.backend.enums.VacationReqStatus;
 import com.unternehmensplattform.backend.handler.*;
 import com.unternehmensplattform.backend.entities.DTOs.WorkingDaysDTO;
 import com.unternehmensplattform.backend.repositories.ContractRepository;
@@ -138,7 +139,7 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
 
 
     private void hasVacationToday(WorkingDaysDTO workingDaysDTO, User loggedInUser) {
-        if (vacationRequestRepository.findByEmployeeIdOrderByRequestedDateDesc(loggedInUser.getId()).stream()
+        if (vacationRequestRepository.findApprovedVacationRequestsByEmployeeId(loggedInUser.getId(), VacationReqStatus.Approved).stream()
                 .anyMatch(vacationReq -> (workingDaysDTO.getDate().isBefore(vacationReq.getEndDate()) && workingDaysDTO.getDate().isAfter(vacationReq.getStartDate()))
                         || workingDaysDTO.getDate().isEqual(vacationReq.getStartDate()) || workingDaysDTO.getDate().isEqual(vacationReq.getEndDate())))
             throw new WDOverlapWithVDException("A vacation request overlaps with the provided date.");

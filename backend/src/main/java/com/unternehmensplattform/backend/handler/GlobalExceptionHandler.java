@@ -250,5 +250,18 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(VROverlapsWithWDException.class)
+    public ResponseEntity<ExceptionResponse> handleVROverlapsWithWD(VROverlapsWithWDException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.VD_OVERLAP_WITH_WD.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.VD_OVERLAP_WITH_WD.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
 
 }

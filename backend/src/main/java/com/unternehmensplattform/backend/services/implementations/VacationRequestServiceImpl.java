@@ -39,6 +39,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
     private final VacationReqRepository vacationRequestRepository;
     private final UserRepository userRepository;
     private final ContractRepository contractRepository;
+    private final WorkingDaysRepository workingDaysRepository;
 
 
     @Override
@@ -52,16 +53,37 @@ public class VacationRequestServiceImpl implements VacationReqService {
         if (request.getAdministrator().getId() != currentAdmin.getId()) {
             throw new RuntimeException("You are not authorized to modify this request");
         }
+
+        if (status == VacationReqStatus.Approved) {
+            List<WorkingDay> workingDays = workingDaysRepository.findAllByEmployeeAndDateBetween(
+                    request.getEmployee(),
+                    request.getStartDate(),
+                    request.getEndDate()
+            );
+
+            if (!workingDays.isEmpty()) {
+                request.setStatus(VacationReqStatus.Rejected);
+                vacationRequestRepository.save(request);
+                recalculateVacationDays(request);
+                throw new VROverlapsWithWDException("Ceva nu-i bine");
+            }
+        }
+
         request.setStatus(status);
         vacationRequestRepository.save(request);
 
         if (status == VacationReqStatus.Rejected) {
-            int vacationDays = (int)calculateWeekdays(request.getStartDate(), request.getEndDate());
-            Contract employeeContract = request.getEmployee().getContract();
-            employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
-            contractRepository.save(employeeContract);
+            recalculateVacationDays(request);
         }
     }
+
+    private void recalculateVacationDays(VacationRequest request) {
+        int vacationDays = (int) calculateWeekdays(request.getStartDate(), request.getEndDate());
+        Contract employeeContract = request.getEmployee().getContract();
+        employeeContract.setActualYearVacationDays(employeeContract.getActualYearVacationDays() + vacationDays);
+        contractRepository.save(employeeContract);
+    }
+
 
     @Override
     public List<VacationRequestDetailsDTO> getAllPendingVacationRequests() {
@@ -168,6 +190,8 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
         validateDates(vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate(), employee);
         ensureNoOverlappingRequests(vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate(), employee);
+        hasWorkingDay(vacationRequestDTO, employee);
+
 
         User administrator = userRepository.findById(vacationRequestDTO.getAssignedAdministratorId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -202,6 +226,19 @@ public class VacationRequestServiceImpl implements VacationReqService {
 
     }
 
+    private void hasWorkingDay(VacationRequestDTO vacationRequestDTO, User loggedInUser) {
+        boolean hasWorkingDayOverlap = workingDaysRepository.findAllByEmployeeAndDateBetween(loggedInUser, vacationRequestDTO.getStartDate(), vacationRequestDTO.getEndDate())
+                .stream()
+                .anyMatch(workingDay ->
+                        (vacationRequestDTO.getStartDate().isBefore(workingDay.getDate()) && vacationRequestDTO.getEndDate().isAfter(workingDay.getDate())) ||
+                                vacationRequestDTO.getStartDate().isEqual(workingDay.getDate()) ||
+                                vacationRequestDTO.getEndDate().isEqual(workingDay.getDate())
+                );
+
+        if (hasWorkingDayOverlap) {
+            throw new VROverlapsWithWDException("An activity report overlaps with the requested vacation period.");
+        }
+    }
 
     private void validateDates(LocalDate startDate, LocalDate endDate, User employee) {
 
