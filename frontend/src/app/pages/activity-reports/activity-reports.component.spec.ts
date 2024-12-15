@@ -10,8 +10,8 @@ describe('ActivityReportsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ActivityReportsComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ActivityReportsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

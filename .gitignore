@@ -2,3 +2,4 @@
 .vscode/
 package-lock.json
 vacation_requests
+backend/src/main/resources/application-dev.yml

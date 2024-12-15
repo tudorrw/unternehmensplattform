@@ -77,6 +77,12 @@ public class VacationReqController {
         return ResponseEntity.ok(requests);
     }
 
+    @GetMapping("/get-approved-vacation-requests-for-employee")
+    public ResponseEntity<List<VacationRequestDetailsDTO>> getApprovedVacationRequestsByEmployee() {
+        List<VacationRequestDetailsDTO> requests = vacationReqService.getApprovedVacationRequestsByEmployee();
+        return ResponseEntity.ok(requests);
+    }
+
 
     @PostMapping("/delete/{requestId}")
     public ResponseEntity<?> deleteVacationRequest(@PathVariable Integer requestId) {
@@ -117,4 +123,5 @@ public class VacationReqController {
         List<UserDetailsDTO> availableAdmins = vacationReqService.getAvailableAdministrators(loggedInUser);
         return ResponseEntity.ok(availableAdmins);
     }
+
 }

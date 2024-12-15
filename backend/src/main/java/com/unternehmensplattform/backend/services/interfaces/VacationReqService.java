@@ -24,6 +24,8 @@ public interface VacationReqService {
 
     List<VacationRequestDetailsDTO> getVacationRequestsByEmployee();
 
+    List<VacationRequestDetailsDTO> getApprovedVacationRequestsByEmployee();
+
     void deleteVacationRequest(Integer requestId);
 
     void createVacationRequest(VacationRequestDTO vacationRequestDTO, User employee);

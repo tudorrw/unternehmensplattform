@@ -45,6 +45,7 @@ import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {MultiSelectModule} from "primeng/multiselect";
 import {DropdownModule} from "primeng/dropdown";
+import {FullCalendarModule} from "@fullcalendar/angular";
 
 
 @NgModule({
@@ -86,7 +87,7 @@ import {DropdownModule} from "primeng/dropdown";
     AvatarModule,
     DialogModule,
     TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, MultiSelectModule, DropdownModule,
-    TabMenuModule, TagModule, IconFieldModule, InputIconModule
+    TabMenuModule, TagModule, IconFieldModule, InputIconModule, FullCalendarModule
   ],
   providers: [
     HttpClient,
