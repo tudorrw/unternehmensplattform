@@ -17,10 +17,13 @@ import { deleteWorkingDay } from '../fn/working-days-controller/delete-working-d
 import { DeleteWorkingDay$Params } from '../fn/working-days-controller/delete-working-day';
 import { getAllActivityReports } from '../fn/working-days-controller/get-all-activity-reports';
 import { GetAllActivityReports$Params } from '../fn/working-days-controller/get-all-activity-reports';
+import { getEmployeesWithWorkingDays } from '../fn/working-days-controller/get-employees-with-working-days';
+import { GetEmployeesWithWorkingDays$Params } from '../fn/working-days-controller/get-employees-with-working-days';
 import { getTodayActivityReport } from '../fn/working-days-controller/get-today-activity-report';
 import { GetTodayActivityReport$Params } from '../fn/working-days-controller/get-today-activity-report';
 import { modifyWorkingDay } from '../fn/working-days-controller/modify-working-day';
 import { ModifyWorkingDay$Params } from '../fn/working-days-controller/modify-working-day';
+import { UserWithWorkingDaysDetailsDto } from '../models/user-with-working-days-details-dto';
 import { WorkingDaysDto } from '../models/working-days-dto';
 
 @Injectable({ providedIn: 'root' })
@@ -138,6 +141,31 @@ export class WorkingDaysControllerService extends BaseService {
   getTodayActivityReport(params?: GetTodayActivityReport$Params, context?: HttpContext): Observable<WorkingDaysDto> {
     return this.getTodayActivityReport$Response(params, context).pipe(
       map((r: StrictHttpResponse<WorkingDaysDto>): WorkingDaysDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getEmployeesWithWorkingDays()` */
+  static readonly GetEmployeesWithWorkingDaysPath = '/working-days/get-employees-with-working-days';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getEmployeesWithWorkingDays()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getEmployeesWithWorkingDays$Response(params?: GetEmployeesWithWorkingDays$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<UserWithWorkingDaysDetailsDto>>> {
+    return getEmployeesWithWorkingDays(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getEmployeesWithWorkingDays$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getEmployeesWithWorkingDays(params?: GetEmployeesWithWorkingDays$Params, context?: HttpContext): Observable<Array<UserWithWorkingDaysDetailsDto>> {
+    return this.getEmployeesWithWorkingDays$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<UserWithWorkingDaysDetailsDto>>): Array<UserWithWorkingDaysDetailsDto> => r.body)
     );
   }
 
