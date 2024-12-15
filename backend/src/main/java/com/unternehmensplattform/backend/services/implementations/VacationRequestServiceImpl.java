@@ -26,6 +26,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -128,6 +129,10 @@ public class VacationRequestServiceImpl implements VacationReqService {
             throw new RuntimeException("Admin has no contract");
         }
 
+        // Fetch all employees linked to the administrator's company
+        List<User> employees = userRepository.findUsersByCompany(UserRole.Employee, currentUser.getContract().getCompany());
+
+        // Fetch vacation requests assigned to the administrator
         List<VacationRequest> vacationRequests = vacationRequestRepository
                 .findByAdministratorIdAndStatusInOrderByStartDateDesc(
                         currentUser.getId(),
@@ -135,13 +140,14 @@ public class VacationRequestServiceImpl implements VacationReqService {
                         VacationReqStatus.Rejected
                 );
 
+        // Group vacation requests by employee
         Map<User, List<VacationRequest>> groupedRequests = vacationRequests.stream()
                 .collect(Collectors.groupingBy(VacationRequest::getEmployee));
 
-        return groupedRequests.entrySet().stream()
-                .map(entry -> {
-                    User employee = entry.getKey();
-                    List<VacationRequest> employeeRequests = entry.getValue();
+        // Map all employees to UserWithVacationRequestDetailsDTO
+        return employees.stream()
+                .map(employee -> {
+                    List<VacationRequest> employeeRequests = groupedRequests.getOrDefault(employee, new ArrayList<>());
 
                     return UserWithVacationRequestDetailsDTO.builder()
                             .userDetailsDTO(UserDetailsDTO.builder()
@@ -164,7 +170,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
                                             .endDate(vacationRequest.getEndDate())
                                             .description(vacationRequest.getDescription())
                                             .status(vacationRequest.getStatus())
-                                            .vacationDays((int)calculateWeekdays(
+                                            .vacationDays((int) calculateWeekdays(
                                                     vacationRequest.getStartDate(),
                                                     vacationRequest.getEndDate()
                                             ))
@@ -174,7 +180,6 @@ public class VacationRequestServiceImpl implements VacationReqService {
                 })
                 .collect(Collectors.toList());
     }
-
 
 
     public List<VacationRequest> getRequestsByAdmin(Integer administratorId) {
