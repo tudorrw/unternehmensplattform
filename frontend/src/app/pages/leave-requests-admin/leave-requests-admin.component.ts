@@ -48,13 +48,17 @@ export class LeaveRequestsAdminComponent implements OnInit {
         this.loadEmployeesWithVacationRequests();
       },
       error: (error) => {
-        if (error.status === 400 && error.error?.message?.includes("Request rejected due to overlap with working days")) {
+        console.log('error', error);
+        if (error.status === 400) {
+          this.showPendingRequests();
+          this.loadEmployeesWithVacationRequests();
           this.messageService.add({
             severity: 'error',
             summary: 'Request Rejected',
-            detail: 'The request was automatically rejected due to overlap with a working day.',
+            detail: error.error.businessErrorDescription,
             key: 'decline-request-overlap-activity'
           });
+
         } else {
           console.error(`Failed to update request ${requestId}:`, error);
         }
