@@ -17,8 +17,6 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HttpTokenInterceptor} from "./services/interceptor/http-token/http-token.interceptor";
 import { EmployeeDashboardComponent } from './pages/dashboard/employee-dashboard/employee-dashboard.component';
 import { AdministratorDashboardComponent } from './pages/dashboard/administrator-dashboard/administrator-dashboard.component';
-import { EmployeeManagerComponent } from "./functionalities/employee-management/employee-manager/employee-manager.component";
-import { EmployeeEditDialogComponent } from "./functionalities/employee-management/employee-edit-dialog/employee-edit-dialog.component";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatInput} from "@angular/material/input";
 import {MatDialogContent} from "@angular/material/dialog";
@@ -45,7 +43,10 @@ import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {MultiSelectModule} from "primeng/multiselect";
 import {DropdownModule} from "primeng/dropdown";
+import { FloatLabelModule } from 'primeng/floatlabel';
+
 import {FullCalendarModule} from "@fullcalendar/angular";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 
 @NgModule({
@@ -59,8 +60,7 @@ import {FullCalendarModule} from "@fullcalendar/angular";
     AdministratorDashboardComponent,
     // AddCompanyComponent,
     // AddAdminComponent,
-    EmployeeManagerComponent,
-    EmployeeEditDialogComponent,
+
     LeaveRequestsAdminComponent,
     TopBarComponent,
     LayoutComponent,
@@ -87,7 +87,7 @@ import {FullCalendarModule} from "@fullcalendar/angular";
     AvatarModule,
     DialogModule,
     TableModule, ToastModule, CalendarModule, InputSwitchModule, Ripple, MultiSelectModule, DropdownModule,
-    TabMenuModule, TagModule, IconFieldModule, InputIconModule, FullCalendarModule
+    TabMenuModule, TagModule, IconFieldModule, InputIconModule, FullCalendarModule, FloatLabelModule, InputTextareaModule
   ],
   providers: [
     HttpClient,

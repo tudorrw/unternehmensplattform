@@ -70,7 +70,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
         this.loadEvents();
     }
 
-    loadEvents() {
+  loadEvents() {
         this.workingDaysService.getAllActivityReports().subscribe({
             next: (data: WorkingDaysDto[]) => {
                 const activityReports = data.map((report) => {
@@ -247,7 +247,9 @@ export class ActivityReportsEmployeeComponent implements OnInit {
       return; // Prevent opening the activity dialog
     }
     this.selectedEventId = undefined;  // Reset selectedEventId
-    this.selectedDate = info.dateStr;
+    // this.selectedDate = info.dateStr ;
+    this.selectedDate = clickedDate;
+
     this.startDate = this.parseUTCDate(info.dateStr);
     this.endDate = new Date(info.dateStr);
     this.description = '';
@@ -359,6 +361,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
       },
     });
   }
+
 
 }
 

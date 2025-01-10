@@ -6,18 +6,20 @@
     <div *ngIf="errorMsg.length > 0" class="p-mb-3">
       <p-messages [value]="errorMsg" class="display:block;"></p-messages>
     </div>
-    <!-- Email input -->
-    <div class="p-field p-mb-3" style="margin-bottom: 20px;">
-      <label for="login">Email address</label>
-      <input id="login" type="email" pInputText [(ngModel)]="authRequest.email" placeholder="name@example.com" style="width: 100%;" />
+
+    <div class="p-field p-mb-3" style="margin-bottom: 30px;">
+      <p-floatLabel variant="on">
+        <input id="login" type="email" pInputText [(ngModel)]="authRequest.email" style="width: 100%;" />
+        <label for="login">Email Address</label>
+      </p-floatLabel>
     </div>
 
-    <!-- Password input -->
-    <div class="p-field p-mb-3" style="margin-bottom: 20px;">
-      <label for="password">Password</label>
-      <input id="password" type="password" pInputText [(ngModel)]="authRequest.passwordHash"  placeholder="Password" style="width: 100%;" />
+    <div class="p-field p-mb-3" style="margin-bottom: 30px;">
+      <p-floatLabel variant="on">
+        <input id="password" type="password" pInputText [(ngModel)]="authRequest.passwordHash" style="width: 100%;" />
+        <label for="password">Password</label>
+      </p-floatLabel>
     </div>
-
     <!-- Sign in button -->
     <div class="p-d-flex p-jc-between p-mb-3">
       <button type="button" pButton (click)="login()" label="Log in" icon="pi pi-sign-in" class="p-button-primary" style="width: 100%;">

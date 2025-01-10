@@ -31,6 +31,5 @@ public class UserDetailsDTO {
     // Additional fields for company and contract information
     private String companyName; // To hold the company name
     private LocalDate signingDate; // Contract signing date
-    private Integer previousYearVacationDays; // Previous year vacation days
     private Integer actualYearVacationDays; // Actual year vacation days
 }

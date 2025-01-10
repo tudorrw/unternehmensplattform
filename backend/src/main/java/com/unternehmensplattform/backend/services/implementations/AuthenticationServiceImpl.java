@@ -81,14 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 LocalDate currentDate = LocalDate.now();
 
                 int totalVacationDaysPerYear = 21;
-                int previousYearVacationDays = 0;
                 int actualYearVacationDays = totalVacationDaysPerYear;
-
-                if (signingDate.getYear() < currentDate.getYear()) {
-                    LocalDate endOfPreviousYear = LocalDate.of(currentDate.getYear() - 1, 12, 31);
-                    long remainingDaysFromPreviousYear = ChronoUnit.DAYS.between(signingDate, endOfPreviousYear.plusDays(1));
-                    previousYearVacationDays = (int) (remainingDaysFromPreviousYear * totalVacationDaysPerYear / 365.0);
-                }
 
                 if (signingDate.getYear() == currentDate.getYear()) {
                     LocalDate lastDayOfActualYear = LocalDate.of(currentDate.getYear(), 12, 31);
@@ -96,7 +89,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     actualYearVacationDays = (int) (remainingDaysFromActualYear * totalVacationDaysPerYear / 365.0);
                 }
 
-                contractToAssign.setPreviousYearVacationDays(previousYearVacationDays);
                 contractToAssign.setActualYearVacationDays(actualYearVacationDays);
 
                 contractRepository.save(contractToAssign);

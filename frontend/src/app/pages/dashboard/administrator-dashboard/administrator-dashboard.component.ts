@@ -15,6 +15,8 @@ import {NgForm} from "@angular/forms";
 })
 export class AdministratorDashboardComponent implements OnInit {
   @ViewChild('employeeForm') employeeForm!: NgForm; // Access the form
+  @ViewChild('dt1') dt1: Table | undefined;
+
   employees: UserDetailsDto[] = [];
   clonedEmployees: { [s: string]: UserDetailsDto } = {};
   searchValue: string = '';
@@ -42,7 +44,7 @@ export class AdministratorDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.showAllEmployees();
     const currentYear = new Date().getFullYear();
-    this.minDate = new Date(currentYear - 1, 0, 1);
+    this.minDate = new Date(currentYear, 0, 1);
     this.maxDate = new Date(currentYear, 11, 31);
     console.log(this.minDate, this.maxDate);
 

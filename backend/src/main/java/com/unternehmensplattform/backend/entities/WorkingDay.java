@@ -38,9 +38,9 @@ public class WorkingDay {
     @Column(name = "end_date", nullable = false)
     private Instant endDate;
 
-    @Size(max = 45)
+    @Size(max = 256)
     @NotNull
-    @Column(name = "description", nullable = false, length = 45)
+    @Column(name = "description", nullable = false, length = 256)
     private String description;
 
 }

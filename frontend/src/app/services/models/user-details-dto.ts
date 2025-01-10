@@ -11,7 +11,6 @@ export interface UserDetailsDto {
   fullName?: string;
   id?: number;
   lastName?: string;
-  previousYearVacationDays?: number;
   role?: 'Superadmin' | 'Administrator' | 'Employee';
   signingDate?: string;
   telefonNumber?: string;

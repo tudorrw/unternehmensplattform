@@ -40,8 +40,8 @@
         <ng-template pTemplate="body" let-request>
           <tr>
             <td>{{ request.employeeFullName }}</td>
-            <td>{{ request.startDate }}</td>
-            <td>{{ request.endDate }}</td>
+            <td>{{ request.startDate | date : 'dd/MM/yyyy' }}</td>
+            <td>{{ request.endDate | date : 'dd/MM/yyyy' }}</td>
             <td>{{ request.vacationDays }}</td>
             <td>{{ request.description }}</td>
               <td>
@@ -158,8 +158,8 @@
                   </ng-template>
                   <ng-template pTemplate="body" let-vacationRequest>
                     <tr>
-                      <td>{{ vacationRequest.startDate }}</td>
-                      <td>{{ vacationRequest.endDate }}</td>
+                      <td>{{ vacationRequest.startDate | date : 'dd/MM/yyyy' }}</td>
+                      <td>{{ vacationRequest.endDate | date : 'dd/MM/yyyy' }}</td>
                       <td>{{ vacationRequest.vacationDays }}</td>
                       <td>{{ vacationRequest.description }}</td>
                       <td [ngClass]="{

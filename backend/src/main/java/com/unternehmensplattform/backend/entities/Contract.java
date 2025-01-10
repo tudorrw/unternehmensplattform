@@ -29,9 +29,6 @@ public class Contract {
     @Column(name = "signing_date")
     private LocalDate signingDate;
 
-    @Column(name = "previous_year_vacation_days")
-    private int previousYearVacationDays;
-
     @Column(name = "actual_year_vacation_days")
     private int actualYearVacationDays;
 }

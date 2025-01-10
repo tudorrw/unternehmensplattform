@@ -159,7 +159,6 @@ public class UserDetailsServiceImpl implements UserDetailsService, UserService {
         if (contract != null) {
             builder.companyName(contract.getCompany().getName())
                     .signingDate(contract.getSigningDate())
-                    .previousYearVacationDays(contract.getPreviousYearVacationDays())
                     .actualYearVacationDays(contract.getActualYearVacationDays());
         }
 

@@ -23,7 +23,7 @@ header="Vacation days information"
       pInputText
       id="signingDate"
       class="flex-auto"
-      [value]="userDetails?.signingDate | date: 'MM/dd/yyyy' || 'Not available'"
+      [value]="userDetails?.signingDate | date: 'dd/MM/yyyy' || 'Not available'"
       disabled
     />
   </div>
@@ -93,6 +93,7 @@ header="Vacation days information"
                   [showIcon]="true"
                   name="vacantionPeriod"
                   (onSelect)="onSelect($event)"
+                  dateFormat="dd/mm/yy"
           ></p-calendar>
         </div>
       </div>
@@ -152,7 +153,7 @@ header="Vacation days information"
   </ng-template>
   <ng-template pTemplate="body" let-request>
     <tr>
-      <td [ngClass]="'date-highlight'">{{ request.requestedDate | date: 'MM/dd/yyyy, HH:mm' }}</td>
+      <td [ngClass]="'date-highlight'">{{ request.requestedDate | date: 'dd/MM/yyyy, HH:mm' }}</td>
       <td>{{ request.startDate | date: 'MM/dd/yyyy' }}</td>
       <td>{{ request.endDate | date: 'MM/dd/yyyy' }}</td>
       <td>{{ request.vacationDays }}</td>

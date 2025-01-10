@@ -17,20 +17,19 @@
       <!-- Data selectată -->
       <div class="p-field">
         <label for="selectedDate">Selected Date</label>
-        <input type="text" id="selectedDate" pInputText [(ngModel)]="selectedDate" [value]="selectedDate | date: 'dd-MM-yyyy'"
-               name="selectedDate" [readonly]="true">
+        <input type="text" id="selectedDate" name="selectedDate" pInputText [value]="selectedDate | date : 'dd/MM/yyyy'" [readonly]="true">
       </div>
 
-      <div class="p-field p-grid">
+      <div class="p-field p-grid" style="display: flex; gap: 1rem;">
       <!-- Ora sosirii -->
-        <div class="p-field">
+        <div class="p-field" style="flex: 1;">
           <label>Arrival Time</label>
           <p-calendar [(ngModel)]="startDate" timeOnly="true" name="startDate" inputId="startDate" [showTime]="true" hourFormat="24" required></p-calendar>
           <small *ngIf="activityForm.submitted && !startDate" class="p-error">Arrival time is required.</small>
         </div>
 
         <!-- Ora plecării -->
-        <div class="p-field">
+        <div class="p-field" style="flex: 1;">
           <label>Departure Time</label>
           <p-calendar [(ngModel)]="endDate" timeOnly="true" name="endDate" inputId="endDate" [showTime]="true" hourFormat="24" required></p-calendar>
           <small *ngIf="activityForm.submitted && !endDate" class="p-error">Departure time is required.</small>
@@ -40,15 +39,21 @@
       <!-- Descriere -->
       <div class="p-field">
         <label for="description">Description</label>
-        <input id="description" type="text" pInputText [(ngModel)]="description" name="description" placeholder="Add a description" required />
+        <textarea
+          id="description"
+          pInputTextarea
+          [(ngModel)]="description"
+          name="description"
+          placeholder="Add a description"
+          rows="4"
+          required
+          style="resize: none; width: 100%;"
+        ></textarea>
         <small *ngIf="activityForm.submitted && !description" class="p-error">Description is required.</small>
       </div>
     </div>
 
     <!-- Butoane de acțiune -->
-    <div class="p-dialog-footer flex justify-content-center">
-
-    </div>
     <div class="p-dialog-footer button-container">
       <button pButton label="Cancel" icon="pi pi-times" type="button" (click)="onCancelSubmitWorkingDayForm(activityForm)" class="p-button-secondary"></button>
       <button pButton label="Submit" icon="pi pi-check" type="submit" class="p-button-primary"></button>
@@ -58,37 +63,63 @@
 
 
 <!-- Pop-up pentru detalii activitate -->
-<p-dialog [(visible)]="detailDialog" [modal]="true" [closable]="true" header="Event Details" [style]="{ width: '30rem' }">
-  <div *ngIf="selectedDate" class="flex flex-column">
-    <div class="flex align-items-center gap-3 mb-3">
-      <label for="selectedDate" class="font-semibold w-6rem">Selected Date</label>
-      <input pInputText id="selectedDatee" class="flex-auto" [value]="selectedDate | date" disabled />
+<p-dialog [(visible)]="detailDialog" [style]="{ width: '30rem' }" [modal]="true" [closable]="true" header="Event Details">
+  <div class="p-fluid" style="padding: 1rem;">
+    <!-- Selected Date -->
+    <div class="p-field p-grid">
+      <label for="selectedDate2" class="p-col-4 font-semibold">Selected Date</label>
+      <input pInputText id="selectedDate2" [value]="selectedDate | date : 'dd/MM/yyyy'" disabled />
     </div>
 
-    <div class="flex align-items-center gap-3 mb-3">
-      <label for="startDate" class="font-semibold w-6rem">Arrival Time</label>
-      <input pInputText id="startDate" class="flex-auto" [value]="startDate | date: 'shortTime'" disabled />
+    <div class="p-field p-grid" style="display: flex; gap: 1rem;">
+      <!-- Arrival Time -->
+      <div class="p-field" style="flex: 1;">
+        <label for="startDate" class="p-col-4 font-semibold">Arrival Time</label>
+        <input pInputText id="startDate" [value]="startDate | date: 'shortTime'" disabled />
+      </div>
+
+      <!-- Departure Time -->
+      <div class="p-field" style="flex: 1;">
+        <label for="endDate" class="p-col-4 font-semibold">Departure Time</label>
+        <input pInputText id="endDate" [value]="endDate | date: 'shortTime'" disabled />
+      </div>
     </div>
 
-    <div class="flex align-items-center gap-3 mb-3">
-      <label for="endDate" class="font-semibold w-6rem">Departure Time</label>
-      <input pInputText id="endDate" class="flex-auto" [value]="endDate | date: 'shortTime'" disabled />
-    </div>
-
-    <div class="flex align-items-center gap-3 mb-3">
-      <label for="descriptionn" class="font-semibold w-6rem">Description</label>
-      <input pInputText id="descriptionn" class="flex-auto" [value]="description" disabled />
+    <!-- Description -->
+    <div class="p-field p-grid">
+      <label for="descriptionn" class="p-col-4 font-semibold">Description</label>
+      <div class="p-col-8">
+    <textarea
+      id="descriptionn"
+      pInputTextarea
+      [value]="description"
+      disabled
+      rows="5"
+      style="resize: none; width: 100%;"
+    ></textarea>
+      </div>
     </div>
   </div>
 
-  <!-- Butoane de acțiune -->
-  <p-footer class="button-container">
-    <div *ngIf="isEditMode">
-
-      <button pButton label="Edit" icon="pi pi-pencil" (click)="openEditDialog()" class="p-button-warning"></button>
-      <button pButton label="Delete" icon="pi pi-trash" (click)="selectedEventId ? deleteActivity(selectedEventId.toString()) : null" class="p-button-danger"></button>
-    </div>
-  </p-footer>
+  <!-- Buttons -->
+  <div class="p-dialog-footer button-container">
+    <button
+      pButton
+      label="Edit"
+      icon="pi pi-pencil"
+      (click)="openEditDialog()"
+      class="p-button-warning"
+      *ngIf="isEditMode"
+    ></button>
+    <button
+      pButton
+      label="Delete"
+      icon="pi pi-trash"
+      (click)="selectedEventId ? deleteActivity(selectedEventId.toString()) : null"
+      class="p-button-danger"
+      *ngIf="isEditMode"
+    ></button>
+  </div>
 </p-dialog>
 
 

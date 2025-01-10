@@ -8,7 +8,6 @@ export interface Contract {
   actualYearVacationDays?: number;
   company?: Company;
   idContract?: number;
-  previousYearVacationDays?: number;
   signingDate?: string;
   user?: User;
 }

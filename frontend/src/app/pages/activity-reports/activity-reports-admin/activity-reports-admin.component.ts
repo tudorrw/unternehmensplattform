@@ -18,14 +18,7 @@ export class ActivityReportsAdminComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'resourceTimeGridDay,2DayView',
-    },
-    views: {
-      '2DayView': {
-        type: 'resourceTimeGrid',
-        duration: { days: 2 },
-        buttonText: '2 day',
-      },
+      right: 'resourceTimeGridDay',
     },
     weekends: false,
     resources: [],
