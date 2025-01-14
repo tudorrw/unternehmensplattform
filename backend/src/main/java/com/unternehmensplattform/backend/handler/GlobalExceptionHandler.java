@@ -263,5 +263,17 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(WorkingDayBeforeSigningDate.class)
+    public ResponseEntity<ExceptionResponse> handleWorkingDayBeforeSigningDate(WorkingDayBeforeSigningDate exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .businessErrorCode(BusinessErrorCodes.WD_BEFORE_SIGNING_DATE.getCode())
+                                .businessErrorDescription(BusinessErrorCodes.WD_BEFORE_SIGNING_DATE.getDescription())
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
 
 }

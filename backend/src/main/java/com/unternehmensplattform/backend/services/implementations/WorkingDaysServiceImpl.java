@@ -112,6 +112,10 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
     }
 
     private void validateDateConditionsForCreate(WorkingDaysDTO dto, User loggedInUser) {
+        if(dto.getDate().isBefore(loggedInUser.getContract().getSigningDate())) {
+            throw new WorkingDayBeforeSigningDate("Activity report should be after signing date.");
+        }
+
         boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
                 .anyMatch(existingReport ->
                         !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
@@ -128,8 +132,8 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
                 .anyMatch(existingReport ->
                         !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
-                                dto.getEndDate().isBefore(existingReport.getStartDate())) && !existingReport.getId().equals(dto.getId()));
-
+                                dto.getEndDate().isBefore(existingReport.getStartDate()) ||
+                                existingReport.getId().equals(dto.getId())));  // Add this condition to exclude current report
         if (overlaps) {
             throw new WorkingDaysOverlapException("The time interval overlaps with an existing activity report.");
         }

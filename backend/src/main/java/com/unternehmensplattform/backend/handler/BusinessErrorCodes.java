@@ -27,8 +27,8 @@ public enum BusinessErrorCodes {
     ARRIVAL_BEFORE_LEAVE(305, "Arrival date is before leave date", BAD_REQUEST),
     WD_OVERLAP_WITH_VD(305, "Activity report overlaps with an existing vacation request", BAD_REQUEST),
     ALL_DATES_SAME(305, "Date, start date, and end date must all be on the same day.", BAD_REQUEST),
-    VD_OVERLAP_WITH_WD(305, "Vacation Request overlaps with an existing activity report", BAD_REQUEST);
-
+    VD_OVERLAP_WITH_WD(305, "Vacation Request overlaps with an existing activity report", BAD_REQUEST),
+    WD_BEFORE_SIGNING_DATE(305, "Activity report should be after signing date", BAD_REQUEST);
 
     @Getter
     private final int code;

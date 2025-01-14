@@ -12,6 +12,8 @@ import { DatePipe } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import {VacationReqControllerService} from "../../../services/services/vacation-req-controller.service";
 import {VacationRequestDetailsDto} from "../../../services/models/vacation-request-details-dto";
+import {UserDetailsDto} from "../../../services/models/user-details-dto";
+import {UserCrudControllerService} from "../../../services/services/user-crud-controller.service";
 
 interface ExtendedEventProps {
     description?: string;
@@ -37,6 +39,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
     endDate: Date | null = null;
     description: string = '';
     events: CustomEventInput[] = [];
+    userDetails: UserDetailsDto | null = null;
     vacationRequests: VacationRequestDetailsDto[] = [];
     isEditMode: boolean = false;
     messages: any[] = [];
@@ -61,16 +64,45 @@ export class ActivityReportsEmployeeComponent implements OnInit {
     constructor(
         private workingDaysService: WorkingDaysControllerService,
         private vacationReqControllerService: VacationReqControllerService,
+        private userCrudControllerService: UserCrudControllerService,
         private datePipe: DatePipe,
         private messageService: MessageService // Injectează MessageService pentru Toast
     ) {}
 
     ngOnInit() {
+        this.fetchUserDetails();
         this.fetchVacationRequests();
         this.loadEvents();
+
     }
 
-  loadEvents() {
+    fetchUserDetails(): void {
+      this.userCrudControllerService.authenticatedUser().subscribe({
+        next: (data: UserDetailsDto) => {
+          this.userDetails = data;
+          // Set the signingDate as the start date in the calendar valid range
+          const signingDate = data.signingDate;
+          if (signingDate) {
+            const formattedDate = this.formatDate(signingDate);
+            this.calendarOptions.validRange = {start: formattedDate};
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching user details:', err);
+        }
+      });
+    }
+
+
+    formatDate(date: string): string {
+      const parsedDate = new Date(date);
+      const year = parsedDate.getFullYear();
+      const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(parsedDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    loadEvents() {
         this.workingDaysService.getAllActivityReports().subscribe({
             next: (data: WorkingDaysDto[]) => {
                 const activityReports = data.map((report) => {
@@ -153,7 +185,6 @@ export class ActivityReportsEmployeeComponent implements OnInit {
             };
 
             if (this.isEditMode && this.selectedEventId !== undefined) {
-                this.isEditMode = false;
                 this.workingDaysService.modifyWorkingDay({ body: activity }).subscribe({
                     next: () => {
                         this.messageService.add({
@@ -166,8 +197,9 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                         this.loadEvents();
                         this.activityDialog = false;
                         form.resetForm();
+                        this.isEditMode = false;
                     },
-                    error: (error: HttpErrorResponse) => {
+                    error: (error) => {
                         console.error('Error updating activity:', error);
                         if (error.status === 409) {
                             this.messages = [{
@@ -181,6 +213,13 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                                 summary: 'Error',
                                 detail: error.error.businessErrorDescription,
                             }];
+                        }
+                        if (error.error.validationErrors) {
+                          this.messages = [{
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: error.error.validationErrors[0],
+                          }];
                         }
                     },
                 });
@@ -198,7 +237,7 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                         this.activityDialog = false;
                         form.resetForm();
                     },
-                    error: (error: HttpErrorResponse) => {
+                    error: (error ) => {
                         console.error('Error submitting activity:', error);
                         if (error.status === 409) {
                             this.messages = [{
@@ -213,6 +252,13 @@ export class ActivityReportsEmployeeComponent implements OnInit {
                             detail: error.error.businessErrorDescription,
                           }];
                         }
+                      if (error.error.validationErrors) {
+                        this.messages = [{
+                          severity: 'error',
+                          summary: 'Error',
+                          detail: error.error.validationErrors[0],
+                        }];
+                      }
                     },
                 });
             }

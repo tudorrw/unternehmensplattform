@@ -252,7 +252,7 @@ public class VacationRequestServiceImpl implements VacationReqService {
         }
 
         if (startDate.isBefore(employee.getContract().getSigningDate())) {
-            throw new VacationRequestValidationDatesException("Start date cannot be in the past.");
+            throw new VacationRequestValidationDatesException("Start date cannot be before the signing date.");
         }
 
         if (startDate.isBefore(LocalDate.now())) {

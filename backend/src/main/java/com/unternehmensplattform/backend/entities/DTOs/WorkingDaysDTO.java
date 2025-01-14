@@ -1,6 +1,7 @@
 package com.unternehmensplattform.backend.entities.DTOs;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class WorkingDaysDTO {
 
     private Instant endDate;
 
+    @Size(max = 256, message = "Description must be between 0 and 256 characters")
     private String description;
     private String effectiveTime;
     private Double effectiveHours;
