@@ -30,8 +30,8 @@ export class ActivityReportsAdminComponent implements OnInit {
     select: (info) => {
       alert(`Selected from ${info.startStr} to ${info.endStr} on resource ${info.resource?.id}`);
     },
-    scrollTime: '06:00',
-    slotMinTime: '06:00:00',
+    scrollTime: '07:00',
+    slotMinTime: '07:00:00',
     slotMaxTime: '24:00:00',
     slotMinWidth: 100,
     timeZone: 'UTC',

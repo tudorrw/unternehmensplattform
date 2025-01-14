@@ -58,7 +58,10 @@ export class ActivityReportsEmployeeComponent implements OnInit {
         events: this.events,
         eventColor: '#378006',
         timeZone: 'UTC',
-        weekends: false
+        weekends: false,
+        scrollTime: '07:00',
+        slotMinTime: '07:00:00',
+        slotMaxTime: '24:00:00',
     };
 
     constructor(

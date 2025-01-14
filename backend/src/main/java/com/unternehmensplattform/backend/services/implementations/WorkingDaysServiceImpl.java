@@ -119,7 +119,9 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
         boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
                 .anyMatch(existingReport ->
                         !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
-                                dto.getEndDate().isBefore(existingReport.getStartDate())));
+                                dto.getEndDate().isBefore(existingReport.getStartDate()) ||
+                                (dto.getEndDate().equals(existingReport.getStartDate()) || dto.getStartDate().equals(existingReport.getEndDate())) // Allow exact match for adjacent events
+                ));
 
         if (overlaps) {
             throw new WorkingDaysOverlapException("The time interval overlaps with an existing activity report.");
@@ -131,15 +133,18 @@ public class WorkingDaysServiceImpl implements WorkingDaysService {
     private void validateDateConditionsForEdit(WorkingDaysDTO dto, User loggedInUser) {
         boolean overlaps = workingDaysRepository.findAllByEmployeeAndDate(loggedInUser, dto.getDate()).stream()
                 .anyMatch(existingReport ->
-                        !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||
-                                dto.getEndDate().isBefore(existingReport.getStartDate()) ||
-                                existingReport.getId().equals(dto.getId())));  // Add this condition to exclude current report
+                        !(dto.getStartDate().isAfter(existingReport.getEndDate()) ||  // New start time must be after existing end time
+                                dto.getEndDate().isBefore(existingReport.getStartDate()) ||  // New end time must be before existing start time
+                                (dto.getEndDate().equals(existingReport.getStartDate()) || dto.getStartDate().equals(existingReport.getEndDate())) || // Allow exact match for adjacent events
+                                existingReport.getId().equals(dto.getId())));  // Exclude current report
+
         if (overlaps) {
             throw new WorkingDaysOverlapException("The time interval overlaps with an existing activity report.");
         }
 
         hasVacationToday(dto, loggedInUser);
     }
+
 
 
     private void hasVacationToday(WorkingDaysDTO workingDaysDTO, User loggedInUser) {
