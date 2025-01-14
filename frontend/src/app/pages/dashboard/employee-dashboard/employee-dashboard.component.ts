@@ -31,8 +31,8 @@ export class EmployeeDashboardComponent implements OnInit {
   availableAdministrators: UserDetailsDto[] = [];
   selectedAdministrator: UserDetailsDto | undefined;
   vacationRequests: VacationRequestDetailsDto[] = [];
-  minDate: Date;
-  maxDate: Date;
+  minDate: Date | undefined;
+  maxDate: Date | undefined;
   invalidDates: Date[] = [];
   date5: Date[] = [];
   description: string = '';
@@ -42,11 +42,7 @@ export class EmployeeDashboardComponent implements OnInit {
       private messageService: MessageService,
       private vacationReqControllerService: VacationReqControllerService,
       private datePipe: DatePipe
-  ) {
-      this.minDate = new Date();
-      this.maxDate = new Date(this.minDate.getFullYear() + 1, 5, 30);
-      this.invalidDates = this.getWeekendsBetweenDates(this.minDate, this.maxDate);
-  }
+  ) {}
 
   ngOnInit(): void {
       this.fetchUserDetails();
@@ -64,6 +60,8 @@ export class EmployeeDashboardComponent implements OnInit {
           next: (data: UserDetailsDto) => {
               this.userDetails = data;
               this.setVacationMessage();
+
+            this.updateDateRangesAndInvalidDates();
           },
           error: (error) => {
               console.error('Failed to fetch user details:', error);
@@ -77,9 +75,22 @@ export class EmployeeDashboardComponent implements OnInit {
       });
   }
 
+  updateDateRangesAndInvalidDates(): void {
+    // Initialize minDate to the current date
+    this.minDate = new Date();
 
+    // Set maxDate to be one year ahead from today (current year + 1, May 30)
+    this.maxDate = new Date(this.minDate.getFullYear() + 1, 5, 30);
 
+    // Ensure that minDate is at least the signing date, if it's provided
+    const signingDate = this.userDetails?.signingDate ? new Date(this.userDetails.signingDate) : null;
+    if (signingDate && signingDate > this.minDate) {
+      this.minDate = signingDate; // Set minDate to signingDate if it's later than today's date
+    }
 
+    // Fetch weekends (invalid dates) between minDate and maxDate
+    this.invalidDates = this.getWeekendsBetweenDates(this.minDate, this.maxDate);
+  }
 
   //functii pt butonul de request vacation
   requestVacation(): void {
@@ -192,7 +203,7 @@ export class EmployeeDashboardComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           console.error('Error submitting vacation request:', error);
           if (error.status === 409) {
-            this.messages = [{severity: 'error', summary: 'Conflict', detail: error.error.businessErrorDescription}];
+            this.messages = [{severity: 'error', summary: 'Conflict', detail: error.error.error}];
           } else {
             this.messages = [{
               severity: 'error',
